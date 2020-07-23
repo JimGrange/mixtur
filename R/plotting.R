@@ -17,7 +17,7 @@
 #'degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 #'from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
 #'wrapped from -pi to pi)
-#'@param id_var The column name coding for partiicpant id.
+#'@param id_var The column name coding for participant id.
 #'@param response_var The column name coding for the participants' responses
 #'@param target_var The column name coding for the target value
 #'@param set_size_var The column name (if applicable) coding for the set

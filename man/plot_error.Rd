@@ -26,7 +26,7 @@ degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
 wrapped from -pi to pi)}
 
-\item{id_var}{The column name coding for partiicpant id.}
+\item{id_var}{The column name coding for participant id.}
 
 \item{response_var}{The column name coding for the participants' responses}
 
