@@ -9,7 +9,10 @@ Authors@R: as.person(c(
 Description: A set of utility functions for analysing and modelling data from 
     continuous report short-term memory experiments. Helper functions are also
     included to assist experiment design.
-Depends: R (>= 4.0.2)
+Depends: R (>= 4.0)
 License: GPL-3
 LazyData: true
+Imports:
+  tidyverse
+Encoding: UTF-8
 RoxygenNote: 7.1.1
