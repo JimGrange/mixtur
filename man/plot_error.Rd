@@ -6,7 +6,7 @@
 \usage{
 plot_error(
   data,
-  unit = "degrees",
+  unit = "degrees_360",
   id_var = "id",
   response_var = "response",
   target_var = "target",
@@ -20,7 +20,7 @@ number ('id_var'); the participants' response per trial ('response_var');
 the  target value ('target_var'); and, if applicable, the condition
 ('condition_var').}
 
-\item{unit}{The unit of measurement in the data frame: "degrees"
+\item{unit}{The unit of measurement in the data frame: "degrees_360"
 (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
