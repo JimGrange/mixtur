@@ -143,7 +143,9 @@ plot_error <- function(data,
                     width = 0.05) +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
-      scale_y_continuous(limits = c(0, 1.15)) +
+      scale_y_continuous(limits = c(0,
+                                    max(final_data$mean_error) +
+                                      max(final_data$se_error))) +
       labs(x = "Mean Error (Radians)",
            y = "Probability Density")
 
@@ -151,30 +153,6 @@ plot_error <- function(data,
 
   # no set size manipulation but there is a condition manipulation
   if(set_size_var == "NULL" && condition_var != "NULL"){
-
-    # we need to ensure points don't overlap
-    pd <- position_dodge(0.0)
-
-    # # do the plot
-    # ggplot(final_data, aes(x = x,
-    #                        y = mean_error,
-    #                        group = condition)) +
-    #   geom_point(aes(shape = condition,
-    #                  colour = condition),
-    #              position = pd) +
-    #   geom_errorbar(aes(ymax = mean_error + se_error,
-    #                     ymin = mean_error - se_error,
-    #                     colour = condition),
-    #                 position = pd,
-    #                 width = 0.05) +
-    #   theme_bw() +
-    #   scale_x_continuous(limits = c(-3.5, 3.5)) +
-    #   scale_y_continuous(limits = c(0, 1.2)) +
-    #   labs(x = "Mean Error (Radians)",
-    #        y = "Probability Density") +
-    #   scale_fill_brewer(palette = "Dark2") +
-    #   scale_colour_brewer(palette = "Dark2")
-
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
@@ -235,7 +213,7 @@ plot_error <- function(data,
       guides(fill=guide_legend(title="New Legend Title")) +
       labs(x = "Mean Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = 4)
+      facet_wrap(vars(condition, set_size))
 
   }
 
