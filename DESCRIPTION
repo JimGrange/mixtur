@@ -13,6 +13,7 @@ Depends: R (>= 4.0)
 License: GPL-3
 LazyData: true
 Imports:
-  tidyverse
+  tidyverse, 
+  RColorBrewer
 Encoding: UTF-8
 RoxygenNote: 7.1.1

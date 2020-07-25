@@ -1,6 +1,6 @@
-data <- read.csv("example_data.csv")
+example_data <- read.csv("example_data.csv")
 
-data <- data %>%
+example_data <- example_data %>%
   rename(non_target_1 = nt1,
          non_target_2 = nt2,
          non_target_3 = nt3) %>%
@@ -16,11 +16,11 @@ data <- data %>%
          id != "26_short") %>%
   select(-task, -sequence) %>%
   mutate(id = str_replace_all(id, pattern = "_short*", replacement = "")) %>%
-  mutate(condition = fct_recode(condition, "condition_a" = "pure",
-                                "condition_b" = "mixed"))
+  mutate(condition = fct_recode(condition, "a" = "mixed",
+                                "b" = "pure"))
 
-data[, 3:7] <- round(data[, 3:7], 0)
+example_data[, 3:7] <- round(example_data[, 3:7], 0)
 
-save(data, file = "example_data.rda")
+save(example_data, file = "example_data.rda")
 
 
