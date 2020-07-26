@@ -5,7 +5,7 @@
 and modelling data from continuous report visual short-term memory
 studies.
 
-![](images/overview.png)
+![](images/overview.png){width=150px}
 
 ## Installation
 
