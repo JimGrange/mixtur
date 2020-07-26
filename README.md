@@ -51,8 +51,26 @@ familiarise themselves with the package:
 Data can be loaded in the following way:
 
 ``` r
-data(bays2009_full)
-head(bays2009_full)
+library(mixtur)
+#> Loading required package: tidyverse
+#> ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.3.0 ──
+#> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+#> ✓ tibble  3.0.3     ✓ dplyr   1.0.0
+#> ✓ tidyr   1.1.0     ✓ stringr 1.4.0
+#> ✓ readr   1.3.1     ✓ forcats 0.5.0
+#> ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> x dplyr::filter() masks stats::filter()
+#> x dplyr::lag()    masks stats::lag()
+#> Loading required package: RColorBrewer
+data(bays2009_sample)
+head(bays2009_sample)
+#>   id response target non_target_1 non_target_2 non_target_3
+#> 1  1   -2.186 -0.002       -2.989        2.648        2.262
+#> 2  1   -1.980 -2.498       -1.861       -1.340       -0.309
+#> 3  1   -0.177 -2.088       -2.845       -3.102       -0.371
+#> 4  1    1.342  1.334        2.844        1.007       -0.599
+#> 5  1   -1.644 -2.224        3.129        2.936        1.295
+#> 6  1    1.219  1.253        2.886       -0.924       -1.035
 ```
 
 ## References
