@@ -63,12 +63,10 @@ head(bays2009_sample)
 #> 6  1    1.219  1.253        2.886       -0.924       -1.035
 ```
 
-## examples that need writing up properly
+## Plotting response error
 
 ``` r
-
-
-# error plots -------------------------------------------------------------
+library(mixtur)
 
 # example data
 data(example_data)
@@ -105,15 +103,17 @@ plot_error(data = example_data,
     #> 15  2.22      0.0564  0.00611
     #> 16  2.59      0.0606  0.00891
     #> 17  2.96      0.0677  0.00541
-    
-    # plot error by condition (condition b is easier than condition a)
-    plot_error(data = example_data, 
-               unit = "degrees", 
-               condition_var = "condition", 
-               set_size = "NULL")
-    #> $plot
 
-![](README-unnamed-chunk-3-2.png)<!-- -->
+``` r
+# plot error by condition (condition b is easier than condition a)
+plot_error(data = example_data, 
+           unit = "degrees", 
+           condition_var = "condition", 
+           set_size = "NULL")
+#> $plot
+```
+
+![](README-unnamed-chunk-4-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -132,16 +132,18 @@ plot_error(data = example_data,
     #>  9 a          0         0.800   0.0556 
     #> 10 a          0.370     0.349   0.0207 
     #> # … with 24 more rows
-    
-    # sample of bays (2009) data
-    data("bays2009_sample")
-    plot_error(data = bays2009_sample, 
-               unit = "radians", 
-               condition_var = "NULL", 
-               set_size_var = "NULL")
-    #> $plot
 
-![](README-unnamed-chunk-3-3.png)<!-- -->
+``` r
+# sample of bays (2009) data
+data("bays2009_sample")
+plot_error(data = bays2009_sample, 
+           unit = "radians", 
+           condition_var = "NULL", 
+           set_size_var = "NULL")
+#> $plot
+```
+
+![](README-unnamed-chunk-5-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -165,17 +167,19 @@ plot_error(data = example_data,
     #> 15  2.22      0.0675   0.0159
     #> 16  2.59      0.0277   0.0128
     #> 17  2.96      0.0331   0.0137
-    
-    # bays (2009) full data set
-    data(bays2009_full)
-    
-    plot_error(data = bays2009_full,
-               unit = "radians",
-               set_size_var = "set_size", 
-               condition_var = "NULL")
-    #> $plot
 
-![](README-unnamed-chunk-3-4.png)<!-- -->
+``` r
+# bays (2009) full data set
+data(bays2009_full)
+
+plot_error(data = bays2009_full,
+           unit = "radians",
+           set_size_var = "set_size", 
+           condition_var = "NULL")
+#> $plot
+```
+
+![](README-unnamed-chunk-6-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -194,33 +198,64 @@ plot_error(data = example_data,
     #>  9        1  0        1.60     0.0661 
     #> 10        1  0.370    0.515    0.0446 
     #> # … with 58 more rows
-    
-    
-    
-    
-    # precision plots ---------------------------------------------------------
-    
-    data <- bays2009_full
-    # plot just mean
-    plot_precision(data, unit = "radians",
-                   condition_var = "NULL",
-                   set_size = "NULL")
-    #> $plot
-    #> [1] "NULL"
+
+``` r
+# by set size & condition
+
+plot_error(data = bays2009_full,
+           unit = "radians",
+           set_size_var = "set_size", 
+           condition_var = "delay")
+#> $plot
+```
+
+![](README-unnamed-chunk-7-1.png)<!-- -->
+
     #> 
     #> $plot_data
-    #> # A tibble: 1 x 4
-    #>   mean_precision se_precision mean_bias se_bias
-    #>            <dbl>        <dbl>     <dbl>   <dbl>
-    #> 1           1.06       0.0826   0.00964 0.00864
-    
-    # plot just set size
-    plot_precision(data, unit = "radians",
-                   condition_var = "NULL",
-                   set_size_var = "set_size")
-    #> $plot
+    #> # A tibble: 204 x 5
+    #> # Groups:   set_size, delay [12]
+    #>    set_size delay      x mean_error se_error
+    #>       <dbl> <fct>  <dbl>      <dbl>    <dbl>
+    #>  1        1 100   -2.96     0        0      
+    #>  2        1 100   -2.59     0        0      
+    #>  3        1 100   -2.22     0.00470  0.00470
+    #>  4        1 100   -1.85     0        0      
+    #>  5        1 100   -1.48     0.00443  0.00443
+    #>  6        1 100   -1.11     0        0      
+    #>  7        1 100   -0.739    0.0442   0.0215 
+    #>  8        1 100   -0.370    0.491    0.0537 
+    #>  9        1 100    0        1.53     0.0791 
+    #> 10        1 100    0.370    0.540    0.0518 
+    #> # … with 194 more rows
 
-![](README-unnamed-chunk-3-5.png)<!-- -->
+## Plotting precision of reponses
+
+``` r
+data <- bays2009_full
+# plot just mean
+plot_precision(data, unit = "radians",
+               condition_var = "NULL",
+               set_size = "NULL")
+#> $plot
+#> [1] "NULL"
+#> 
+#> $plot_data
+#> # A tibble: 1 x 4
+#>   mean_precision se_precision mean_bias se_bias
+#>            <dbl>        <dbl>     <dbl>   <dbl>
+#> 1           1.06       0.0826   0.00964 0.00864
+```
+
+``` r
+# plot just set size
+plot_precision(data, unit = "radians",
+               condition_var = "NULL",
+               set_size_var = "set_size")
+#> $plot
+```
+
+![](README-unnamed-chunk-9-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -231,14 +266,16 @@ plot_error(data = example_data,
     #> 2        2          1.72        0.153    0.0107   0.0114
     #> 3        4          0.820       0.0917   0.0171   0.0145
     #> 4        6          0.508       0.0555  -0.0120   0.0440
-    
-    # plot just condition (delay)
-    plot_precision(data, unit = "radians",
-                   condition_var = "delay",
-                   set_size_var = "NULL")
-    #> $plot
 
-![](README-unnamed-chunk-3-6.png)<!-- -->
+``` r
+# plot just condition (delay)
+plot_precision(data, unit = "radians",
+               condition_var = "delay",
+               set_size_var = "NULL")
+#> $plot
+```
+
+![](README-unnamed-chunk-10-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -248,14 +285,16 @@ plot_error(data = example_data,
     #> 1 100            0.873       0.0630   0.0343   0.0184
     #> 2 500            1.08        0.101   -0.00218  0.0149
     #> 3 2000           1.22        0.117   -0.00149  0.0112
-    
-    # plot set size AND condition
-    plot_precision(data, unit = "radians",
-                   condition_var = "delay",
-                   set_size_var = "set_size")
-    #> $plot
 
-![](README-unnamed-chunk-3-7.png)<!-- -->
+``` r
+# plot set size AND condition
+plot_precision(data, unit = "radians",
+               condition_var = "delay",
+               set_size_var = "set_size")
+#> $plot
+```
+
+![](README-unnamed-chunk-11-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -275,14 +314,15 @@ plot_error(data = example_data,
     #> 10        6 100            0.369       0.0443  0.0949   0.0764 
     #> 11        6 500            0.518       0.0724 -0.0777   0.0760 
     #> 12        6 2000           0.587       0.0983 -0.0493   0.0567
-    
-    
-    data <- example_data
-    plot_precision(data, unit = "degrees", 
-                   condition_var = "condition")
-    #> $plot
 
-![](README-unnamed-chunk-3-8.png)<!-- -->
+``` r
+data <- example_data
+plot_precision(data, unit = "degrees", 
+               condition_var = "condition")
+#> $plot
+```
+
+![](README-unnamed-chunk-12-1.png)<!-- -->
 
     #> 
     #> $plot_data
