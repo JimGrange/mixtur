@@ -2,13 +2,14 @@ Package: mixtur
 Title: An R package for designing, analysing, and modelling continuous 
     report visual short-term memory studies
 Version: 0.0.0.9000
-Authors@R: as.person(c(
-    "Jim Grange <grange.jim@gmail.com> [aut, cre]", 
-    "Stuart Moore <StuartBryanMoore@outlook.com> [aut]"
-  ))
+Authors@R: c(
+    person("Grange", "Jim", email = "grange.jim@gmail.com", role = c("aut", "cre")),
+    person("Moore", "Stuart", email = "StuartBryanMoore@outlook.com", role = "aut"), 
+    person("Berry", "Ed", email = "enter_here@gmail.com", role = c("aut", "ctb")))
 Description: A set of utility functions for analysing and modelling data from 
-    continuous report short-term memory experiments. Helper functions are also
-    included to assist experiment design.
+    continuous report short-term memory experiments using [enter model 
+    descriptions here...]. Users are able to simulate from these models, too. 
+    Helper functions are also included to assist with experiment design.
 Depends: R (>= 4.0)
 License: GPL-3
 LazyData: true

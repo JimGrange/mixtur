@@ -32,3 +32,194 @@ wrap <- function(data, bound = pi) {
 
 
 
+# calculate circular mean -------------------------------------------------
+#' Calculate the circular equivalent of the mean
+#' #' @export
+cmean <- function(x) {
+
+  if(any(abs(x) > pi)) {
+    stop("Error: Input values must be in radians, range -PI to PI'", call. = FALSE)
+  }
+
+  y <- atan2(sum(sin(x)), sum(cos(x)))
+  return(y)
+}
+
+
+
+
+# calculate the circular SD -----------------------------------------------
+#' Calculate the circular equivalent of standard deviation
+#' #' @export
+cstd <- function(x) {
+
+  if(any(abs(x) > pi)) {
+    stop("Error: Input values must be in radians, range -PI to PI'", call. = FALSE)
+  }
+
+  if(nrow(x) == 1){
+    x <- t(x)
+  }
+
+  r <- sqrt(sum(sin(x))^2 + sum(cos(x))^2) / nrow(x)
+  y <- sqrt(-2 * log(r))
+  return(y)
+}
+
+
+
+# generate random samples from vin mises ----------------------------------
+#' Generates N random samples from a Von Mises distribution with mean mu and
+#' concentration k
+#' #' @export
+randomvonmises <- function(n, mu, k) {
+
+  x = NULL
+
+  if(k == 0) {
+    x <- (runif(n) * 2 - 1) * pi
+  }
+
+  a <- 1 + (1 + 4 * (k ^ 2)) ^ 0.5
+  b <- (a - (2 * a) ^ 0.5) / (2 * k)
+  r <- (1 + b ^ 2) / (2 * b)
+  obs <- 1
+
+  while(obs <= n) {
+    z = cos(pi * runif(1))
+    f = (1 + r * z) / (r + z)
+    c = k * (r - f)
+    u = runif(1)
+
+    if((c * (2 - c) - u > 0) | (log(c / u) + 1 - c >= 0)) {
+      x[obs] = wrap(sign(runif(1) - 0.5) * acos(f) + mu)
+      obs = obs + 1
+    }
+
+  }
+
+  return(x)
+
+}
+
+
+
+# probability density function of von mises -------------------------------
+#' Probability density function of the Von Mises distribution.
+#' Returns the probability density function for the Von Mises distribution with
+#' mean MU and concentration K, evaluated at the values in X (given in
+#' radians).
+#' #' @export
+vonmisespdf <- function(x, mu, k) {
+  p <- exp(k * cos(x - mu)) / (2 * pi * besselI(k, 0))
+  return(p)
+}
+
+
+
+
+# obtain logarithmically spaced vectors -----------------------------------
+#' Obtain logarithmically spaced vectors
+#' logspace function for logarithmically spaced vectors
+#' soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
+#' #' @export
+logspace <- function(a, b, n){
+  exp(log(10) * seq(a, b, length.out = n))
+}
+
+
+
+
+# trapz function ----------------------------------------------------------
+#' trapz function from the caTools package by Jarek Tuszynski
+#' #' @export
+trapz <- function(x, y) {
+  idx <- 2:length(x)
+  return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
+}
+
+
+
+# Matlab's repmat function ------------------------------------------------
+#' Recreate Matlab's repmat function
+#' repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
+#' #' @export
+repmat = function(x, nn){
+
+  mx <- nrow(x)
+  nx <- ncol(x)
+
+  if(nn > 0){
+    return(matrix(data = x, nrow = mx, ncol = nx*nn))
+  } else {
+    return(matrix(nrow = mx, ncol = nn))
+  }
+
+}
+
+
+
+# inverse of A1 function --------------------------------------------------
+#' Inverse of A1 function.
+#' This is available in the circular package but I have recreated it here from
+#' Bays' code
+#' #' @export
+A1inv <- function(r) {
+
+  if(0 <= r & r < 0.53) {
+    k <- 2 * r + r ^ 3 + (5 * r ^ 5) / 6
+  } else if(r < 0.85) {
+    k <- -0.4 + 1.39 * r + 0.43 / (1 - r)
+  } else {
+    k <- 1 / (r ^ 3 - 4 * r ^ 2 + 3 * r)
+  }
+
+  return(k)
+
+}
+
+
+
+
+# standard deviation of k -------------------------------------------------
+#' Standard deviation of Von Mises K parameter
+#' Returns the standard deviation of a wrapped normal distribution
+#' corresponding to a Von Mises concentration parameter of K
+#' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
+#' #' @export
+k2sd <- function(k){
+
+  if(k == 0){
+    s <- Inf
+  } else if(is.infinite(k)){
+    s <- 0
+  } else {
+    s <- sqrt(-2 * log(besselI(k, 1) / besselI(k, 0)))
+  }
+
+  return(S)
+
+}
+
+
+
+# standard deviation to k -------------------------------------------------
+#' Translate from standard deviation to Von Mises K parameter
+#' Returns the Von Mises concentration parameter K corresponding
+#' to a standard deviation S of a wrapped normal distributions
+#' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
+#' #' @export
+sd2k <- function(s){
+
+  r <- exp(-s ^ 2 / 2)
+
+  k <- 1 / (r ^ 3 - 4 * r ^ 2 + 3 * r)
+
+  k[r < 0.85] <- -0.4 + 1.39 * r[r < 0.85] + 0.43 / (1 - r[r < 0.85])
+
+  k[r < 0.53] <- 2 * r[r < 0.53] + r[r < 0.53]^3 + (5 * r[r < 0.53]^5) / 6
+
+  return(k)
+}
+
+

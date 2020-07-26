@@ -169,6 +169,9 @@ plot_error <- function(data,
            y = "Probability Density") +
       facet_wrap(vars(condition), ncol = 4)
 
+    # rename the final_data frame
+    colnames(final_data)[1] <- condition_var
+
     }
 
 
@@ -189,6 +192,9 @@ plot_error <- function(data,
       labs(x = "Mean Error (Radians)",
            y = "Probability Density") +
       facet_wrap(vars(set_size), ncol = 4)
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
 
   }
 
@@ -215,12 +221,11 @@ plot_error <- function(data,
            y = "Probability Density") +
       facet_wrap(vars(condition, set_size))
 
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+    colnames(final_data)[2] <- condition_var
+
   }
-
-
-  # rename the final_data frame
-  colnames(final_data)[1] <- set_size_var
-  colnames(final_data)[2] <- condition_var
 
   # return the plot & the plot data
   return(list(plot = plot,
