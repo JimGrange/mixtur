@@ -1,10 +1,8 @@
 ---
 title: "Plotting behavioural data"
-author: "Jim Grange & Stuart Moore"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Plotting behavioural data}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

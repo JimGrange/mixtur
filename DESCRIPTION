@@ -14,10 +14,12 @@ Depends:
   R (>= 4.0), 
   tidyverse, 
   RColorBrewer
-License: GPL-3
-LazyData: true
 Imports:
   tidyverse, 
   RColorBrewer
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+License: GPL-3
+LazyData: true
 Encoding: UTF-8
 RoxygenNote: 7.1.1
