@@ -5,18 +5,22 @@
 and modelling data from continuous report visual short-term memory
 studies.
 
+## Continuous Report Tasks
+
 ![](images/overview.png)
 
-In these studies, participants are presented with an encoding screen
-with items to remember (in this example, the participants need to recall
-the colours of the squares). After a retention interval, one of the
-squares is probed (highlighted here by the darkened square), and the
-participants’ task is to recall the colour of the probed item. The
-participant makes their response on a colour wheel, and the dependent
-variable is the angular deviation between the participant’s response (R)
-and the true target value (T) in radians. After many trials, a
-probability density distribution can be formed of the response errors
-across participants.
+In continuous report tasks, participants are presented with an encoding
+screen with items to remember (in this example, the participants need to
+recall the colours of the squares). After a retention interval, one of
+the squares is probed (highlighted here by the darkened square), and the
+participants’ task is to recall the colour of the probed item.
+
+The participant makes their response on a colour wheel, and the
+dependent variable is the angular deviation between the participant’s
+response (R) and the true target value (T) in radians.
+
+After many trials, a probability density distribution can be formed of
+the response errors across participants.
 
 ## Installation
 
