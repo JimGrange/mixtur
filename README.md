@@ -1,8 +1,5 @@
-mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
-===============================================================================================================
 
-Installation Instructions
--------------------------
+# mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
 
 To install the package from GitHub, you need the devools package:
 

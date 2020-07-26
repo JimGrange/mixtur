@@ -6,7 +6,7 @@
 #' #' @export
 get_precision_single <- function(error, target = 0) {
 
-  if(any(abs(response) > pi) | any(abs(target) > pi)) {
+  if(any(abs(error) > pi) | any(abs(target) > pi)) {
     stop("Error: Input values must be in radians, range -PI to PI", call. = FALSE)
   }
 

@@ -202,14 +202,19 @@ plot_error <- function(data,
   # both set size & condition manipulation
   if(set_size_var != "NULL" && condition_var != "NULL"){
 
+    # add position jitter to avoid over-plotting
+    pd <- position_dodge(0.1)
+
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error,
                                    group = condition)) +
-      geom_point(aes(colour = condition)) +
+      geom_point(aes(colour = condition),
+                 position = pd) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error,
                         colour = condition),
-                    width = 0.05) +
+                    width = 0.05,
+                    position = pd) +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
       scale_y_continuous(limits = c(0,
@@ -219,7 +224,7 @@ plot_error <- function(data,
       guides(fill=guide_legend(title="New Legend Title")) +
       labs(x = "Mean Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(condition, set_size))
+      facet_wrap(vars(set_size))
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
