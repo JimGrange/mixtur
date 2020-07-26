@@ -232,3 +232,206 @@ plot_error <- function(data,
               plot_data = final_data))
 
 }
+
+
+
+
+# plot behavioural precision ----------------------------------------------
+#' @export
+plot_precision <- function(data,
+                           unit = "degrees",
+                           id_var = "id",
+                           response_var = "response",
+                           target_var = "target",
+                           set_size_var = "NULL",
+                           condition_var = "NULL"){
+
+  # get the list of participant ids
+  ids <- unique(data[[id_var]])
+
+  # calculate response error mapped onto circular space ----
+  if(unit == "degrees"){
+    response <- data[[response_var]] / 180 * pi
+    target <- data[[target_var]] / 180 * pi
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "degrees_180"){
+    response <- data[[response_var]] / 90 * pi
+    target <- data[[target_var]] / 90 * pi
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "radians"){
+    response <- data[[response_var]]
+    target <- data[[target_var]]
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "wrapped_radians"){
+    data$error <- data$response
+  }
+
+
+  # find precision----
+
+  # no set size or condition manipulation
+  if(set_size_var == "NULL" && condition_var == "NULL"){
+
+    final_data <- data %>%
+      group_by(id) %>%
+      summarise(precision = get_precision_single(error)[, 1],
+                bias = get_precision_single(error)[, 2]) %>%
+      summarise(mean_precision = mean(precision),
+                se_precision = sd(precision) / sqrt(length(precision)),
+                mean_bias = mean(bias),
+                se_bias = sd(bias) / sqrt(length(bias)))
+
+  }
+
+  # no set size manipulation but there is a condition manipulation
+  if(set_size_var == "NULL" && condition_var != "NULL"){
+
+    data$condition <- as.factor(data[[condition_var]])
+
+    final_data <- data %>%
+      group_by(id, condition) %>%
+      summarise(precision = get_precision_single(error)[, 1],
+                bias = get_precision_single(error)[, 2]) %>%
+      group_by(condition) %>%
+      summarise(mean_precision = mean(precision),
+                se_precision = sd(precision) / sqrt(length(precision)),
+                mean_bias = mean(bias),
+                se_bias = sd(bias) / sqrt(length(bias)))
+  }
+
+
+  # set size manipulation, but no condition manipulation
+  if(set_size_var != "NULL" && condition_var == "NULL"){
+
+    data$set_size <- data[[set_size_var]]
+
+    final_data <- data %>%
+      group_by(id, set_size) %>%
+      summarise(precision = get_precision_single(error)[, 1],
+                bias = get_precision_single(error)[, 2]) %>%
+      group_by(set_size) %>%
+      summarise(mean_precision = mean(precision),
+                se_precision = sd(precision) / sqrt(length(precision)),
+                mean_bias = mean(bias),
+                se_bias = sd(bias) / sqrt(length(bias)))
+
+  }
+
+  # both set size & condition manipulation
+  if(set_size_var != "NULL" && condition_var != "NULL"){
+
+    data$set_size <- data[[set_size_var]]
+    data$condition <- as.factor(data[[condition_var]])
+
+    final_data <- data %>%
+      group_by(id, condition, set_size) %>%
+      summarise(precision = get_precision_single(error)[, 1],
+                bias = get_precision_single(error)[, 2]) %>%
+      group_by(set_size, condition) %>%
+      summarise(mean_precision = mean(precision),
+                se_precision = sd(precision) / sqrt(length(precision)),
+                mean_bias = mean(bias),
+                se_bias = sd(bias) / sqrt(length(bias)))
+
+
+  }
+
+
+  # plot the data----
+
+  # no set size or condition manipulation
+  if(set_size_var == "NULL" && condition_var == "NULL"){
+
+
+    plot <- "NULL"
+
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(set_size_var == "NULL" && condition_var != "NULL"){
+
+    plot <- ggplot(final_data, aes(x = condition,
+                                   y = mean_precision)) +
+      geom_point() +
+      geom_errorbar(aes(ymax = mean_precision + se_precision,
+                        ymin = mean_precision - se_precision),
+                    width = 0.05) +
+      theme_bw() +
+      labs(x = condition_var,
+           y = "Precision")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- condition_var
+
+  }
+
+
+  # set size manipulation but no condition manipulation
+  if(set_size_var != "NULL" && condition_var == "NULL"){
+
+    # ensure set size is numeric
+    final_data$set_size <- as.numeric(as.character(final_data$set_size))
+
+    plot <- ggplot(final_data, aes(x = set_size,
+                                   y = mean_precision)) +
+      geom_point() +
+      geom_errorbar(aes(ymax = mean_precision + se_precision,
+                        ymin = mean_precision - se_precision),
+                    width = 0.05) +
+      theme_bw() +
+      labs(x = "Set Size",
+           y = "Precision")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+
+  }
+
+
+
+
+  # both set size & condition manipulation
+  if(set_size_var != "NULL" && condition_var != "NULL"){
+
+
+    # ensure set size is numeric
+    final_data$set_size <- as.numeric(as.character(final_data$set_size))
+
+    # add some jitter to the plotting position
+    pd = position_dodge(0.2)
+
+    plot <- ggplot(final_data, aes(x = set_size,
+                                   y = mean_precision,
+                                   group = condition)) +
+      geom_point(aes(colour = condition),
+                 position = pd) +
+      geom_errorbar(aes(ymax = mean_precision + se_precision,
+                        ymin = mean_precision - se_precision,
+                        colour = condition),
+                    width = 0.05,
+                    position = pd) +
+      theme_bw() +
+      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      labs(x = "Set Size",
+           y = "Precision")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+    colnames(final_data)[2] <- condition_var
+
+  }
+
+
+  # return the plot & the plot data
+  return(list(plot = plot,
+              plot_data = final_data))
+
+}
+

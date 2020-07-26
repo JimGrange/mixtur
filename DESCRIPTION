@@ -10,7 +10,10 @@ Description: A set of utility functions for analysing and modelling data from
     continuous report short-term memory experiments using [enter model 
     descriptions here...]. Users are able to simulate from these models, too. 
     Helper functions are also included to assist with experiment design.
-Depends: R (>= 4.0)
+Depends: 
+  R (>= 4.0), 
+  tidyverse, 
+  RColorBrewer
 License: GPL-3
 LazyData: true
 Imports:

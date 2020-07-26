@@ -1,5 +1,37 @@
 ### various utility functions
 
+
+
+# get precision of single condition ---------------------------------------
+#' #' @export
+get_precision_single <- function(error, target = 0) {
+
+  if(any(abs(response) > pi) | any(abs(target) > pi)) {
+    stop("Error: Input values must be in radians, range -PI to PI", call. = FALSE)
+  }
+
+
+  # transform error to column vector
+  error <- tibble(error)
+
+  #--- calculate precision
+  n <- nrow(error)
+
+  # expected precision under uniform distribution
+  x <- logspace(-2, 2, 100)
+  p0 <- trapz(x, n / (sqrt(x) * exp(x + (n * exp(-x)))))
+
+  precision <- (1 / cstd(error)) - p0
+
+  # Bias
+  bias <- cmean(error)
+
+  return(data.frame(precision = precision, bias = bias))
+}
+
+
+
+
 # degrees to radians ------------------------------------------------------
 #' Transform degrees into radians
 #'
@@ -17,6 +49,8 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #' @param deg Radian value to transform into degrees
 #' #' @export
 radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
+
+
 
 
 
