@@ -3,7 +3,9 @@
 
 
 # get precision of single condition ---------------------------------------
-#' #' @export
+#' Obtain the precision of a single condition
+#' @importFrom tidyr tibble
+#' @export
 get_precision_single <- function(error, target = 0) {
 
   if(any(abs(error) > pi) | any(abs(target) > pi)) {
@@ -37,7 +39,7 @@ get_precision_single <- function(error, target = 0) {
 #'
 #' A function to transform degrees into radians
 #' @param deg Degree value to transform into radians
-#' #' @export
+#' @export
 degrees_to_radians <- function(deg){deg * pi / 180}
 
 
@@ -47,7 +49,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #'
 #' A function to transform radians into degrees
 #' @param deg Radian value to transform into degrees
-#' #' @export
+#' @export
 radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 
 
@@ -58,7 +60,7 @@ radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 #' Map values onto circular space
 #' This function maps the input radians onto the circular space -pi to pi.
 #' @param data The data (in radians) to be mapped
-#' #' @export
+#' @export
 wrap <- function(data, bound = pi) {
   result <- ((data + bound) %% (bound * 2)) - bound
   return(result)
@@ -68,7 +70,7 @@ wrap <- function(data, bound = pi) {
 
 # calculate circular mean -------------------------------------------------
 #' Calculate the circular equivalent of the mean
-#' #' @export
+#' @export
 cmean <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -84,7 +86,7 @@ cmean <- function(x) {
 
 # calculate the circular SD -----------------------------------------------
 #' Calculate the circular equivalent of standard deviation
-#' #' @export
+#' @export
 cstd <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -105,7 +107,7 @@ cstd <- function(x) {
 # generate random samples from vin mises ----------------------------------
 #' Generates N random samples from a Von Mises distribution with mean mu and
 #' concentration k
-#' #' @export
+#' @export
 randomvonmises <- function(n, mu, k) {
 
   x = NULL
@@ -143,7 +145,7 @@ randomvonmises <- function(n, mu, k) {
 #' Returns the probability density function for the Von Mises distribution with
 #' mean MU and concentration K, evaluated at the values in X (given in
 #' radians).
-#' #' @export
+#' @export
 vonmisespdf <- function(x, mu, k) {
   p <- exp(k * cos(x - mu)) / (2 * pi * besselI(k, 0))
   return(p)

@@ -8,8 +8,7 @@ This function maps the input radians onto the circular space -pi to pi.}
 wrap(data, bound = pi)
 }
 \arguments{
-\item{data}{The data (in radians) to be mapped
-#' @export}
+\item{data}{The data (in radians) to be mapped}
 }
 \description{
 Map values onto circular space

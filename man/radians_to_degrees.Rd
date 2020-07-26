@@ -7,8 +7,7 @@
 radians_to_degrees(rad)
 }
 \arguments{
-\item{deg}{Radian value to transform into degrees
-#' @export}
+\item{deg}{Radian value to transform into degrees}
 }
 \description{
 A function to transform radians into degrees

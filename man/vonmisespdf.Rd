@@ -5,8 +5,7 @@
 \title{Probability density function of the Von Mises distribution.
 Returns the probability density function for the Von Mises distribution with
 mean MU and concentration K, evaluated at the values in X (given in
-radians).
-#' @export}
+radians).}
 \usage{
 vonmisespdf(x, mu, k)
 }
@@ -15,5 +14,4 @@ Probability density function of the Von Mises distribution.
 Returns the probability density function for the Von Mises distribution with
 mean MU and concentration K, evaluated at the values in X (given in
 radians).
-#' @export
 }

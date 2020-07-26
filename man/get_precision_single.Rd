@@ -2,10 +2,10 @@
 % Please edit documentation in R/utilities.R
 \name{get_precision_single}
 \alias{get_precision_single}
-\title{#' @export}
+\title{Obtain the precision of a single condition}
 \usage{
 get_precision_single(error, target = 0)
 }
 \description{
-#' @export
+Obtain the precision of a single condition
 }

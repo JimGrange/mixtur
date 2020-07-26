@@ -1,0 +1,100 @@
+---
+title: "Plotting behavioural data"
+author: "Jim Grange & Stuart Moore"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Plotting response error
+
+```{r, fig.width = 6, fig.height = 6}
+library(mixtur)
+
+# example data
+data(example_data)
+
+# plot overall error
+plot_error(data = example_data, 
+           unit = "degrees", 
+           condition_var = "NULL", 
+           set_size_var = "NULL")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# plot error by condition (condition b is easier than condition a)
+plot_error(data = example_data, 
+           unit = "degrees", 
+           condition_var = "condition", 
+           set_size = "NULL")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# sample of bays (2009) data
+data("bays2009_sample")
+plot_error(data = bays2009_sample, 
+           unit = "radians", 
+           condition_var = "NULL", 
+           set_size_var = "NULL")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# bays (2009) full data set
+data(bays2009_full)
+
+plot_error(data = bays2009_full,
+           unit = "radians",
+           set_size_var = "set_size", 
+           condition_var = "NULL")
+```
+
+
+```{r, fig.width = 6, fig.height = 6}
+# by set size & condition
+
+plot_error(data = bays2009_full,
+           unit = "radians",
+           set_size_var = "set_size", 
+           condition_var = "delay")
+```
+
+## Plotting precision of reponses
+
+```{r, fig.width = 6, fig.height = 6}
+data <- bays2009_full
+# plot just mean
+plot_precision(data, unit = "radians",
+               condition_var = "NULL",
+               set_size = "NULL")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# plot just set size
+plot_precision(data, unit = "radians",
+               condition_var = "NULL",
+               set_size_var = "set_size")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# plot just condition (delay)
+plot_precision(data, unit = "radians",
+               condition_var = "delay",
+               set_size_var = "NULL")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+# plot set size AND condition
+plot_precision(data, unit = "radians",
+               condition_var = "delay",
+               set_size_var = "set_size")
+```
+
+```{r, fig.width = 6, fig.height = 6}
+data <- example_data
+plot_precision(data, unit = "degrees", 
+               condition_var = "condition")
+
+```

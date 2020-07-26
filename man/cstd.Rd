@@ -2,12 +2,10 @@
 % Please edit documentation in R/utilities.R
 \name{cstd}
 \alias{cstd}
-\title{Calculate the circular equivalent of standard deviation
-#' @export}
+\title{Calculate the circular equivalent of standard deviation}
 \usage{
 cstd(x)
 }
 \description{
 Calculate the circular equivalent of standard deviation
-#' @export
 }

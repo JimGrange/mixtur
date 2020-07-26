@@ -3,13 +3,11 @@
 \name{randomvonmises}
 \alias{randomvonmises}
 \title{Generates N random samples from a Von Mises distribution with mean mu and
-concentration k
-#' @export}
+concentration k}
 \usage{
 randomvonmises(n, mu, k)
 }
 \description{
 Generates N random samples from a Von Mises distribution with mean mu and
 concentration k
-#' @export
 }

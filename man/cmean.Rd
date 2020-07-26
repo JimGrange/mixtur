@@ -2,12 +2,10 @@
 % Please edit documentation in R/utilities.R
 \name{cmean}
 \alias{cmean}
-\title{Calculate the circular equivalent of the mean
-#' @export}
+\title{Calculate the circular equivalent of the mean}
 \usage{
 cmean(x)
 }
 \description{
 Calculate the circular equivalent of the mean
-#' @export
 }

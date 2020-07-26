@@ -7,6 +7,7 @@
 #'
 #'Function to plot the response error in behavioural data. Requires a data
 #'frame that (at least) has target value data and participant response data.
+#' TODO: Check for updates.
 #'
 #' @param data A data frame with columns containing: participant identifier
 #' ('id_var'); the participants' response per trial ('response_var'); the
@@ -29,6 +30,12 @@
 #'library(tidyverse)
 #'data(example_data)
 #'plot_error(example_data, condition_var = "condition")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom graphics hist
 #' @export
 plot_error <- function(data,
                        unit = "degrees",
@@ -241,7 +248,41 @@ plot_error <- function(data,
 
 
 
+
+
+
 # plot behavioural precision ----------------------------------------------
+#' Plot precision behavioural data
+#'
+#'This note is a TODO for later.
+#'
+#' @param data A data frame with columns containing: participant identifier
+#' ('id_var'); the participants' response per trial ('response_var'); the
+#' target value ('target_var'); and, if applicable, the set size of each
+#' response ('set_size_var'), and the condition of each response
+#' ('condition_var').
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); "radians" (measurement is in radians,
+#'from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
+#'wrapped from -pi to pi)
+#'@param id_var The column name coding for participant id.
+#'@param response_var The column name coding for the participants' responses
+#'@param target_var The column name coding for the target value
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response
+#'@examples
+#'library(tidyverse)
+#'data(example_data)
+#'plot_error(example_data, condition_var = "condition")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom graphics hist
 #' @export
 plot_precision <- function(data,
                            unit = "degrees",
