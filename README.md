@@ -79,7 +79,7 @@ plot_error(data = example_data,
 #> $plot
 ```
 
-![](README-unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -113,7 +113,7 @@ plot_error(data = example_data,
 #> $plot
 ```
 
-![](README-unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -143,7 +143,7 @@ plot_error(data = bays2009_sample,
 #> $plot
 ```
 
-![](README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -179,7 +179,7 @@ plot_error(data = bays2009_full,
 #> $plot
 ```
 
-![](README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -209,7 +209,7 @@ plot_error(data = bays2009_full,
 #> $plot
 ```
 
-![](README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -255,7 +255,7 @@ plot_precision(data, unit = "radians",
 #> $plot
 ```
 
-![](README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -275,7 +275,7 @@ plot_precision(data, unit = "radians",
 #> $plot
 ```
 
-![](README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -294,7 +294,7 @@ plot_precision(data, unit = "radians",
 #> $plot
 ```
 
-![](README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
     #> 
     #> $plot_data
@@ -322,7 +322,7 @@ plot_precision(data, unit = "degrees",
 #> $plot
 ```
 
-![](README-unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
 
     #> 
     #> $plot_data
