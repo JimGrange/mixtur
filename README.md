@@ -5,6 +5,14 @@
 and modelling data from continuous report visual short-term memory
 studies.
 
+Overview of README:
+
+  - [How to install the package](#installation)
+  - [An overview of continuous report tasks](#continuous-report-tasks)
+  - [Example data shipped with mixtur](#example-data)
+  - [Plotting response error](#plotting-response-error)
+  - [Plotting response precision](#plotting-precision-of-responses)
+
 ## Installation
 
 To install the package from GitHub, you need the devtools package:
@@ -22,20 +30,21 @@ devtools::install_github("JimGrange/mixtur")
 
 ## Continuous Report Tasks
 
-![](images/overview.png)
+The package is designed to assist researchers using continuous report
+measures of visual short term memory. In continuous report tasks,
+participants are presented with an encoding screen with items to
+remember (in the example below, the participants need to recall the
+colours of the squares). After a retention interval, one of the items is
+probed (highlighted here by the darkened square), and the participants’
+task is to recall the feature value (e.g., colour) of the probed item.
 
-In continuous report tasks, participants are presented with an encoding
-screen with items to remember (in this example, the participants need to
-recall the colours of the squares). After a retention interval, one of
-the squares is probed (highlighted here by the darkened square), and the
-participants’ task is to recall the colour of the probed item.
+![](images/overview.png)
 
 The participant makes their response on a colour wheel, and the
 dependent variable is the angular deviation between the participant’s
-response (R) and the true target value (T) in radians.
-
-After many trials, a probability density distribution can be formed of
-the response errors across participants.
+response (R) and the true target value (T). After many trials, a
+probability density distribution can be formed of the response errors
+across participants.
 
 ## Example Data
 
@@ -43,10 +52,15 @@ the response errors across participants.
 familiarise themselves with the package:
 
   - **bays2009\_full**: The full data set from Bays et al. (2009)
-    including set size manipulations (1, 2, 4, and 6 items) plus a
-    manipulation of *delay* of the retention interval (100ms, 500ms, and
-    2,000ms).
-  - **bays2009\_sample**: A sample from Bays et al. (2009).
+    including data from 12 participants. The data includes set size
+    manipulations (1, 2, 4, and 6 items) plus a manipulation of *delay*
+    of the retention interval (100ms, 500ms, and 2,000ms). The response,
+    target, and non-target values are in radians (-pi to pi).
+  - **bays2009\_sample**: A sample of data taken from the full data from
+    Bays et al. (2009). This data just consists of set sizes of 4 and
+    delay of 500ms. This sample data is provided if the user wishes to
+    interact with a simpler data structure. The response, target, and
+    non-target values are in radians (-pi to pi).
 
 Data can be loaded in the following way:
 
@@ -63,7 +77,7 @@ head(bays2009_sample)
 #> 6  1    1.219  1.253        2.886       -0.924       -1.035
 ```
 
-## Plotting response error
+## Plotting Response Error
 
 ``` r
 library(mixtur)
@@ -124,7 +138,7 @@ plot_error(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
-## Plotting precision of reponses
+## Plotting Precision of Reponses
 
 ``` r
 data <- bays2009_full

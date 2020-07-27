@@ -7,7 +7,6 @@
 #'
 #'Function to plot the response error in behavioural data. Requires a data
 #'frame that (at least) has target value data and participant response data.
-#' TODO: Check for updates.
 #'
 #' @param data A data frame with columns containing: participant identifier
 #' ('id_var'); the participants' response per trial ('response_var'); the
@@ -19,7 +18,8 @@
 #'degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 #'from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
 #'wrapped from -pi to pi).
-#'@param id_var The column name coding for participant id.
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
 #'@param response_var The column name coding for the participants' responses.
 #'@param target_var The column name coding for the target value.
 #'@param set_size_var The column name (if applicable) coding for the set
@@ -29,7 +29,6 @@
 #'@param return_data A boolean indicating whether the data for the plot should
 #'be returned.
 #'@examples
-#'library(tidyverse)
 #'data(example_data)
 #'plot_error(example_data, condition_var = "condition")
 #'
@@ -86,13 +85,23 @@ plot_error <- function(data,
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
 
-    final_data <- data %>%
-      group_by(id) %>%
-      summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-      group_by(x) %>%
-      summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    } else{
+      final_data <- data %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    }
+
   }
 
   # no set size manipulation but there is a condition manipulation
@@ -100,13 +109,24 @@ plot_error <- function(data,
 
     data$condition <- as.factor(data[[condition_var]])
 
-    final_data <- data %>%
-      group_by(id, condition) %>%
-      summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-      group_by(condition, x) %>%
-      summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, condition) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(condition, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    } else{
+      final_data <- data %>%
+        group_by(condition) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(condition, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    }
+
   }
 
 
@@ -114,27 +134,50 @@ plot_error <- function(data,
   if(set_size_var != "NULL" && condition_var == "NULL"){
     data$set_size <- data[[set_size_var]]
 
-    final_data <- data %>%
-      group_by(id, set_size) %>%
-      summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-      group_by(set_size, x) %>%
-      summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, set_size) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(set_size, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    } else{
+      final_data <- data %>%
+        group_by(set_size) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(set_size, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    }
+
   }
+
 
   # both set size & condition manipulation
   if(set_size_var != "NULL" && condition_var != "NULL"){
     data$set_size <- data[[set_size_var]]
     data$condition <- as.factor(data[[condition_var]])
 
-    final_data <- data %>%
-      group_by(id, condition, set_size) %>%
-      summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-      group_by(set_size, condition, x) %>%
-      summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, condition, set_size) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(set_size, condition, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    } else{
+      final_data <- data %>%
+        group_by(condition, set_size) %>%
+        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(set_size, condition, x) %>%
+        summarise(mean_error = mean(y),
+                  se_error = (sd(y) / sqrt(length(y))))
+    }
+
   }
 
 
@@ -257,17 +300,18 @@ plot_error <- function(data,
 #'
 #'This note is a TODO for later.
 #'
-#' @param data A data frame with columns containing: participant identifier
-#' ('id_var'); the participants' response per trial ('response_var'); the
-#' target value ('target_var'); and, if applicable, the set size of each
-#' response ('set_size_var'), and the condition of each response
-#' ('condition_var').
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'target value ('target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
 #'@param unit The unit of measurement in the data frame: "degrees"
 #'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 #'degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 #'from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
 #'wrapped from -pi to pi)
-#'@param id_var The column name coding for participant id.
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
 #'@param response_var The column name coding for the participants' responses
 #'@param target_var The column name coding for the target value
 #'@param set_size_var The column name (if applicable) coding for the set
@@ -328,31 +372,55 @@ plot_precision <- function(data,
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
 
-    final_data <- data %>%
-      group_by(id) %>%
-      summarise(precision = get_precision_single(error)[, 1],
-                bias = get_precision_single(error)[, 2]) %>%
-      summarise(mean_precision = mean(precision),
-                se_precision = sd(precision) / sqrt(length(precision)),
-                mean_bias = mean(bias),
-                se_bias = sd(bias) / sqrt(length(bias)))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    } else{
+      final_data <- data %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    }
 
   }
+
 
   # no set size manipulation but there is a condition manipulation
   if(set_size_var == "NULL" && condition_var != "NULL"){
 
     data$condition <- as.factor(data[[condition_var]])
 
-    final_data <- data %>%
-      group_by(id, condition) %>%
-      summarise(precision = get_precision_single(error)[, 1],
-                bias = get_precision_single(error)[, 2]) %>%
-      group_by(condition) %>%
-      summarise(mean_precision = mean(precision),
-                se_precision = sd(precision) / sqrt(length(precision)),
-                mean_bias = mean(bias),
-                se_bias = sd(bias) / sqrt(length(bias)))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, condition) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(condition) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    } else{
+      final_data <- data %>%
+        group_by(condition) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(condition) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    }
+
   }
 
 
@@ -361,15 +429,27 @@ plot_precision <- function(data,
 
     data$set_size <- data[[set_size_var]]
 
-    final_data <- data %>%
-      group_by(id, set_size) %>%
-      summarise(precision = get_precision_single(error)[, 1],
-                bias = get_precision_single(error)[, 2]) %>%
-      group_by(set_size) %>%
-      summarise(mean_precision = mean(precision),
-                se_precision = sd(precision) / sqrt(length(precision)),
-                mean_bias = mean(bias),
-                se_bias = sd(bias) / sqrt(length(bias)))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, set_size) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(set_size) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    } else{
+      final_data <- data %>%
+        group_by(set_size) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(set_size) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    }
 
   }
 
@@ -379,28 +459,36 @@ plot_precision <- function(data,
     data$set_size <- data[[set_size_var]]
     data$condition <- as.factor(data[[condition_var]])
 
-    final_data <- data %>%
-      group_by(id, condition, set_size) %>%
-      summarise(precision = get_precision_single(error)[, 1],
-                bias = get_precision_single(error)[, 2]) %>%
-      group_by(set_size, condition) %>%
-      summarise(mean_precision = mean(precision),
-                se_precision = sd(precision) / sqrt(length(precision)),
-                mean_bias = mean(bias),
-                se_bias = sd(bias) / sqrt(length(bias)))
+    if(id_var != "NULL"){
+      final_data <- data %>%
+        group_by(id, condition, set_size) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    } else{
+      final_data <- data %>%
+        group_by(condition, set_size) %>%
+        summarise(precision = get_precision_single(error)[, 1],
+                  bias = get_precision_single(error)[, 2]) %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_precision = mean(precision),
+                  se_precision = sd(precision) / sqrt(length(precision)),
+                  mean_bias = mean(bias),
+                  se_bias = sd(bias) / sqrt(length(bias)))
+    }
 
-
-  }
+}
 
 
   # plot the data----
 
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
-
-
     plot <- "NULL"
-
   }
 
 
@@ -448,7 +536,6 @@ plot_precision <- function(data,
   # both set size & condition manipulation
   if(set_size_var != "NULL" && condition_var != "NULL"){
 
-
     # ensure set size is numeric
     final_data$set_size <- as.numeric(as.character(final_data$set_size))
 
@@ -485,4 +572,3 @@ plot_precision <- function(data,
   }
 
 }
-
