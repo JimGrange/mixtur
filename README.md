@@ -359,12 +359,4 @@ plot_precision(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
-``` r
-data <- example_data
-plot_precision(data, unit = "degrees", 
-               condition_var = "condition")
-```
-
-![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
-
 ## References
