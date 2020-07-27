@@ -10,6 +10,8 @@ Overview of README:
   - [How to install the package](#installation)
   - [An overview of continuous report tasks](#continuous-report-tasks)
   - [Example data shipped with mixtur](#example-data)
+  - [An overview of data structures in
+    mixtur](#data-structures-in-mixtur)
   - [Plotting response error](#plotting-response-error)
   - [Plotting response precision](#plotting-precision-of-responses)
 
@@ -60,7 +62,7 @@ familiarise themselves with the package:
     Bays et al. (2009). This data just consists of set sizes of 4 and
     delay of 500ms. This sample data is provided if the user wishes to
     interact with a simpler data structure. The response, target, and
-    non-target values are in radians (-pi to pi).
+    non-target values are in radians (-PI to PI).
 
 Data can be loaded in the following way:
 
@@ -77,7 +79,38 @@ head(bays2009_sample)
 #> 6  1    1.219  1.253        2.886       -0.924       -1.035
 ```
 
+## Data Structures in mixtur
+
+**mixtur** has some flexibility in the data structures it can deal with,
+but you need to tell **mixtur** some things about your data so it can
+work. The data should be in long format (where rows indicate separate
+trials, and columns indicate trial information). Typically the data
+should have the following columns (note your columns do not necessarily
+need these names as you can set this within function calls; see examples
+later).
+
+  - **id:** A column indicating the participant numbers / identifiers.
+  - **response:** A column providing the participant response. This can
+    either be in degrees (i.e., 1-360), degrees limited to the range
+    1-180 (i.e., if your experiment uses bar orientations), or radians
+    (typically in the range 0-2PI, but could also be -PI to PI).
+  - **target:** A column providing the target value. This will be used
+    to calculate response error (i.e., the deviation between the
+    participant’s response and the target value).
+  - **non-target:** NEED TO WORK ON THIS IN THE MODELLING SECTION.
+  - **set-size:** A column indicating the current trial’s set size
+    (i.e., number of items to remember during the encoding phase), if
+    your experiment manipulated this.
+  - **other condition:** A colum indicating the current trial’s
+    condition if your experiment had an additional manipulation (for
+    example the *delay* of the retention interval, as in the Bays
+    \[2009\] data).
+
 ## Plotting Response Error
+
+Response error refers to the angular deviation between the participant’s
+response and the location of the true target value (i.e., where
+participants *should* have responded).
 
 ``` r
 library(mixtur)
