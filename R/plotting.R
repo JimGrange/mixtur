@@ -197,7 +197,7 @@ plot_error <- function(data,
       scale_y_continuous(limits = c(0,
                                     max(final_data$mean_error) +
                                       max(final_data$se_error))) +
-      labs(x = "Mean Error (Radians)",
+      labs(x = "Error (Radians)",
            y = "Probability Density")
 
   }
@@ -216,7 +216,7 @@ plot_error <- function(data,
       scale_y_continuous(limits = c(0,
                                     max(final_data$mean_error) +
                                       max(final_data$se_error))) +
-      labs(x = "Mean Error (Radians)",
+      labs(x = "Error (Radians)",
            y = "Probability Density") +
       facet_wrap(vars(condition), ncol = 4)
 
@@ -240,7 +240,7 @@ plot_error <- function(data,
       scale_y_continuous(limits = c(0,
                                     max(final_data$mean_error) +
                                       max(final_data$se_error))) +
-      labs(x = "Mean Error (Radians)",
+      labs(x = "Error (Radians)",
            y = "Probability Density") +
       facet_wrap(vars(set_size), ncol = 4)
 
@@ -273,7 +273,7 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       scale_colour_brewer(palette = "Dark2", name = condition_var) +
       guides(fill=guide_legend(title="New Legend Title")) +
-      labs(x = "Mean Error (Radians)",
+      labs(x = "Error (Radians)",
            y = "Probability Density") +
       facet_wrap(vars(set_size))
 

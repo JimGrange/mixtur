@@ -24,11 +24,11 @@ response ('set_size_var'), and the condition of each response
 
 \item{unit}{The unit of measurement in the data frame: "degrees"
 (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
-degrees, but limited to 0 to 180); "radians" (measurement is in radians,
-from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
-wrapped from -pi to pi)}
+degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+from pi to 2 * pi, but could also be already in -pi to pi).}
 
-\item{id_var}{The column name coding for participant id.}
+\item{id_var}{The column name coding for participant id. If the data is from
+a single participant (i.e., there is no id column) set to "NULL".}
 
 \item{response_var}{The column name coding for the participants' responses}
 
