@@ -110,32 +110,35 @@ later).
 
 Response error refers to the angular deviation between the participant’s
 response and the location of the true target value (i.e., where
-participants *should* have responded).
+participants *should* have responded). The plot functions returns the
+probability density of response error averaged across participants
+together with standard errors. (Unless told otherwise, **mixtur** will
+assume you have multiple participants in your data, and will therefore
+average across these participants.)
 
-``` r
-library(mixtur)
+The function—*plot\_error*—takes the following arguments:
 
-# example data
-data(example_data)
+  - **data:** A data frame containing the data that is to be plotted.
+    See the \[data structure section\]((\#data-structures-in-mixtur) for
+    how this should be formatted.
+  - **unit:** A character variable indicating the unit of measurement in
+    the data. **mixtur** accepts units in degrees (1-360), degrees\_180
+    capped at 180 (1-180), and radians (either 0-2PI or -PI to PI).
+    Defaults to “degrees”.
+  - **id\_var:** A character variable indicating the column name that
+    codes for participant identification. Defaults to “id”.
+  - **response\_var:** A character variable indicating the column name
+    that codes for participants’ responses. Defaults to “response”.
+  - **target\_var:** A character variable indicating the column name
+    that codes for the target value. Defaults to “target”.
+  - **set\_size\_var:** If set size was manipulated, a character
+    variable indicating the column name that codes for the set size.
+    Defaults to “NULL”.
+  - **conditon\_var:** If an additional condition was manipulated, a
+    character indicating the column name that codes for this condition.
+    Defaults to “NULL”.
 
-# plot overall error
-plot_error(data = example_data, 
-           unit = "degrees", 
-           condition_var = "NULL", 
-           set_size_var = "NULL")
-```
-
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
-
-``` r
-# plot error by condition (condition b is easier than condition a)
-plot_error(data = example_data, 
-           unit = "degrees", 
-           condition_var = "condition", 
-           set_size = "NULL")
-```
-
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+<!-- end list -->
 
 ``` r
 # sample of bays (2009) data
@@ -146,7 +149,7 @@ plot_error(data = bays2009_sample,
            set_size_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
 # bays (2009) full data set
@@ -158,7 +161,7 @@ plot_error(data = bays2009_full,
            condition_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 # by set size & condition
@@ -169,7 +172,7 @@ plot_error(data = bays2009_full,
            condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ## Plotting Precision of Reponses
 
@@ -189,7 +192,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 # plot just condition (delay)
@@ -198,7 +201,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 # plot set size AND condition
@@ -207,7 +210,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 data <- example_data
@@ -215,6 +218,6 @@ plot_precision(data, unit = "degrees",
                condition_var = "condition")
 ```
 
-![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 ## References
