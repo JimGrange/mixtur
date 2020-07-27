@@ -119,8 +119,8 @@ average across these participants.)
 The function—*plot\_error*—takes the following arguments:
 
   - **data:** A data frame containing the data that is to be plotted.
-    See the \[data structure section\]((\#data-structures-in-mixtur) for
-    how this should be formatted.
+    See the [data structure section](#data-structures-in-mixtur) for how
+    this should be formatted.
   - **unit:** A character variable indicating the unit of measurement in
     the data. **mixtur** accepts units in degrees (1-360), degrees\_180
     capped at 180 (1-180), and radians (either 0-2PI or -PI to PI).
@@ -137,42 +137,123 @@ The function—*plot\_error*—takes the following arguments:
   - **conditon\_var:** If an additional condition was manipulated, a
     character indicating the column name that codes for this condition.
     Defaults to “NULL”.
+  - **return\_data:** A logical variable (“TRUE” or “FALSE”) indicating
+    whether the plot data should be returned by the function. By
+    default, the function will just return the plot itself (i.e.,
+    return\_data = “FALSE”), but having the data returned allows the
+    user to customise the plots further.
 
-<!-- end list -->
+### Examples
+
+In the following we use the example data sets shipped with **mixtur**.
+
+In a first example, we will use just the sample data from Bays et
+al. (2009). Recall that the units in this data are in radians, so we
+need to inform **mixtur** of this in the function call. As there was no
+set size manipulation in this sample, and no other condition
+manipulation, we do not need to set any other variables.
 
 ``` r
-# sample of bays (2009) data
-data("bays2009_sample")
+# load the sample of bays (2009) data
+data(bays2009_sample)
+
+# do the plotting
 plot_error(data = bays2009_sample, 
-           unit = "radians", 
-           condition_var = "NULL", 
-           set_size_var = "NULL")
+           unit = "radians")
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
+If you wish to receive the data underpinning the plot, save the
+plot\_error call to a new variable and set *return\_data* to TRUE.
+
 ``` r
-# bays (2009) full data set
+my_data <- plot_error(data = bays2009_sample, 
+                      unit = "radians",
+                      return_data = TRUE)
+```
+
+The data can then be accessed in the following way:
+
+``` r
+my_data$data
+#> # A tibble: 17 x 3
+#>         x mean_error se_error
+#>     <dbl>      <dbl>    <dbl>
+#>  1 -2.96      0.0392   0.0148
+#>  2 -2.59      0.0267   0.0106
+#>  3 -2.22      0.0386   0.0175
+#>  4 -1.85      0.0504   0.0222
+#>  5 -1.48      0.0599   0.0182
+#>  6 -1.11      0.0514   0.0165
+#>  7 -0.739     0.144    0.0261
+#>  8 -0.370     0.449    0.0480
+#>  9  0         0.902    0.0655
+#> 10  0.370     0.464    0.0394
+#> 11  0.739     0.171    0.0225
+#> 12  1.11      0.0880   0.0240
+#> 13  1.48      0.0611   0.0171
+#> 14  1.85      0.0323   0.0110
+#> 15  2.22      0.0675   0.0159
+#> 16  2.59      0.0277   0.0128
+#> 17  2.96      0.0331   0.0137
+```
+
+In the full data set, Bays et al. (2009) also had a set-size
+manipulation. Participants were presented with either 1, 2, 4, or 6
+items to remember in the encoding phase. To plot how response error
+varies by set size, we need to tell the plot\_error function the column
+name that codes for our set size variable. Note that in the example the
+column name is usefully set as *set\_size*, but it needn’t be this
+useful (it could—for example—be as ridiculous as *womble*); just tell
+**mixtur** what it is called and it will do the rest\!
+
+``` r
+# load bays (2009) full data set
 data(bays2009_full)
 
+# do the plotting
 plot_error(data = bays2009_full,
            unit = "radians",
            set_size_var = "set_size", 
            condition_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+
+Maybe your experiment didn’t manipulate set size, but it did manipulate
+something else. In the full data set of Bays et al. (2009) they
+manipulated the *delay* of the retention interval. To plot how response
+error varies by a factor other than set size, we need to tell the
+plot\_error function the column name that codes for it (using the
+*condition\_var* variable):
 
 ``` r
-# by set size & condition
+# plot response error by condition
+plot_error(data = bays2009_full,
+           unit = "radians",
+           condition_var = "delay")
+```
 
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+
+Maybe your experiment manipulated both set size AND an additional
+condition. No worries; **mixtur** can handle this. By default the
+plot\_error function will return a plot where the *set\_size* variable
+is represented by different panels, and the *condition* variable is
+represented by different colours within the plots. At the moment this is
+the default and only behaviour; if you wish to customise the plots
+please use the *return\_data* variable.
+
+``` r
+# plot response error by set size & condition
 plot_error(data = bays2009_full,
            unit = "radians",
            set_size_var = "set_size", 
            condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
 ## Plotting Precision of Reponses
 
@@ -192,7 +273,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 # plot just condition (delay)
@@ -201,7 +282,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 # plot set size AND condition
@@ -210,7 +291,7 @@ plot_precision(data, unit = "radians",
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 data <- example_data
@@ -218,6 +299,6 @@ plot_precision(data, unit = "degrees",
                condition_var = "condition")
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
 
 ## References
