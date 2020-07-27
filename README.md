@@ -257,41 +257,107 @@ plot_error(data = bays2009_full,
 
 ## Plotting Precision of Reponses
 
-``` r
-data <- bays2009_full
-# plot just mean
-plot_precision(data, unit = "radians",
-               condition_var = "NULL",
-               set_size = "NULL")
-#> [1] "NULL"
-```
+Once response error is known, a formal estimate of the **precision** of
+a participant’s response is possible. Following Bays et al. (2009),
+precision is calculated as the reciprocol of the standard deviation of
+the response error distribution (calculated as SD for circular space).
+Below are two example conditions that differ in their precision:
+
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+
+Condition A has lower precision (i.e., higher SD) than Condition B. The
+arguments to pass to the function that calcualtes & plots
+precision—*plot\_precision*—are the same as for the *plot\_error*
+function.
+
+### Examples
+
+In the first example, we plot mean precision across all participants as
+a function of set size.
 
 ``` r
-# plot just set size
-plot_precision(data, unit = "radians",
-               condition_var = "NULL",
+
+# load the data
+data(bays2009_full)
+
+# plot response precision by set size
+plot_precision(data = bays2009_full, 
+               unit = "radians",
                set_size_var = "set_size")
 ```
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
+Again, if we wanted the data underlying the plot, we can ask **mixtur**
+for this:
+
+``` r
+
+# plot response precision by set size
+plot_data <- plot_precision(data = bays2009_full, 
+                            unit = "radians",
+                            set_size_var = "set_size", 
+                            return_data = TRUE)
+
+# show the data
+plot_data$data
+#> # A tibble: 4 x 5
+#>   set_size mean_precision se_precision mean_bias se_bias
+#>      <dbl>          <dbl>        <dbl>     <dbl>   <dbl>
+#> 1        1          3.39        0.243    0.00676  0.0107
+#> 2        2          1.72        0.153    0.0107   0.0114
+#> 3        4          0.820       0.0917   0.0171   0.0145
+#> 4        6          0.508       0.0555  -0.0120   0.0440
+```
+
+Note that when you return the data from a plot there is data concerning
+*bias*. This is a measure of response bias (i.e., responses with no bias
+should be near zero), and is not used further in this package.
+
+Note that if you have no conditions and no set-size manipulation, the
+plotting function doesn’t return anything. This is because in effect you
+are asking to just plot one data point, which doesn’t seem worthwhile.
+
+Instead, just ask for the plot data.
+
+``` r
+plot_data <- plot_precision(data = bays2009_full, 
+                            unit = "radians",
+                            condition_var = "NULL",
+                            set_size_var = "NULL", 
+                            return_data = TRUE)
+plot_data$data
+#> # A tibble: 1 x 4
+#>   mean_precision se_precision mean_bias se_bias
+#>            <dbl>        <dbl>     <dbl>   <dbl>
+#> 1           1.06       0.0826   0.00964 0.00864
+```
+
+In this example, we plot precision as a function of the *delay*
+condition.
+
 ``` r
 # plot just condition (delay)
-plot_precision(data, unit = "radians",
+plot_precision(data = bays2009_full, 
+               unit = "radians",
                condition_var = "delay",
                set_size_var = "NULL")
 ```
 
-![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+
+As before, if we want to plot both set size and an additional condition,
+we can do so:
 
 ``` r
 # plot set size AND condition
-plot_precision(data, unit = "radians",
+plot_precision(data = bays2009_full, 
+               unit = "radians",
                condition_var = "delay",
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 data <- example_data
@@ -299,6 +365,6 @@ plot_precision(data, unit = "degrees",
                condition_var = "condition")
 ```
 
-![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
 
 ## References

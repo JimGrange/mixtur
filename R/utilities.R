@@ -222,7 +222,7 @@ A1inv <- function(r) {
 #' Returns the standard deviation of a wrapped normal distribution
 #' corresponding to a Von Mises concentration parameter of K
 #' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
-#' #' @export
+#' @export
 k2sd <- function(k){
 
   if(k == 0){
@@ -233,7 +233,7 @@ k2sd <- function(k){
     s <- sqrt(-2 * log(besselI(k, 1) / besselI(k, 0)))
   }
 
-  return(S)
+  return(s)
 
 }
 
@@ -244,7 +244,7 @@ k2sd <- function(k){
 #' Returns the Von Mises concentration parameter K corresponding
 #' to a standard deviation S of a wrapped normal distributions
 #' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
-#' #' @export
+#' @export
 sd2k <- function(s){
 
   r <- exp(-s ^ 2 / 2)
