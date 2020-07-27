@@ -11,7 +11,8 @@ plot_precision(
   response_var = "response",
   target_var = "target",
   set_size_var = "NULL",
-  condition_var = "NULL"
+  condition_var = "NULL",
+  return_data = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ size of each response}
 
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response}
+
+\item{return_data}{A boolean indicating whether the data for the plot should
+be returned.}
 }
 \description{
 This note is a TODO for later.

@@ -11,7 +11,8 @@ plot_error(
   response_var = "response",
   target_var = "target",
   set_size_var = "NULL",
-  condition_var = "NULL"
+  condition_var = "NULL",
+  return_data = FALSE
 )
 }
 \arguments{
@@ -25,19 +26,22 @@ response ('set_size_var'), and the condition of each response
 (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
-wrapped from -pi to pi)}
+wrapped from -pi to pi).}
 
 \item{id_var}{The column name coding for participant id.}
 
-\item{response_var}{The column name coding for the participants' responses}
+\item{response_var}{The column name coding for the participants' responses.}
 
-\item{target_var}{The column name coding for the target value}
+\item{target_var}{The column name coding for the target value.}
 
 \item{set_size_var}{The column name (if applicable) coding for the set
-size of each response}
+size of each response.}
 
 \item{condition_var}{The column name (if applicable) coding for the
-condition of each response}
+condition of each response.}
+
+\item{return_data}{A boolean indicating whether the data for the plot should
+be returned.}
 }
 \description{
 Function to plot the response error in behavioural data. Requires a data

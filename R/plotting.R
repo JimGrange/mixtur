@@ -18,14 +18,16 @@
 #'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 #'degrees, but limited to 0 to 180); "radians" (measurement is in radians,
 #'from pi to 2 * pi); "wrapped_radians" (measurement is in radians, but
-#'wrapped from -pi to pi)
+#'wrapped from -pi to pi).
 #'@param id_var The column name coding for participant id.
-#'@param response_var The column name coding for the participants' responses
-#'@param target_var The column name coding for the target value
+#'@param response_var The column name coding for the participants' responses.
+#'@param target_var The column name coding for the target value.
 #'@param set_size_var The column name (if applicable) coding for the set
-#'size of each response
+#'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
-#'condition of each response
+#'condition of each response.
+#'@param return_data A boolean indicating whether the data for the plot should
+#'be returned.
 #'@examples
 #'library(tidyverse)
 #'data(example_data)
@@ -43,7 +45,8 @@ plot_error <- function(data,
                        response_var = "response",
                        target_var = "target",
                        set_size_var = "NULL",
-                       condition_var = "NULL"){
+                       condition_var = "NULL",
+                       return_data = FALSE){
 
 
   # establish the break points of the density plot
@@ -78,7 +81,7 @@ plot_error <- function(data,
 
 
 
-# find mean error ---------------------------------------------------------
+  # find mean error ----
 
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
@@ -136,8 +139,7 @@ plot_error <- function(data,
 
 
 
-# plot the data -----------------------------------------------------------
-
+  # plot the data ----
 
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
@@ -240,14 +242,13 @@ plot_error <- function(data,
   }
 
   # return the plot & the plot data
-  return(list(plot = plot,
-              plot_data = final_data))
+  if(return_data == TRUE){
+    return(list(plot = plot, data = final_data))
+  } else {
+    return(plot)
+  }
 
 }
-
-
-
-
 
 
 
@@ -273,6 +274,8 @@ plot_error <- function(data,
 #'size of each response
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response
+#'@param return_data A boolean indicating whether the data for the plot should
+#'be returned.
 #'@examples
 #'library(tidyverse)
 #'data(example_data)
@@ -290,7 +293,8 @@ plot_precision <- function(data,
                            response_var = "response",
                            target_var = "target",
                            set_size_var = "NULL",
-                           condition_var = "NULL"){
+                           condition_var = "NULL",
+                           return_data = FALSE){
 
   # get the list of participant ids
   ids <- unique(data[[id_var]])
@@ -441,8 +445,6 @@ plot_precision <- function(data,
   }
 
 
-
-
   # both set size & condition manipulation
   if(set_size_var != "NULL" && condition_var != "NULL"){
 
@@ -476,8 +478,11 @@ plot_precision <- function(data,
 
 
   # return the plot & the plot data
-  return(list(plot = plot,
-              plot_data = final_data))
+  if(return_data == TRUE){
+    return(list(plot = plot, data = final_data))
+  } else {
+    return(plot)
+  }
 
 }
 
