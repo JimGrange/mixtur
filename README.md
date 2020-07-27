@@ -12,8 +12,12 @@ Overview of README:
   - [Example data shipped with mixtur](#example-data)
   - [An overview of data structures in
     mixtur](#data-structures-in-mixtur)
-  - [Plotting response error](#plotting-response-error)
-  - [Plotting response precision](#plotting-precision-of-responses)
+  - [Plotting behavioural data](#plotting)
+      - [Plotting response error](#plotting-response-error)
+      - [Plotting response precision](#plotting-precision-of-responses)
+  - [Modelling data](#modelling)
+      - [2-component mixture models](#two-component-mixture-models)
+      - [3-component mixture models](#three-component-mixture-models)
 
 ## Installation
 
@@ -106,7 +110,9 @@ later).
     example the *delay* of the retention interval, as in the Bays
     \[2009\] data).
 
-## Plotting Response Error
+## Plotting
+
+### Plotting Response Error
 
 Response error refers to the angular deviation between the participant’s
 response and the location of the true target value (i.e., where
@@ -143,7 +149,7 @@ The function—*plot\_error*—takes the following arguments:
     return\_data = “FALSE”), but having the data returned allows the
     user to customise the plots further.
 
-### Examples
+#### Examples
 
 In the following we use the example data sets shipped with **mixtur**.
 
@@ -255,7 +261,7 @@ plot_error(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
-## Plotting Precision of Reponses
+### Plotting Precision of Reponses
 
 Once response error is known, a formal estimate of the **precision** of
 a participant’s response is possible. Following Bays et al. (2009),
@@ -270,7 +276,7 @@ arguments to pass to the function that calcualtes & plots
 precision—*plot\_precision*—are the same as for the *plot\_error*
 function.
 
-### Examples
+#### Examples
 
 In the first example, we plot mean precision across all participants as
 a function of set size.
@@ -358,5 +364,17 @@ plot_precision(data = bays2009_full,
 ```
 
 ![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+
+## Modelling
+
+Coming soon\!
+
+### Two-Component Mixture Models
+
+Coming soon\!
+
+### Three-Component Mixture Models
+
+Coming soon\!
 
 ## References
