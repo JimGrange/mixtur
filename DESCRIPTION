@@ -16,6 +16,8 @@ Depends:
   RColorBrewer
 Imports:
   tidyverse, 
+  dplyr, 
+  tidyr,
   RColorBrewer
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

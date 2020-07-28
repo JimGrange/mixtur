@@ -3,15 +3,13 @@
 \name{A1inv}
 \alias{A1inv}
 \title{Inverse of A1 function.
-This is available in the circular package but I have recreated it here from
-Bays' code
-#' @export}
+This is available in the circular package but we have recreated it here from
+Bays' code}
 \usage{
 A1inv(r)
 }
 \description{
 Inverse of A1 function.
-This is available in the circular package but I have recreated it here from
+This is available in the circular package but we have recreated it here from
 Bays' code
-#' @export
 }

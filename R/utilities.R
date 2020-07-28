@@ -17,7 +17,7 @@ get_precision_single <- function(error, target = 0) {
   error <- tibble(error)
 
   #--- calculate precision
-  n <- nrow(error)
+  n <- NROW(error)
 
   # expected precision under uniform distribution
   x <- logspace(-2, 2, 100)
@@ -93,11 +93,11 @@ cstd <- function(x) {
     stop("Error: Input values must be in radians, range -PI to PI'", call. = FALSE)
   }
 
-  if(nrow(x) == 1){
+  if(NROW(x) == 1){
     x <- t(x)
   }
 
-  r <- sqrt(sum(sin(x))^2 + sum(cos(x))^2) / nrow(x)
+  r <- sqrt(sum(sin(x))^2 + sum(cos(x))^2) / NROW(x)
   y <- sqrt(-2 * log(r))
   return(y)
 }
@@ -158,7 +158,7 @@ vonmisespdf <- function(x, mu, k) {
 #' Obtain logarithmically spaced vectors
 #' logspace function for logarithmically spaced vectors
 #' soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
-#' #' @export
+#' @export
 logspace <- function(a, b, n){
   exp(log(10) * seq(a, b, length.out = n))
 }
@@ -168,7 +168,7 @@ logspace <- function(a, b, n){
 
 # trapz function ----------------------------------------------------------
 #' trapz function from the caTools package by Jarek Tuszynski
-#' #' @export
+#' @export
 trapz <- function(x, y) {
   idx <- 2:length(x)
   return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
@@ -179,14 +179,14 @@ trapz <- function(x, y) {
 # Matlab's repmat function ------------------------------------------------
 #' Recreate Matlab's repmat function
 #' repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
-#' #' @export
+#' @export
 repmat = function(x, nn){
 
-  mx <- nrow(x)
-  nx <- ncol(x)
+  mx <- NROW(x)
+  nx <- NCOL(x)
 
   if(nn > 0){
-    return(matrix(data = x, nrow = mx, ncol = nx*nn))
+    return(matrix(data = x, nrow = mx, ncol = nx * nn))
   } else {
     return(matrix(nrow = mx, ncol = nn))
   }
@@ -195,11 +195,13 @@ repmat = function(x, nn){
 
 
 
+
+
 # inverse of A1 function --------------------------------------------------
 #' Inverse of A1 function.
-#' This is available in the circular package but I have recreated it here from
+#' This is available in the circular package but we have recreated it here from
 #' Bays' code
-#' #' @export
+#' @export
 A1inv <- function(r) {
 
   if(0 <= r & r < 0.53) {

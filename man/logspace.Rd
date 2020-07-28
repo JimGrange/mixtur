@@ -4,8 +4,7 @@
 \alias{logspace}
 \title{Obtain logarithmically spaced vectors
 logspace function for logarithmically spaced vectors
-soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
-#' @export}
+soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html}
 \usage{
 logspace(a, b, n)
 }
@@ -13,5 +12,4 @@ logspace(a, b, n)
 Obtain logarithmically spaced vectors
 logspace function for logarithmically spaced vectors
 soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
-#' @export
 }

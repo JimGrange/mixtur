@@ -3,13 +3,11 @@
 \name{repmat}
 \alias{repmat}
 \title{Recreate Matlab's repmat function
-repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
-#' @export}
+repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html}
 \usage{
 repmat(x, nn)
 }
 \description{
 Recreate Matlab's repmat function
 repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
-#' @export
 }

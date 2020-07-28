@@ -2,12 +2,10 @@
 % Please edit documentation in R/utilities.R
 \name{trapz}
 \alias{trapz}
-\title{trapz function from the caTools package by Jarek Tuszynski
-#' @export}
+\title{trapz function from the caTools package by Jarek Tuszynski}
 \usage{
 trapz(x, y)
 }
 \description{
 trapz function from the caTools package by Jarek Tuszynski
-#' @export
 }
