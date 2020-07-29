@@ -495,7 +495,7 @@ plot_precision <- function(data,
 
     plot <- ggplot(final_data, aes(x = condition,
                                    y = mean_precision)) +
-      geom_point() +
+      geom_point(size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
                     width = 0.05) +
@@ -517,7 +517,7 @@ plot_precision <- function(data,
 
     plot <- ggplot(final_data, aes(x = set_size,
                                    y = mean_precision)) +
-      geom_point() +
+      geom_point(size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
                     width = 0.05) +
@@ -544,7 +544,8 @@ plot_precision <- function(data,
                                    y = mean_precision,
                                    group = condition)) +
       geom_point(aes(colour = condition),
-                 position = pd) +
+                 position = pd,
+                 size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision,
                         colour = condition),

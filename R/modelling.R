@@ -104,12 +104,6 @@ fit_mixtur <- function(data,
         fit <- rbind(fit, set_fit)
       }
     }
-
-    fit <- fit %>%
-      mutate(condition = as.factor(condition))
-
-
-
   }
 
   # both set size & condition manipulation

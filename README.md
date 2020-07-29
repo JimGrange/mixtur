@@ -398,7 +398,7 @@ fit %>%
             se_parm = sd(p_n) / sqrt(length(p_n))) %>% 
   ggplot(aes(x = set_size, 
              y = mean_parm)) + 
-  geom_point() + 
+  geom_point(size = 2.5) + 
   geom_errorbar(aes(ymax = mean_parm + se_parm,
                     ymin = mean_parm - se_parm),
                 width = 0.05) + 
@@ -427,7 +427,7 @@ fit %>%
             se_parm = sd(p_u) / sqrt(length(p_u))) %>% 
   ggplot(aes(x = set_size, 
              y = mean_parm)) + 
-  geom_point() + 
+  geom_point(size = 2.5) + 
   geom_errorbar(aes(ymax = mean_parm + se_parm,
                     ymin = mean_parm - se_parm),
                 width = 0.05) + 
@@ -464,7 +464,8 @@ fit %>%
              y = mean_parm, 
              group = condition)) + 
   geom_point(aes(colour = condition), 
-             position = pd) + 
+             position = pd, 
+             size = 2.5) + 
   geom_line(aes(colour = condition, 
                 linetype = condition), 
             position = pd) +
@@ -491,7 +492,8 @@ fit %>%
              y = mean_parm, 
              group = condition)) + 
   geom_point(aes(colour = condition), 
-             position = pd) + 
+             position = pd, 
+             size = 2.5) + 
   geom_line(aes(colour = condition, 
                 linetype = condition), 
             position = pd) +
