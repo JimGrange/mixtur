@@ -1,17 +1,54 @@
 # fit the mixtur model ----------------------------------------------------
 #' Fit the mixture model. This is the function to be called by the user
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
 #' @export
 fit_mixtur <- function(data,
+                       unit = "degrees",
                        id_var = "id",
                        response_var = "response",
                        target_var = "target",
-                       non_target_var = "non_target",
+                       non_target_var = "NULL",
                        set_size_var = "NULL",
                        condition_var = "NULL"){
+
+  # get the non-target column names, if applicable
+  if(non_target_var != "NULL"){
+    non_target_cols <- data %>%
+      select(contains(non_target_var)) %>%
+      colnames()
+  }
+
+  # change degrees to radians
+  if(unit == "degrees"){
+    data[[response_var]] <- data[[response_var]] / 180 * pi
+    data[[target_var]] <- data[[target_var]] / 180 * pi
+
+     if(non_target_var != "NULL"){
+      data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
+    }
+
+  }
+
+  # change degrees_180 to radians
+  if(unit == "degrees_180"){
+    data[[response_var]] <- data[[response_var]] / 90 * pi
+    data[[target_var]] <- data[[target_var]] / 90 * pi
+
+    if(non_target_var != "NULL"){
+      data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
+    }
+
+  }
+
+  # TODO: Radians not in range -pi to pi
+
+
 
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
 
+    # perform the model fit
     fit <- fit_level(data)
 
   }
@@ -23,6 +60,53 @@ fit_mixtur <- function(data,
 
   # set size manipulation, but no condition manipulation
   if(set_size_var != "NULL" && condition_var == "NULL"){
+
+    # get the list of set_sizes
+    data$set_size <- data[[set_size_var]]
+    set_sizes <- unique(data[[set_size_var]])
+
+    # loop over each set size
+    for(i in 1:length(set_sizes)){
+
+      # get the current set size's data
+      set_data <- data %>%
+        filter(set_size == set_sizes[i])
+
+      # fit the model to this set size
+      if(set_sizes[i] == 1){
+        set_fit <- fit_level(set_data,
+                             id_var = "id",
+                             response_var = "response",
+                             target_var = "target",
+                             non_target_var = NULL)
+        set_fit <- set_fit %>%
+          mutate(set_size = set_sizes[i])
+      } else{
+        set_fit <- fit_level(set_data,
+                             id_var = "id",
+                             response_var = "response",
+                             target_var = "target",
+                             non_target_var = "non_target",
+                             set_size = set_sizes[i])
+        set_fit <- set_fit %>%
+          mutate(set_size = set_sizes[i])
+      }
+
+
+      # stitch data together
+      if(i == 1){
+        fit <- set_fit
+      } else {
+        fit <- rbind(fit, set_fit)
+      }
+
+
+    }
+
+
+
+
+
   }
 
   # both set size & condition manipulation
@@ -45,7 +129,8 @@ fit_level <- function(data,
                       id_var = "id",
                       response_var = "response",
                       target_var = "target",
-                      non_target_var = "non_target"){
+                      non_target_var = "non_target",
+                      set_size = 1){
 
 
   # get the participant ids
@@ -65,9 +150,22 @@ fit_level <- function(data,
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
 
-    # get the response and the target value
+    # get the response and the target values
     response <- as.matrix(df[, response_var])
-    target <- as.matrix(df[target_var])
+    target <- as.matrix(df[, target_var])
+
+    # get the non-target values for this set size if set size is above one
+
+    if(set_size > 1){
+      non_target_cols <- df %>%
+        select(starts_with(non_target_var)) %>%
+        colnames()
+
+      non_targets <- as.matrix(df[, non_target_cols])
+      colnames(non_targets) <- NULL
+      non_targets <- as.matrix(non_targets[, 1:(set_size - 1)])
+    }
+
 
     #--- pass the data to the fit function
 
@@ -78,11 +176,6 @@ fit_level <- function(data,
                        target,
                        return.ll = FALSE)
     } else {
-
-      # get the non-target columns
-      non_targets <- df %>%
-        select(starts_with(non_target_var)) %>%
-        as.matrix()
 
       # fit the model
       fit <- fit_model(response,
@@ -303,33 +396,3 @@ likelihood_function <- function(response,
               ll = LL))
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
