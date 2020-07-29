@@ -9,7 +9,8 @@ fit_level(
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  non_target_var = "non_target"
+  non_target_var = "non_target",
+  set_size = 1
 )
 }
 \description{

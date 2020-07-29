@@ -6,10 +6,11 @@
 \usage{
 fit_mixtur(
   data,
+  unit = "degrees",
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  non_target_var = "non_target",
+  non_target_var = "NULL",
   set_size_var = "NULL",
   condition_var = "NULL"
 )

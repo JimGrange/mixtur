@@ -41,6 +41,10 @@ fit_mixtur <- function(data,
 
   }
 
+  if(unit == "radians"){
+    data <- data
+  }
+
   # TODO: Radians not in range -pi to pi
 
 

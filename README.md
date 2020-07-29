@@ -377,4 +377,65 @@ Coming soon\!
 
 Coming soon\!
 
+#### Bays et al. (2009 Figure 1d & 1e)
+
+``` r
+
+data <- bays2009_full
+
+fit <- fit_mixtur(data = data,
+                  unit = "radians",
+                  id_var = "id",
+                  response_var = "response",
+                  target_var = "target",
+                  non_target_var = "non_target",
+                  set_size_var = "set_size",
+                  condition_var = "NULL")
+
+fit %>% 
+  group_by(set_size) %>% 
+  summarise(mean_parm = mean(p_n), 
+            se_parm = sd(p_n) / sqrt(length(p_n))) %>% 
+  ggplot(aes(x = set_size, 
+             y = mean_parm)) + 
+  geom_point() + 
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm),
+                width = 0.05) + 
+  scale_y_continuous(limits = c(0, 0.4)) + 
+  theme_bw()
+#> `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+data <- bays2009_full
+
+fit <- fit_mixtur(data = data,
+                  id_var = "id",
+                  unit = "radians",
+                  response_var = "response",
+                  target_var = "target",
+                  non_target_var = "non_target",
+                  set_size_var = "set_size",
+                  condition_var = "NULL")
+
+fit %>% 
+  group_by(set_size) %>% 
+  summarise(mean_parm = mean(p_u), 
+            se_parm = sd(p_u) / sqrt(length(p_u))) %>% 
+  ggplot(aes(x = set_size, 
+             y = mean_parm)) + 
+  geom_point() + 
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm),
+                width = 0.05) + 
+  scale_y_continuous(limits = c(0, 0.4)) + 
+  theme_bw()
+#> `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-16-1.png)<!-- --> \`\`\`
+
 ## References
