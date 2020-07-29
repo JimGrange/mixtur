@@ -436,6 +436,76 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-16-1.png)<!-- --> \`\`\`
+![](man/figures/README-unnamed-chunk-16-1.png)<!-- -->
+
+#### Bayes et al. (2009 Figure 1h & 1i)
+
+``` r
+data <- bays2009_full
+
+fit <- fit_mixtur(data = data,
+                  unit = "radians",
+                  id_var = "id",
+                  response_var = "response",
+                  target_var = "target",
+                  non_target_var = "non_target",
+                  set_size_var = "set_size",
+                  condition_var = "delay")
+
+# add position jitter to avoid over-plotting
+pd <- position_dodge(0.0)
+
+fit %>% 
+  group_by(set_size, condition) %>% 
+  summarise(mean_parm = mean(p_n), 
+            se_parm = sd(p_n) / sqrt(length(p_n))) %>% 
+  mutate(condition = as.factor(condition)) %>% 
+  ggplot(aes(x = set_size, 
+             y = mean_parm, 
+             group = condition)) + 
+  geom_point(aes(colour = condition), 
+             position = pd) + 
+  geom_line(aes(colour = condition, 
+                linetype = condition), 
+            position = pd) +
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm, 
+                    colour = condition),
+                width = 0.05, 
+                position = pd) + 
+  scale_y_continuous(limits = c(0, 0.4)) + 
+  scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
+#> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
+
+``` r
+fit %>% 
+  group_by(set_size, condition) %>% 
+  summarise(mean_parm = mean(p_u), 
+            se_parm = sd(p_u) / sqrt(length(p_u))) %>% 
+  mutate(condition = as.factor(condition)) %>% 
+  ggplot(aes(x = set_size, 
+             y = mean_parm, 
+             group = condition)) + 
+  geom_point(aes(colour = condition), 
+             position = pd) + 
+  geom_line(aes(colour = condition, 
+                linetype = condition), 
+            position = pd) +
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm, 
+                    colour = condition),
+                width = 0.05, 
+                position = pd) + 
+  scale_y_continuous(limits = c(0, 0.4)) + 
+  scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
+#> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
 
 ## References

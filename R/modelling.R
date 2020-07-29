@@ -103,11 +103,10 @@ fit_mixtur <- function(data,
       } else {
         fit <- rbind(fit, set_fit)
       }
-
-
     }
 
-
+    fit <- fit %>%
+      mutate(condition = as.factor(condition))
 
 
 
@@ -115,6 +114,55 @@ fit_mixtur <- function(data,
 
   # both set size & condition manipulation
   if(set_size_var != "NULL" && condition_var != "NULL"){
+
+    # get the list of set sizes
+    data$set_size <- data[[set_size_var]]
+    set_sizes <- unique(data[[set_size_var]])
+
+    # get the list of conditions
+    data$condition <- data[[condition_var]]
+    conditions <- unique(data[, "condition"])
+
+    # loop over each set size & condition
+    for(i in 1:length(set_sizes)){
+      for(j in 1:length(conditions)){
+
+        # get the current level's data
+        level_data <- data %>%
+          filter(set_size == set_sizes[i]) %>%
+          filter(condition == conditions[j])
+
+        # fit the model to this set size & condition
+        if(set_sizes[i] == 1){
+          level_fit <- fit_level(level_data,
+                                 id_var = id_var,
+                                 response_var = response_var,
+                                 target_var = target_var,
+                                 non_target_var = NULL
+                                 )
+          level_fit <- level_fit %>%
+            mutate(set_size = set_sizes[i],
+                   condition = conditions[j])
+        } else{
+          level_fit <- fit_level(level_data,
+                                 id_var = id_var,
+                                 response_var = response_var,
+                                 target_var = target_var,
+                                 non_target_var = "non_target",
+                                 set_size = set_sizes[i])
+          level_fit <- level_fit %>%
+            mutate(set_size = set_sizes[i],
+                   condition = conditions[j])
+        }
+
+        # stitch data together
+        if(i == 1 && j == 1){
+          fit <- level_fit
+        } else {
+          fit <- rbind(fit, level_fit)
+        }
+      }
+    }
   }
 
   return(fit)
