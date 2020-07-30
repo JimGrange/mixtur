@@ -49,6 +49,7 @@ studies.
   - [Modelling data](#modelling)
       - [2-component mixture models](#two-component-mixture-models)
       - [3-component mixture models](#three-component-mixture-models)
+  - [Simulating data from the models](#simulating-from-the-models)
 
 ## Installation
 
