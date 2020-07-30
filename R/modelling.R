@@ -60,7 +60,40 @@ fit_mixtur <- function(data,
 
   # no set size manipulation but there is a condition manipulation
   if(set_size_var == "NULL" && condition_var != "NULL"){
-  }
+
+    # get the list of conditions
+    data$condition <- data[[condition_var]]
+    conditions <- unique(data[, "condition"])
+
+    # loop over each condition
+    for(i in 1:length(conditions)){
+
+      # get the current level's data
+      level_data <- data %>%
+        filter(condition == conditions[i])
+
+      # fit the model to this condition
+      # TODO: How do we account for people wanting to fit just condition
+      # in a study where set size always equals 1? Probably needs another
+      # argument in the function call to declare it's a single-target task
+      level_fit <- fit_level(level_data,
+                             id_var = id_var,
+                             response_var = response_var,
+                             target_var = target_var,
+                             non_target_var = "non_target",
+                             set_size = length(non_target_cols) + 1)
+        level_fit <- level_fit %>%
+          mutate(condition = conditions[i])
+
+        # stitch data together
+        if(i == 1){
+          fit <- level_fit
+        } else {
+          fit <- rbind(fit, level_fit)
+        }
+      }
+    }
+
 
   # set size manipulation, but no condition manipulation
   if(set_size_var != "NULL" && condition_var == "NULL"){
@@ -95,7 +128,6 @@ fit_mixtur <- function(data,
         set_fit <- set_fit %>%
           mutate(set_size = set_sizes[i])
       }
-
 
       # stitch data together
       if(i == 1){
