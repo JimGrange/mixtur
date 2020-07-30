@@ -508,6 +508,46 @@ fit %>%
 #> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-18-1.png)<!-- --> \#\#\#\# Plotting
+by condition
 
-## References
+``` r
+data <- bays2009_full
+
+# get just the set size = 4 data
+sample_data <- data %>% 
+  filter(set_size == 4) %>% 
+  select(-non_target_4, -non_target_5)
+
+# fit the model
+fit <- fit_mixtur(data = sample_data,
+                  unit = "radians",
+                  id_var = "id",
+                  response_var = "response",
+                  target_var = "target",
+                  non_target_var = "non_target",
+                  set_size_var = "NULL",
+                  condition_var = "delay")
+
+# add position jitter to avoid over-plotting
+pd <- position_dodge(0.8)
+
+# plot the fit
+fit %>% 
+  group_by(condition) %>% 
+  summarise(mean_parm = mean(p_t), 
+            se_parm = sd(p_t) / sqrt(length(p_t))) %>% 
+  mutate(condition = as.factor(condition)) %>% 
+  ggplot(aes(x = condition, 
+             y = mean_parm)) + 
+  geom_point(size = 3) + 
+  geom_line(aes(group = 1)) +
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm),
+                width = 0.05) + 
+  scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
+#> `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- --> \#\# References

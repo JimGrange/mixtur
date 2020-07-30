@@ -57,7 +57,6 @@ fit_mixtur <- function(data,
 
   }
 
-
   # no set size manipulation but there is a condition manipulation
   if(set_size_var == "NULL" && condition_var != "NULL"){
 
@@ -106,34 +105,34 @@ fit_mixtur <- function(data,
     for(i in 1:length(set_sizes)){
 
       # get the current set size's data
-      set_data <- data %>%
+      levl_data <- data %>%
         filter(set_size == set_sizes[i])
 
       # fit the model to this set size
       if(set_sizes[i] == 1){
-        set_fit <- fit_level(set_data,
-                             id_var = "id",
-                             response_var = "response",
-                             target_var = "target",
-                             non_target_var = NULL)
-        set_fit <- set_fit %>%
+        level_fit <- fit_level(level_data,
+                               id_var = "id",
+                               response_var = "response",
+                               target_var = "target",
+                               non_target_var = NULL)
+        level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
       } else{
-        set_fit <- fit_level(set_data,
-                             id_var = "id",
-                             response_var = "response",
-                             target_var = "target",
-                             non_target_var = "non_target",
-                             set_size = set_sizes[i])
-        set_fit <- set_fit %>%
+        level_fit <- fit_level(level_data,
+                               id_var = "id",
+                               response_var = "response",
+                               target_var = "target",
+                               non_target_var = "non_target",
+                               set_size = set_sizes[i])
+        level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
       }
 
       # stitch data together
       if(i == 1){
-        fit <- set_fit
+        fit <- level_fit
       } else {
-        fit <- rbind(fit, set_fit)
+        fit <- rbind(fit, level_fit)
       }
     }
   }
