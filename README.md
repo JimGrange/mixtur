@@ -5,7 +5,38 @@
 and modelling data from continuous report visual short-term memory
 studies.
 
-Overview of README:
+## ToDo List
+
+  - Designing
+      - ~~generate trial-level data for a user’s experiment~~
+      - ensure this works for multiple participants
+      - cie-lab calculation
+      - cie2rgb converter
+      - rgb2cie converter
+  - Plotting
+      - ~~plot response error~~
+      - ~~plot precision of responses~~
+      - need to test degress\_180 data works
+  - Analysing
+      - return response error by id for inferential analysis
+      - return precision by id for inferential analysis
+  - Modelling
+      - ~~fit the 3-component model to data~~
+      - fit the 2-component model to data
+      - plot model parameters
+      - plot model fit against participant error data
+      - need to test degress\_180 data works
+      - formal model comparison tests?
+  - Simulating
+      - ~~base simulate\_mixtur function~~
+      - ~~check parameter recovery 3-component~~
+      - check parameter recovery 2-component
+  - General
+      - update documentation of all functions
+      - add more example data sets
+      - vignettes for all functions & use cases
+
+## Overview of README
 
   - [How to install the package](#installation)
   - [An overview of continuous report tasks](#continuous-report-tasks)
