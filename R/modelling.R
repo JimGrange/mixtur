@@ -53,7 +53,8 @@ fit_mixtur <- function(data,
   if(set_size_var == "NULL" && condition_var == "NULL"){
 
     # perform the model fit
-    fit <- fit_level(data)
+    fit <- fit_level(data,
+                     set_size = length(non_target_cols) + 1)
 
   }
 
@@ -196,7 +197,6 @@ fit_mixtur <- function(data,
 
 
 
-
 # fit model to a single level ---------------------------------------------
 #' fit model to a single level
 #' @importFrom dplyr %>%
@@ -243,7 +243,6 @@ fit_level <- function(data,
       non_targets <- as.matrix(non_targets[, 1:(set_size - 1)])
     }
 
-
     #--- pass the data to the fit function
 
     # if there are no targets, just fit the 2-component model, else
@@ -270,8 +269,6 @@ fit_level <- function(data,
   return(parms)
 
 }
-
-
 
 
 
@@ -346,7 +343,6 @@ likelihood_function <- function(response,
                                 non_targets,
                                 start_parms = NULL) {
 
-
   if(is.null(non_targets)){
     non_targets <- replicate(NROW(response), 0)
   }
@@ -408,7 +404,6 @@ likelihood_function <- function(response,
   # iterate to minimise log likelihood
   while(TRUE) {
     iter <- iter + 1
-
 
     # get the weight contributions of target and guess responses to performance
     w_t <- p_t * vonmisespdf(error, 0, K)

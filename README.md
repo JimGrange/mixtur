@@ -365,7 +365,7 @@ plot_precision(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
-## Modelling
+## Fitting the Models
 
 Coming soon\!
 
@@ -550,4 +550,39 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- --> \#\# References
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+
+## Simulating From the Models
+
+``` r
+simulated_data <- simulate_mixtur(n_trials = 5000, 
+                                  K = 15, 
+                                  p_t = 0.75, 
+                                  p_n = 0.15, 
+                                  p_u = 0.10, 
+                                  set_size = 4)
+
+head(simulated_data)
+#>   id target response non_target_1 non_target_2 non_target_3
+#> 1  1  2.531    2.971        1.065       -1.588       -2.548
+#> 2  1  2.601    2.373       -2.915       -2.077       -0.750
+#> 3  1  0.471    0.532        3.124        2.042       -1.972
+#> 4  1  2.932    2.280        0.942       -0.977       -0.192
+#> 5  1 -2.374    1.447        3.089       -1.606        1.850
+#> 6  1  1.885    1.830       -0.262       -1.815        0.873
+
+fit <- fit_mixtur(data = simulated_data,
+                  unit = "radians",
+                  id_var = "id",
+                  response_var = "response",
+                  target_var = "target",
+                  non_target_var = "non_target",
+                  set_size_var = "NULL",
+                  condition_var = "NULL")
+
+head(fit)
+#>   id      K   p_t   p_n   p_u
+#> 1  1 15.118 0.761 0.147 0.092
+```
+
+## References
