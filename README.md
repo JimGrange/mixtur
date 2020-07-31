@@ -45,7 +45,6 @@ studies.
       - [Example data shipped with mixtur](#example-data)
       - [An overview of data structures in
         mixtur](#data-structures-in-mixtur)
-  - [Designing: Experiment design tools](#designing)
   - [Plotting: Visualising behavioural data](#plotting)
       - [Plotting response error](#plotting-response-error)
       - [Plotting response precision](#plotting-precision-of-responses)
@@ -55,6 +54,7 @@ studies.
       - [3-component mixture models](#three-component-mixture-models)
   - [Simulating: Generating data from mixture
     models](#simulating-generating-data-from-mixture-models)
+  - [Designing: Experiment design tools](#designing)
   - [References](#references)
 
 ## Package Overview
