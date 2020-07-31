@@ -7,12 +7,6 @@ studies.
 
 ## ToDo List
 
-  - Designing
-      - ~~generate trial-level data for a user’s experiment~~
-      - ensure this works for multiple participants
-      - cie-lab calculation
-      - cie2rgb converter
-      - rgb2cie converter
   - Plotting
       - ~~plot response error~~
       - ~~plot precision of responses~~
@@ -35,23 +29,37 @@ studies.
       - update documentation of all functions
       - add more example data sets
       - vignettes for all functions & use cases
+  - Designing
+      - ~~generate trial-level data for a user’s experiment~~
+      - ensure this works for multiple participants
+      - cie-lab calculation
+      - cie2rgb converter
+      - rgb2cie converter
 
-## Overview of README
+## Contents
 
-  - [How to install the package](#installation)
-  - [An overview of continuous report tasks](#continuous-report-tasks)
-  - [Example data shipped with mixtur](#example-data)
-  - [An overview of data structures in
-    mixtur](#data-structures-in-mixtur)
-  - [Plotting behavioural data](#plotting)
+  - [Package Overview](#package-overview)
+      - [How to install the package](#installation)
+      - [An overview of continuous report
+        tasks](#continuous-report-tasks)
+      - [Example data shipped with mixtur](#example-data)
+      - [An overview of data structures in
+        mixtur](#data-structures-in-mixtur)
+  - [Designing: Experiment design tools](#designing)
+  - [Plotting: Visualising behavioural data](#plotting)
       - [Plotting response error](#plotting-response-error)
       - [Plotting response precision](#plotting-precision-of-responses)
-  - [Modelling data](#modelling)
+  - [Analysing: Preparing data for inferential analysis](#analysing)
+  - [Modelling: Fitting mixture models to data](#modelling)
       - [2-component mixture models](#two-component-mixture-models)
       - [3-component mixture models](#three-component-mixture-models)
-  - [Simulating data from the models](#simulating-from-the-models)
+  - [Simulating: Generating data from mixture
+    models](#simulating-generating-data-from-mixture-models)
+  - [References](#references)
 
-## Installation
+## Package Overview
+
+### Installation
 
 To install the package from GitHub, you need the devtools package:
 
@@ -66,7 +74,7 @@ Then **mixtur** can be directly installed:
 devtools::install_github("JimGrange/mixtur")
 ```
 
-## Continuous Report Tasks
+### Continuous report tasks
 
 The package is designed to assist researchers using continuous report
 measures of visual short term memory. In continuous report tasks,
@@ -84,7 +92,7 @@ response (R) and the true target value (T). After many trials, a
 probability density distribution can be formed of the response errors
 across participants.
 
-## Example Data
+### Example data
 
 **mixtur** includes several example data sets to allow the user to
 familiarise themselves with the package:
@@ -104,18 +112,29 @@ Data can be loaded in the following way:
 
 ``` r
 library(mixtur)
-data(bays2009_sample)
-head(bays2009_sample)
-#>   id response target non_target_1 non_target_2 non_target_3
-#> 1  1   -2.186 -0.002       -2.989        2.648        2.262
-#> 2  1   -1.980 -2.498       -1.861       -1.340       -0.309
-#> 3  1   -0.177 -2.088       -2.845       -3.102       -0.371
-#> 4  1    1.342  1.334        2.844        1.007       -0.599
-#> 5  1   -1.644 -2.224        3.129        2.936        1.295
-#> 6  1    1.219  1.253        2.886       -0.924       -1.035
+
+# load the full data
+data(bays2009_full)
+
+# look at the top of the data
+head(bays2009_full)
+#>   id set_size delay response target non_target_1 non_target_2 non_target_3
+#> 1  1        1   100    -0.65  -0.64           NA           NA           NA
+#> 2  1        1   100     2.04   2.11           NA           NA           NA
+#> 3  1        1   500    -2.95   3.14           NA           NA           NA
+#> 4  1        1   500     1.92   2.37           NA           NA           NA
+#> 5  1        1   500    -0.18  -0.16           NA           NA           NA
+#> 6  1        1   100    -2.68  -2.61           NA           NA           NA
+#>   non_target_4 non_target_5
+#> 1           NA           NA
+#> 2           NA           NA
+#> 3           NA           NA
+#> 4           NA           NA
+#> 5           NA           NA
+#> 6           NA           NA
 ```
 
-## Data Structures in mixtur
+### Data structures in mixtur
 
 **mixtur** has some flexibility in the data structures it can deal with,
 but you need to tell **mixtur** some things about your data so it can
@@ -144,7 +163,7 @@ later).
 
 ## Plotting
 
-### Plotting Response Error
+### Plotting response error
 
 Response error refers to the angular deviation between the participant’s
 response and the location of the true target value (i.e., where
@@ -293,7 +312,7 @@ plot_error(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
-### Plotting Precision of Reponses
+### Plotting precision of reponses
 
 Once response error is known, a formal estimate of the **precision** of
 a participant’s response is possible. Following Bays et al. (2009),
@@ -397,15 +416,19 @@ plot_precision(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
+## Analysing
+
+Coming soon\!
+
 ## Fitting the Models
 
 Coming soon\!
 
-### Two-Component Mixture Models
+### Two-component mixture models
 
 Coming soon\!
 
-### Three-Component Mixture Models
+### Three-component mixture models
 
 Coming soon\!
 
@@ -584,7 +607,7 @@ fit %>%
 
 ![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
 
-## Simulating From the Models
+## Simulating: Generating Data From Mixture Models
 
 ``` r
 simulated_data <- simulate_mixtur(n_trials = 5000, 
@@ -616,5 +639,9 @@ head(fit)
 #>   id      K   p_t   p_n   p_u
 #> 1  1 15.118 0.761 0.147 0.092
 ```
+
+## Designing
+
+Coming soon\!
 
 ## References
