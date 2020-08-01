@@ -16,7 +16,7 @@ studies.
       - return precision by id for inferential analysis
   - Modelling
       - ~~fit the 3-component model to data~~
-      - fit the 2-component model to data
+      - ~~fit the 2-component model to data~~
       - plot model parameters
       - plot model fit against participant error data
       - need to test degress\_180 data works
@@ -24,7 +24,7 @@ studies.
   - Simulating
       - ~~base simulate\_mixtur function~~
       - ~~check parameter recovery 3-component~~
-      - check parameter recovery 2-component
+      - ~~check parameter recovery 2-component~~
   - General
       - update documentation of all functions
       - add more example data sets
