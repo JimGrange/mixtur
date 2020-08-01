@@ -578,14 +578,14 @@ plot_precision <- function(data,
 # plot model fit ----------------------------------------------------------
 #' Plot model fit against human error data (target errors)
 #' @export
-plot_model_fit(human_data,
-               model_data,
-               unit = "degrees",
-               id_var = "id",
-               response_var = "response",
-               target_var = "target",
-               set_size_var = "NULL",
-               condition_var = "NULL"){
+plot_model_fit <- function(human_data,
+                           model_data,
+                           unit = "degrees",
+                           id_var = "id",
+                           response_var = "response",
+                           target_var = "target",
+                           set_size_var = "NULL",
+                           condition_var = "NULL"){
 
 
   # get the error data for the participant data
