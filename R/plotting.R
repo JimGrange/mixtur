@@ -571,3 +571,156 @@ plot_precision <- function(data,
   }
 
 }
+
+
+
+
+# plot model fit ----------------------------------------------------------
+#' Plot model fit against human error data (target errors)
+#' @export
+plot_model_fit(human_data,
+               model_data,
+               unit = "degrees",
+               id_var = "id",
+               response_var = "response",
+               target_var = "target",
+               set_size_var = "NULL",
+               condition_var = "NULL"){
+
+
+  # get the error data for the participant data
+  human_error <- plot_error(human_data,
+                            id_var = id_var,
+                            unit = unit,
+                            response_var = response_var,
+                            target_var = target_var,
+                            set_size_var = set_size_var,
+                            condition_var = condition_var,
+                            return_data = TRUE)
+
+  # no set size or condition manipulation
+  if(set_size_var == "NULL" && condition_var == "NULL"){
+
+    # get the mean K, p_t, and p_u parameters from the model fit
+    # 2-component and 3-component model make same predictions for
+    # target error
+    mean_k <- mean(model_data$K)
+    mean_p_t <- mean(model_data$p_t)
+    mean_p_u <- mean(model_data$p_n) + mean(model_data$p_u)
+
+    # get the model predictions
+    model_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
+                          y = vonmisespdf(x, 0, mean_k) * (mean_p_t) +
+                            dunif(x, min = -pi, max = pi) * (mean_p_u))
+
+    # plot the human data & model predictions
+    plot <- ggplot(human_error$data, aes(x = x,
+                                         y = mean_error)) +
+      geom_point() +
+      geom_errorbar(aes(ymax = mean_error + se_error,
+                        ymin = mean_error - se_error),
+                    width = 0.05) +
+      geom_line(data = model_preds,
+                aes(x = x, y = y),
+                alpha = 0.6,
+                col = "#D95F02",
+                lwd = 1.3) +
+      theme_bw() +
+      labs(x = "Error (Radians)",
+           y = "Probability Density")
+
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(set_size_var == "NULL" && condition_var != "NULL"){
+  }
+
+
+  # set size manipulation, but no condition manipulation
+  if(set_size_var != "NULL" && condition_var == "NULL"){
+
+    model_data$set_size <- model_data[[set_size_var]]
+
+    # get the mean K, p_t, and p_u parameters from the model fit
+    # 2-component and 3-component model make same predictions for
+    # target error
+    mean_k <- model_data %>%
+      group_by(set_size) %>%
+      summarise(mean_k = mean(K))
+    mean_p_t <- model_data %>%
+      group_by(set_size) %>%
+      summarise(mean_p_t = mean(p_t))
+    mean_p_u <- model_data %>%
+      group_by(set_size) %>%
+      summarise(mean_p_u = mean(p_n) + mean(p_u))
+
+    # get the model predictions
+
+    set_sizes <- unique(data$set_size)
+
+    for(i in 1:length(set_sizes)){
+
+      level_k = mean_k %>%
+        filter(set_size == set_sizes[i]) %>%
+        pull()
+
+      level_p_t = mean_p_t %>%
+        filter(set_size == set_sizes[i]) %>%
+        pull()
+
+      level_p_u = mean_p_u %>%
+        filter(set_size == set_sizes[i]) %>%
+        pull()
+
+      level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
+                            y = vonmisespdf(x, 0, level_k) * (level_p_t) +
+                              dunif(x, min = -pi, max = pi) * (level_p_u))
+
+      level_preds <- level_preds %>%
+        mutate(set_size = set_sizes[i])
+
+      if(i == 1){
+        model_preds <- level_preds
+      } else {
+        model_preds <- rbind(model_preds, level_preds)
+      }
+
+    }
+
+
+    #---- plot the human data & model predictions
+
+    # # get the maximum value for y-axis
+    # max_y <- max(c(max(human_error$data$mean_error) +
+    #              max(human_error$data$se_error),
+    #            max(model_preds$y)))
+
+    plot <- ggplot(human_error$data, aes(x = x,
+                                   y = mean_error)) +
+      geom_point() +
+      geom_errorbar(aes(ymax = mean_error + se_error,
+                        ymin = mean_error - se_error),
+                    width = 0.05) +
+      geom_line(data = model_preds,
+                aes(x = x, y = y),
+                alpha = 0.6,
+                col = "#D95F02",
+                lwd = 1.3) +
+      facet_wrap(vars(set_size), ncol = 4) +
+      # scale_y_continuous(limits = c(0, max_y)) +
+      theme_bw() +
+      labs(x = "Error (Radians)",
+           y = "Probability Density")
+
+  }
+
+
+  if(set_size_var != "NULL" && condition_var != "NULL"){
+  }
+
+
+  return(plot)
+
+}
+
