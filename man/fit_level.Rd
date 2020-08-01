@@ -6,10 +6,11 @@
 \usage{
 fit_level(
   data,
+  components = 3,
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  non_target_var = "non_target",
+  non_target_var = non_target_var,
   set_size = 1
 )
 }

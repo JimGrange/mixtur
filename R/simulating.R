@@ -15,6 +15,9 @@ simulate_mixtur <- function(n_trials,
                             min_angle_distance = 40){
 
 
+  # print message to user
+  print("Simulating data. Please wait...")
+
   # check that p_t, p_n, and p_u sum to 1
   if(p_n == "NULL"){
     if((p_t + p_u) != 1){
@@ -55,6 +58,9 @@ simulate_mixtur <- function(n_trials,
                                      p_u = p_u,
                                      p_n = n)
   }
+
+  # print message to user
+  print("Simulating data finished.")
 
   return(model_data)
 }

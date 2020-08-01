@@ -6,10 +6,10 @@
 \usage{
 simulate_mixtur(
   n_trials,
-  K = 12,
-  p_t = 0.75,
-  p_n = 0.15,
-  p_u = 0.1,
+  K,
+  p_t,
+  p_n,
+  p_u,
   set_size = 4,
   min_angle_distance = 40
 )

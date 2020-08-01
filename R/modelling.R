@@ -1,9 +1,11 @@
 # fit the mixtur model ----------------------------------------------------
 #' Fit the mixture model. This is the function to be called by the user
+#' TODO: Documentation!
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @export
 fit_mixtur <- function(data,
+                       components = 3,
                        unit = "degrees",
                        id_var = "id",
                        response_var = "response",
@@ -49,13 +51,25 @@ fit_mixtur <- function(data,
 
 
 
+  # print message to user
+  print("Model fit running. Please wait...")
+
+
   # no set size or condition manipulation
   if(set_size_var == "NULL" && condition_var == "NULL"){
 
+    # get the set size of the level
+    if(non_target_var != "NULL"){
+      level_set_size <- length(non_target_cols) + 1
+    } else {
+      level_set_size <- 1
+    }
+
     # perform the model fit
     fit <- fit_level(data,
-                     set_size = length(non_target_cols) + 1)
-
+                     components = components,
+                     set_size = level_set_size,
+                     non_target_var = non_target_var)
   }
 
   # no set size manipulation but there is a condition manipulation
@@ -72,28 +86,33 @@ fit_mixtur <- function(data,
       level_data <- data %>%
         filter(condition == conditions[i])
 
+      # get the set size of the level
+      if(non_target_var != "NULL"){
+        level_set_size <- length(non_target_cols) + 1
+      } else {
+        level_set_size <- 1
+        non_target_var <- NULL
+      }
+
       # fit the model to this condition
-      # TODO: How do we account for people wanting to fit just condition
-      # in a study where set size always equals 1? Probably needs another
-      # argument in the function call to declare it's a single-target task
       level_fit <- fit_level(level_data,
+                             components = components,
                              id_var = id_var,
                              response_var = response_var,
                              target_var = target_var,
-                             non_target_var = "non_target",
-                             set_size = length(non_target_cols) + 1)
-        level_fit <- level_fit %>%
-          mutate(condition = conditions[i])
+                             non_target_var = non_target_var,
+                             set_size = level_set_size)
+      level_fit <- level_fit %>%
+        mutate(condition = conditions[i])
 
-        # stitch data together
-        if(i == 1){
-          fit <- level_fit
-        } else {
-          fit <- rbind(fit, level_fit)
-        }
+      # stitch data together
+      if(i == 1){
+        fit <- level_fit
+      } else {
+        fit <- rbind(fit, level_fit)
       }
     }
-
+  }
 
   # set size manipulation, but no condition manipulation
   if(set_size_var != "NULL" && condition_var == "NULL"){
@@ -106,24 +125,28 @@ fit_mixtur <- function(data,
     for(i in 1:length(set_sizes)){
 
       # get the current set size's data
-      levl_data <- data %>%
+      level_data <- data %>%
         filter(set_size == set_sizes[i])
 
       # fit the model to this set size
       if(set_sizes[i] == 1){
         level_fit <- fit_level(level_data,
+                               components = components,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
                                non_target_var = NULL)
+
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
+
       } else{
         level_fit <- fit_level(level_data,
+                               components = components,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
-                               non_target_var = "non_target",
+                               non_target_var = non_target_var,
                                set_size = set_sizes[i])
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
@@ -161,20 +184,22 @@ fit_mixtur <- function(data,
         # fit the model to this set size & condition
         if(set_sizes[i] == 1){
           level_fit <- fit_level(level_data,
+                                 components = components,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
                                  non_target_var = NULL
-                                 )
+          )
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
                    condition = conditions[j])
         } else{
           level_fit <- fit_level(level_data,
+                                 components = components,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
-                                 non_target_var = "non_target",
+                                 non_target_var = non_target_var,
                                  set_size = set_sizes[i])
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
@@ -191,6 +216,9 @@ fit_mixtur <- function(data,
     }
   }
 
+  # print message to user
+  print("Model fit finished.")
+
   return(fit)
 
 }
@@ -203,10 +231,11 @@ fit_mixtur <- function(data,
 #' @importFrom dplyr pull
 #' @export
 fit_level <- function(data,
+                      components = 3,
                       id_var = "id",
                       response_var = "response",
                       target_var = "target",
-                      non_target_var = "non_target",
+                      non_target_var = non_target_var,
                       set_size = 1){
 
 
@@ -232,7 +261,6 @@ fit_level <- function(data,
     target <- as.matrix(df[, target_var])
 
     # get the non-target values for this set size if set size is above one
-
     if(set_size > 1){
       non_target_cols <- df %>%
         select(starts_with(non_target_var)) %>%
@@ -245,19 +273,26 @@ fit_level <- function(data,
 
     #--- pass the data to the fit function
 
-    # if there are no targets, just fit the 2-component model, else
-    # fit the 3-component model
-    if(is.null(non_target_var)) {
+    # if the 2-component model is called, don't pass non-target info to fit
+    if(components == 2){
       fit <- fit_model(response,
                        target,
                        return.ll = FALSE)
-    } else {
+    }
 
-      # fit the model
-      fit <- fit_model(response,
-                       target,
-                       non_targets,
-                       return.ll = FALSE)
+    # if the 3-component model is called, pass non-target info to fit
+    # only if set size is greater than one (i.e., there is non-target info)
+    if(components == 3){
+      if(is.null(non_target_var)) {
+        fit <- fit_model(response,
+                         target,
+                         return.ll = FALSE)
+      } else {
+        fit <- fit_model(response,
+                         target,
+                         non_targets,
+                         return.ll = FALSE)
+      }
     }
 
     # store the parameters

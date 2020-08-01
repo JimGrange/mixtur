@@ -2,10 +2,12 @@
 % Please edit documentation in R/modelling.R
 \name{fit_mixtur}
 \alias{fit_mixtur}
-\title{Fit the mixture model. This is the function to be called by the user}
+\title{Fit the mixture model. This is the function to be called by the user
+TODO: Documentation!}
 \usage{
 fit_mixtur(
   data,
+  components = 3,
   unit = "degrees",
   id_var = "id",
   response_var = "response",
@@ -17,4 +19,5 @@ fit_mixtur(
 }
 \description{
 Fit the mixture model. This is the function to be called by the user
+TODO: Documentation!
 }
