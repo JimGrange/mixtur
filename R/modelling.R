@@ -91,7 +91,6 @@ fit_mixtur <- function(data,
         level_set_size <- length(non_target_cols) + 1
       } else {
         level_set_size <- 1
-        non_target_var <- NULL
       }
 
       # fit the model to this condition
@@ -135,7 +134,7 @@ fit_mixtur <- function(data,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
-                               non_target_var = NULL)
+                               non_target_var = "NULL")
 
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
@@ -188,7 +187,7 @@ fit_mixtur <- function(data,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
-                                 non_target_var = NULL
+                                 non_target_var = "NULL"
           )
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
@@ -235,9 +234,12 @@ fit_level <- function(data,
                       id_var = "id",
                       response_var = "response",
                       target_var = "target",
-                      non_target_var = non_target_var,
+                      non_target_var,
                       set_size = 1){
 
+  if(non_target_var == "NULL"){
+    non_target_var <- NULL
+  }
 
   # get the participant ids
   id <- data %>%
