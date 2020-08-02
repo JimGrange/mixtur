@@ -12,13 +12,14 @@ studies.
       - ~~plot precision of responses~~
       - need to test degress\_180 data works
   - Analysing
-      - return response error by id for inferential analysis
-      - return precision by id for inferential analysis
+      - return response error by id for inferential analysis (is this
+        even worthwhile??)
+      - ~~return precision by id for inferential analysis~~
   - Modelling
       - ~~fit the 3-component model to data~~
       - ~~fit the 2-component model to data~~
       - plot model parameters
-      - plot model fit against participant error data
+      - ~~plot model fit against participant error data~~
       - need to test degress\_180 data works
       - formal model comparison tests?
   - Simulating
