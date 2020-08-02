@@ -452,7 +452,7 @@ Note that this function **does not** conduct the analysis for you. We
 wish to stay out of the fierce “frequentist vs. Bayes” wars that occupy
 academic social media\! This way, **mixtur** can play nicely with all.
 
-## Fitting the Models
+## Modelling
 
 Coming soon\!
 
