@@ -603,8 +603,9 @@ fit %>%
 #> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- --> \#\#\#\# Plotting
-by condition
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+
+#### Plotting by condition
 
 ``` r
 data <- bays2009_full
@@ -652,7 +653,63 @@ fit %>%
 
 ## Plotting 2: Plotting Model Fit
 
-Coming soon\!
+``` r
+
+data <- bays2009_full
+
+model_data <- fit_mixtur(data,
+                         components=  3,
+                         unit = "radians",
+                         id_var = "id",
+                         response_var = "response",
+                         target_var = "target",
+                         non_target_var = "non_target",
+                         set_size_var = "set_size",
+                         condition_var = "NULL")
+#> [1] "Model fit running. Please wait..."
+#> [1] "Model fit finished."
+
+plot_model_fit(human_data = data,
+               model_data = model_data,
+               unit = "radians",
+               id_var = "id",
+               response_var = "response",
+               target_var = "target",
+               set_size_var = "set_size",
+               condition_var = "NULL")
+```
+
+![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
+
+### Rough recreation of Figure 2 (Bays et al., 2009)
+
+``` r
+
+data <- bays2009_full
+
+model_data <- fit_mixtur(data,
+                         components=  3,
+                         unit = "radians",
+                         id_var = "id",
+                         response_var = "response",
+                         target_var = "target",
+                         non_target_var = "non_target",
+                         set_size_var = "set_size",
+                         condition_var = "delay")
+#> [1] "Model fit running. Please wait..."
+#> [1] "Model fit finished."
+
+plot_model_fit(human_data = data,
+               model_data = model_data,
+               unit = "radians",
+               id_var = "id",
+               response_var = "response",
+               target_var = "target",
+               set_size_var = "set_size",
+               condition_var = "delay")
+```
+
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
 ## Simulating: Generating Data From Mixture Models
 
@@ -670,12 +727,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  0.436    0.246       -3.107        1.414       -2.234
-#> 2  1 -2.583   -1.852        1.344       -1.030        2.496
-#> 3  1 -2.723   -2.082        0.000       -1.902       -1.169
-#> 4  1  2.758    2.454       -1.484        0.367       -2.688
-#> 5  1 -0.070    2.850       -1.222       -1.955        2.164
-#> 6  1 -1.239   -3.129        0.785       -0.052        2.775
+#> 1  1 -1.710   -1.423        0.506        1.309        2.915
+#> 2  1 -2.391   -2.810       -1.100        0.942        0.192
+#> 3  1 -0.681   -0.722       -2.705       -1.780        2.583
+#> 4  1 -0.995    0.086       -2.007        1.885        2.793
+#> 5  1  1.187    1.904        0.454       -1.431        2.217
+#> 6  1 -1.431    0.742       -2.653       -0.314        2.723
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -691,7 +748,7 @@ fit <- fit_mixtur(data = simulated_data,
 
 head(fit)
 #>   id      K   p_t p_n   p_u
-#> 1  1 15.519 0.751   0 0.249
+#> 1  1 14.988 0.739   0 0.261
 ```
 
 ### Three-component model
@@ -708,12 +765,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  0.855    0.759       -3.124        2.374       -0.524
-#> 2  1 -1.798   -1.886        0.873       -1.012       -0.035
-#> 3  1 -2.042   -2.156       -1.292       -2.758        1.361
-#> 4  1 -2.443   -2.403        1.204        1.920       -1.169
-#> 5  1  3.019    2.776        0.820        2.129       -1.676
-#> 6  1 -2.635   -2.667        0.698       -0.140        2.094
+#> 1  1  2.827    2.996       -0.925       -0.157        0.925
+#> 2  1 -1.676   -1.872        1.274        0.541        2.775
+#> 3  1 -1.972   -2.087       -1.134        3.037        0.942
+#> 4  1  1.100    0.655        2.653       -2.374       -0.785
+#> 5  1  1.169    0.998       -0.105        2.077       -3.142
+#> 6  1 -0.977   -0.710        1.361       -2.025        2.723
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -729,7 +786,7 @@ fit <- fit_mixtur(data = simulated_data,
 
 head(fit)
 #>   id      K   p_t   p_n   p_u
-#> 1  1 15.266 0.744 0.158 0.098
+#> 1  1 14.635 0.754 0.143 0.103
 ```
 
 ## Designing

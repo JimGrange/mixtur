@@ -111,6 +111,10 @@ fit_mixtur <- function(data,
         fit <- rbind(fit, level_fit)
       }
     }
+
+    # rename columns
+    fit <- fit %>%
+      rename(!!condition_var:=condition)
   }
 
   # set size manipulation, but no condition manipulation
@@ -158,6 +162,10 @@ fit_mixtur <- function(data,
         fit <- rbind(fit, level_fit)
       }
     }
+
+    # rename columns
+    fit <- fit %>%
+      rename(!!set_size_var:=set_size)
   }
 
   # both set size & condition manipulation
@@ -213,10 +221,17 @@ fit_mixtur <- function(data,
         }
       }
     }
+
+    # rename columns
+    fit <- fit %>%
+      rename(!!condition_var:=condition) %>%
+      rename(!!set_size_var:=set_size)
   }
 
   # print message to user
   print("Model fit finished.")
+
+
 
   return(fit)
 
