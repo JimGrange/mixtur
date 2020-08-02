@@ -29,7 +29,6 @@ fit_mixtur <- function(data,
      if(non_target_var != "NULL"){
       data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
     }
-
   }
 
   # change degrees_180 to radians
@@ -40,7 +39,6 @@ fit_mixtur <- function(data,
     if(non_target_var != "NULL"){
       data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
     }
-
   }
 
   if(unit == "radians"){
@@ -68,8 +66,11 @@ fit_mixtur <- function(data,
     # perform the model fit
     fit <- fit_level(data,
                      components = components,
-                     set_size = level_set_size,
-                     non_target_var = non_target_var)
+                     id_var = id_var,
+                     response_var = response_var,
+                     target_var = target_var,
+                     non_target_var = non_target_var,
+                     set_size = level_set_size)
   }
 
   # no set size manipulation but there is a condition manipulation
@@ -138,7 +139,8 @@ fit_mixtur <- function(data,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
-                               non_target_var = "NULL")
+                               non_target_var = "NULL",
+                               set_size = 1)
 
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
@@ -195,8 +197,8 @@ fit_mixtur <- function(data,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
-                                 non_target_var = "NULL"
-          )
+                                 non_target_var = "NULL",
+                                 set_size = 1)
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
                    condition = conditions[j])
@@ -230,8 +232,6 @@ fit_mixtur <- function(data,
 
   # print message to user
   print("Model fit finished.")
-
-
 
   return(fit)
 
