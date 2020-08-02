@@ -10,7 +10,7 @@ studies.
   - Plotting
       - ~~plot response error~~
       - ~~plot precision of responses~~
-      - need to test degress\_180 data works
+      - ~~need to test degress\_180 data works~~
   - Analysing
       - return response error by id for inferential analysis (is this
         even worthwhile??)
@@ -20,7 +20,7 @@ studies.
       - ~~fit the 2-component model to data~~
       - plot model parameters
       - ~~plot model fit against participant error data~~
-      - need to test degress\_180 data works
+      - ~~need to test degress\_180 data works~~
       - formal model comparison tests?
   - Simulating
       - ~~base simulate\_mixtur function~~
@@ -109,6 +109,9 @@ familiarise themselves with the package:
     delay of 500ms. This sample data is provided if the user wishes to
     interact with a simpler data structure. The response, target, and
     non-target values are in radians (-PI to PI).
+  - **berrt\_2009**: TODO - Write blurb about studt. Data set has
+    respone, target, and non-target values in degrees in the range -180
+    to 180.
 
 Data can be loaded in the following way:
 
