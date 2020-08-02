@@ -653,6 +653,8 @@ fit %>%
 
 ## Plotting 2: Plotting Model Fit
 
+### Rough recreation of Figure 2 (Bays et al., 2009)
+
 ``` r
 
 data <- bays2009_full
@@ -680,8 +682,6 @@ plot_model_fit(human_data = data,
 ```
 
 ![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
-
-### Rough recreation of Figure 2 (Bays et al., 2009)
 
 ``` r
 
