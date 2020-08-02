@@ -617,8 +617,8 @@ plot_model_fit <- function(human_data,
                             dunif(x, min = -pi, max = pi) * (mean_p_u))
 
     # plot the human data & model predictions
-    plot <- ggplot(human_error$data, aes(x = x,
-                                         y = mean_error)) +
+    plot <- ggplot(human_error, aes(x = x,
+                                    y = mean_error)) +
       geom_line(data = model_preds,
                 aes(x = x, y = y),
                 alpha = 0.8,
