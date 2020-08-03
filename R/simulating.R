@@ -19,13 +19,13 @@ simulate_mixtur <- function(n_trials,
   print("Simulating data. Please wait...")
 
   # check that p_t, p_n, and p_u sum to 1
-  if(p_n == "NULL"){
+  if(is.null(p_n)){
     if((p_t + p_u) != 1){
       stop("error: p_t and p_u do not sum to 1.", call. = FALSE)
     }
   }
 
-  if(p_n != "NULL"){
+  if(!is.null(p_n)){
     if((p_t + p_u + p_n) != 1){
       stop("error: p_t, p_n, and p_u do not sum to 1.", call. = FALSE)
     }
@@ -42,7 +42,7 @@ simulate_mixtur <- function(n_trials,
   trial_data <- round(wrap(trial_data / 180 * pi), 3)
 
   # get the model response
-  if(p_n == "NULL"){
+  if(is.null(p_n)){
     model_data <- get_model_response(trial_data,
                                      set_size = set_size,
                                      K = K,

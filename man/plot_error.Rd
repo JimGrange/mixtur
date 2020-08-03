@@ -10,8 +10,8 @@ plot_error(
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  set_size_var = "NULL",
-  condition_var = "NULL",
+  set_size_var = NULL,
+  condition_var = NULL,
   return_data = FALSE
 )
 }

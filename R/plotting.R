@@ -43,8 +43,8 @@ plot_error <- function(data,
                        id_var = "id",
                        response_var = "response",
                        target_var = "target",
-                       set_size_var = "NULL",
-                       condition_var = "NULL",
+                       set_size_var = NULL,
+                       condition_var = NULL,
                        return_data = FALSE){
 
 
@@ -83,9 +83,9 @@ plot_error <- function(data,
   # find mean error ----
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id) %>%
         summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
@@ -105,11 +105,11 @@ plot_error <- function(data,
   }
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition) %>%
         summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
@@ -131,10 +131,10 @@ plot_error <- function(data,
 
 
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
     data$set_size <- data[[set_size_var]]
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, set_size) %>%
         summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
@@ -156,11 +156,11 @@ plot_error <- function(data,
 
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
     data$set_size <- data[[set_size_var]]
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition, set_size) %>%
         summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
@@ -185,7 +185,7 @@ plot_error <- function(data,
   # plot the data ----
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
@@ -204,7 +204,7 @@ plot_error <- function(data,
   }
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
@@ -228,7 +228,7 @@ plot_error <- function(data,
 
 
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
@@ -252,7 +252,7 @@ plot_error <- function(data,
 
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     # add position jitter to avoid over-plotting
     pd <- position_dodge(0.1)
@@ -335,8 +335,8 @@ plot_precision <- function(data,
                            id_var = "id",
                            response_var = "response",
                            target_var = "target",
-                           set_size_var = "NULL",
-                           condition_var = "NULL",
+                           set_size_var = NULL,
+                           condition_var = NULL,
                            return_data = FALSE){
 
   # get the list of participant ids
@@ -369,9 +369,9 @@ plot_precision <- function(data,
   # find precision----
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -394,11 +394,11 @@ plot_precision <- function(data,
 
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -424,11 +424,11 @@ plot_precision <- function(data,
 
 
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     data$set_size <- data[[set_size_var]]
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, set_size) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -453,12 +453,12 @@ plot_precision <- function(data,
   }
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     data$set_size <- data[[set_size_var]]
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition, set_size) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -486,13 +486,13 @@ plot_precision <- function(data,
   # plot the data----
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
     plot <- "NULL"
   }
 
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     plot <- ggplot(final_data, aes(x = condition,
                                    y = mean_precision)) +
@@ -511,7 +511,7 @@ plot_precision <- function(data,
 
 
   # set size manipulation but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     # ensure set size is numeric
     final_data$set_size <- as.numeric(as.character(final_data$set_size))
@@ -533,7 +533,7 @@ plot_precision <- function(data,
 
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     # ensure set size is numeric
     final_data$set_size <- as.numeric(as.character(final_data$set_size))
@@ -585,8 +585,8 @@ plot_model_fit <- function(human_data,
                            id_var = "id",
                            response_var = "response",
                            target_var = "target",
-                           set_size_var = "NULL",
-                           condition_var = "NULL"){
+                           set_size_var = NULL,
+                           condition_var = NULL){
 
 
   # get the error data for the participant data
@@ -602,7 +602,7 @@ plot_model_fit <- function(human_data,
   human_error <- human_error$data
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
     # get the mean K, p_t, and p_u parameters from the model fit
     # 2-component and 3-component model make same predictions for
@@ -636,7 +636,7 @@ plot_model_fit <- function(human_data,
 
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
     human_error$condition <- human_error[[condition_var]]
     model_data$condition <- model_data[[condition_var]]
 
@@ -705,7 +705,7 @@ plot_model_fit <- function(human_data,
 
 
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     human_error$set_size <- human_error[[set_size_var]]
     model_data$set_size <- model_data[[set_size_var]]
@@ -776,7 +776,7 @@ plot_model_fit <- function(human_data,
 
   }
 
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     human_error$set_size <- human_error[[set_size_var]]
     human_error$condition <- human_error[[condition_var]]

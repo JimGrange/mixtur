@@ -10,12 +10,12 @@ fit_mixtur <- function(data,
                        id_var = "id",
                        response_var = "response",
                        target_var = "target",
-                       non_target_var = "NULL",
-                       set_size_var = "NULL",
-                       condition_var = "NULL"){
+                       non_target_var = NULL,
+                       set_size_var = NULL,
+                       condition_var = NULL){
 
   # get the non-target column names, if applicable
-  if(non_target_var != "NULL"){
+  if(!is.null(non_target_var)){
     non_target_cols <- data %>%
       select(contains(non_target_var)) %>%
       colnames()
@@ -26,7 +26,7 @@ fit_mixtur <- function(data,
     data[[response_var]] <- data[[response_var]] / 180 * pi
     data[[target_var]] <- data[[target_var]] / 180 * pi
 
-     if(non_target_var != "NULL"){
+     if(!is.null(non_target_var)){
       data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
     }
   }
@@ -36,7 +36,7 @@ fit_mixtur <- function(data,
     data[[response_var]] <- data[[response_var]] / 90 * pi
     data[[target_var]] <- data[[target_var]] / 90 * pi
 
-    if(non_target_var != "NULL"){
+    if(!is.null(non_target_var)){
       data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
     }
   }
@@ -54,10 +54,10 @@ fit_mixtur <- function(data,
 
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
     # get the set size of the level
-    if(non_target_var != "NULL"){
+    if(!is.null(non_target_var)){
       level_set_size <- length(non_target_cols) + 1
     } else {
       level_set_size <- 1
@@ -74,7 +74,7 @@ fit_mixtur <- function(data,
   }
 
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     # get the list of conditions
     data$condition <- data[[condition_var]]
@@ -88,7 +88,7 @@ fit_mixtur <- function(data,
         filter(condition == conditions[i])
 
       # get the set size of the level
-      if(non_target_var != "NULL"){
+      if(!is.null(non_target_var)){
         level_set_size <- length(non_target_cols) + 1
       } else {
         level_set_size <- 1
@@ -119,7 +119,7 @@ fit_mixtur <- function(data,
   }
 
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     # get the list of set_sizes
     data$set_size <- data[[set_size_var]]
@@ -139,7 +139,7 @@ fit_mixtur <- function(data,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
-                               non_target_var = "NULL",
+                               non_target_var = NULL,
                                set_size = 1)
 
         level_fit <- level_fit %>%
@@ -171,7 +171,7 @@ fit_mixtur <- function(data,
   }
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     # get the list of set sizes
     data$set_size <- data[[set_size_var]]
@@ -197,7 +197,7 @@ fit_mixtur <- function(data,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
-                                 non_target_var = "NULL",
+                                 non_target_var = NULL,
                                  set_size = 1)
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
@@ -252,7 +252,7 @@ fit_level <- function(data,
                       non_target_var,
                       set_size = 1){
 
-  if(non_target_var == "NULL"){
+  if(is.null(non_target_var)){
     non_target_var <- NULL
   }
 

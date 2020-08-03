@@ -195,10 +195,10 @@ The function—*plot\_error*—takes the following arguments:
     that codes for the target value. Defaults to “target”.
   - **set\_size\_var:** If set size was manipulated, a character
     variable indicating the column name that codes for the set size.
-    Defaults to “NULL”.
+    Defaults to NULL.
   - **conditon\_var:** If an additional condition was manipulated, a
     character indicating the column name that codes for this condition.
-    Defaults to “NULL”.
+    Defaults to NULL.
   - **return\_data:** A logical variable (“TRUE” or “FALSE”) indicating
     whether the plot data should be returned by the function. By
     default, the function will just return the plot itself (i.e.,
@@ -278,7 +278,7 @@ data(bays2009_full)
 plot_error(data = bays2009_full,
            unit = "radians",
            set_size_var = "set_size", 
-           condition_var = "NULL")
+           condition_var = NULL)
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -385,8 +385,8 @@ Instead, just ask for the plot data.
 ``` r
 plot_data <- plot_precision(data = bays2009_full, 
                             unit = "radians",
-                            condition_var = "NULL",
-                            set_size_var = "NULL", 
+                            condition_var = NULL,
+                            set_size_var = NULL, 
                             return_data = TRUE)
 plot_data$data
 #> # A tibble: 1 x 4
@@ -403,7 +403,7 @@ condition.
 plot_precision(data = bays2009_full, 
                unit = "radians",
                condition_var = "delay",
-               set_size_var = "NULL")
+               set_size_var = NULL)
 ```
 
 ![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
@@ -481,7 +481,7 @@ fit <- fit_mixtur(data = data,
                   target_var = "target",
                   non_target_var = "non_target",
                   set_size_var = "set_size",
-                  condition_var = "NULL")
+                  condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
@@ -513,7 +513,7 @@ fit <- fit_mixtur(data = data,
                   target_var = "target",
                   non_target_var = "non_target",
                   set_size_var = "set_size",
-                  condition_var = "NULL")
+                  condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
@@ -627,7 +627,7 @@ fit <- fit_mixtur(data = sample_data,
                   response_var = "response",
                   target_var = "target",
                   non_target_var = "non_target",
-                  set_size_var = "NULL",
+                  set_size_var = NULL,
                   condition_var = "delay")
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
@@ -637,11 +637,11 @@ pd <- position_dodge(0.8)
 
 # plot the fit
 fit %>% 
-  group_by(condition) %>% 
+  group_by(delay) %>% 
   summarise(mean_parm = mean(p_t), 
             se_parm = sd(p_t) / sqrt(length(p_t))) %>% 
-  mutate(condition = as.factor(condition)) %>% 
-  ggplot(aes(x = condition, 
+  mutate(condition = as.factor(delay)) %>% 
+  ggplot(aes(x = delay, 
              y = mean_parm)) + 
   geom_point(size = 3) + 
   geom_line(aes(group = 1)) +
@@ -671,7 +671,7 @@ model_data <- fit_mixtur(data,
                          target_var = "target",
                          non_target_var = "non_target",
                          set_size_var = "set_size",
-                         condition_var = "NULL")
+                         condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
@@ -682,7 +682,7 @@ plot_model_fit(human_data = data,
                response_var = "response",
                target_var = "target",
                set_size_var = "set_size",
-               condition_var = "NULL")
+               condition_var = NULL)
 ```
 
 ![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
@@ -723,7 +723,7 @@ plot_model_fit(human_data = data,
 simulated_data <- simulate_mixtur(n_trials = 5000, 
                                   K = 15, 
                                   p_t = 0.75, 
-                                  p_n = "NULL", 
+                                  p_n = NULL, 
                                   p_u = 0.25, 
                                   set_size = 4)
 #> [1] "Simulating data. Please wait..."
@@ -731,12 +731,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1 -1.710   -1.423        0.506        1.309        2.915
-#> 2  1 -2.391   -2.810       -1.100        0.942        0.192
-#> 3  1 -0.681   -0.722       -2.705       -1.780        2.583
-#> 4  1 -0.995    0.086       -2.007        1.885        2.793
-#> 5  1  1.187    1.904        0.454       -1.431        2.217
-#> 6  1 -1.431    0.742       -2.653       -0.314        2.723
+#> 1  1 -1.012    0.582       -2.548        1.414        2.793
+#> 2  1  2.147    2.119       -2.251        0.925       -0.908
+#> 3  1 -0.262   -0.100       -2.094        2.182        2.897
+#> 4  1 -1.833   -1.701        0.454       -0.454       -2.897
+#> 5  1  1.152    1.175        2.653       -2.007        0.192
+#> 6  1 -0.733   -0.719       -2.374        1.885        0.698
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -745,14 +745,14 @@ fit <- fit_mixtur(data = simulated_data,
                   response_var = "response",
                   target_var = "target",
                   non_target_var = "non_target",
-                  set_size_var = "NULL",
-                  condition_var = "NULL")
+                  set_size_var = NULL,
+                  condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
 head(fit)
 #>   id      K   p_t p_n   p_u
-#> 1  1 14.988 0.739   0 0.261
+#> 1  1 15.194 0.748   0 0.252
 ```
 
 ### Three-component model
@@ -769,12 +769,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  2.827    2.996       -0.925       -0.157        0.925
-#> 2  1 -1.676   -1.872        1.274        0.541        2.775
-#> 3  1 -1.972   -2.087       -1.134        3.037        0.942
-#> 4  1  1.100    0.655        2.653       -2.374       -0.785
-#> 5  1  1.169    0.998       -0.105        2.077       -3.142
-#> 6  1 -0.977   -0.710        1.361       -2.025        2.723
+#> 1  1  0.663    0.929        1.937       -1.065        2.985
+#> 2  1 -3.142   -3.267       -0.140        0.960        1.868
+#> 3  1  1.553    1.520       -2.793       -1.676       -0.977
+#> 4  1 -2.478    1.130        0.454        2.688        1.606
+#> 5  1 -0.209   -0.073       -2.304        3.072        1.187
+#> 6  1  1.204    1.486       -1.222        2.862       -2.601
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -783,14 +783,14 @@ fit <- fit_mixtur(data = simulated_data,
                   response_var = "response",
                   target_var = "target",
                   non_target_var = "non_target",
-                  set_size_var = "NULL",
-                  condition_var = "NULL")
+                  set_size_var = NULL,
+                  condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t   p_n   p_u
-#> 1  1 14.635 0.754 0.143 0.103
+#>   id     K   p_t   p_n   p_u
+#> 1  1 15.32 0.752 0.153 0.095
 ```
 
 ## Designing
