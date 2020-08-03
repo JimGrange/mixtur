@@ -70,7 +70,7 @@ bays_data$non_target_5[is.nan(as.numeric(bays_data$non_target_5))] <- NA
 #   bays_data$non_target_5[i] <- radians_to_degrees(bays_data$non_target_5[i])
 # }
 
-# round degrees to 2 decimal places
+# round degrees to 3 decimal places
 bays_data[, 3:10] <- round(bays_data[, 3:10], 3)
 
 # only select a snippet of the data for simple overview

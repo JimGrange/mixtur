@@ -124,12 +124,12 @@ data(bays2009_full)
 # look at the top of the data
 head(bays2009_full)
 #>   id set_size delay response target non_target_1 non_target_2 non_target_3
-#> 1  1        1   100    -0.65  -0.64           NA           NA           NA
-#> 2  1        1   100     2.04   2.11           NA           NA           NA
-#> 3  1        1   500    -2.95   3.14           NA           NA           NA
-#> 4  1        1   500     1.92   2.37           NA           NA           NA
-#> 5  1        1   500    -0.18  -0.16           NA           NA           NA
-#> 6  1        1   100    -2.68  -2.61           NA           NA           NA
+#> 1  1        1   100   -0.651 -0.638           NA           NA           NA
+#> 2  1        1   100    2.042  2.108           NA           NA           NA
+#> 3  1        1   500   -2.953  3.141           NA           NA           NA
+#> 4  1        1   500    1.918  2.368           NA           NA           NA
+#> 5  1        1   500   -0.176 -0.155           NA           NA           NA
+#> 6  1        1   100   -2.683 -2.609           NA           NA           NA
 #>   non_target_4 non_target_5
 #> 1           NA           NA
 #> 2           NA           NA
@@ -366,10 +366,10 @@ plot_data$data
 #> # A tibble: 4 x 5
 #>   set_size mean_precision se_precision mean_bias se_bias
 #>      <dbl>          <dbl>        <dbl>     <dbl>   <dbl>
-#> 1        1          3.39        0.243    0.00676  0.0107
+#> 1        1          3.40        0.244    0.00679  0.0108
 #> 2        2          1.72        0.153    0.0107   0.0114
-#> 3        4          0.820       0.0917   0.0171   0.0145
-#> 4        6          0.508       0.0555  -0.0120   0.0440
+#> 3        4          0.819       0.0917   0.0172   0.0144
+#> 4        6          0.508       0.0555  -0.0120   0.0441
 ```
 
 Note that when you return the data from a plot there is data concerning
@@ -392,7 +392,7 @@ plot_data$data
 #> # A tibble: 1 x 4
 #>   mean_precision se_precision mean_bias se_bias
 #>            <dbl>        <dbl>     <dbl>   <dbl>
-#> 1           1.06       0.0826   0.00964 0.00864
+#> 1           1.06       0.0826   0.00968 0.00863
 ```
 
 In this example, we plot precision as a function of the *delay*
