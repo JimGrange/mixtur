@@ -4,7 +4,7 @@
 get_angles <- function(n_trials, set_size = 4, memory_distance = 20){
 
   if((set_size != 1) & (set_size != 2) & (set_size !=3) &
-     (set_size != 4) & (set_size != 6)){
+     (set_size != 4) & (set_size != 6) & (set_size != 8)){
     return("ERROR: Only use 1, 2, 4, 6, or 8 stimuli!")
   }
 
