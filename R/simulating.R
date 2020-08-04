@@ -12,7 +12,7 @@ simulate_mixtur <- function(n_trials,
                             p_n,
                             p_u,
                             set_size = 4,
-                            min_angle_distance = 40){
+                            min_angle_distance = 20){
 
 
   # print message to user

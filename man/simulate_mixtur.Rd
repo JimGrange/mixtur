@@ -11,7 +11,7 @@ simulate_mixtur(
   p_n,
   p_u,
   set_size = 4,
-  min_angle_distance = 40
+  min_angle_distance = 20
 )
 }
 \description{
