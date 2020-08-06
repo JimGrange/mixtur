@@ -138,3 +138,74 @@ get_model_response <- function(trial_data, set_size, K, p_t, p_n, p_u){
 
 }
 
+
+
+# simulate data from the mixture models -----------------------------------
+
+# TODO: I could tidy this up by having the standard sim function call
+# a different "get_angles" depending on whether if the user wants fixed
+# angle separations
+#' simulate the mixture model with fixed angle separation.
+#' This is NOT the function to be called by the user
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom dplyr near
+#' @export
+fixed_angle_simulate_mixtur <- function(n_trials,
+                                        K,
+                                        p_t,
+                                        p_n,
+                                        p_u,
+                                        set_size = 4,
+                                        min_angle_distance = 20){
+
+
+  # print message to user
+  print("Simulating data. Please wait...")
+
+  # check that p_t, p_n, and p_u sum to 1
+  if(is.null(p_n)){
+    if(dplyr::near((p_t + p_u), 1)){
+      stop("error: p_t and p_u do not sum to 1.", call. = FALSE)
+    }
+  }
+
+  if(!is.null(p_n)){
+    if(dplyr::near((p_t + p_n + p_u), 1) != TRUE){
+      stop("p_t, p_n, and p_u do not sum to 1.", call. = FALSE)
+    }
+  }
+
+
+
+  # create the trial structure to present to the model
+  trial_data <- get_fixed_angles(n_trials = n_trials,
+                                 set_size = set_size,
+                                 memory_distance = min_angle_distance)
+
+  # transform the angles to circular space
+  trial_data <- round(wrap(trial_data / 180 * pi), 3)
+
+  # get the model response
+  if(is.null(p_n)){
+    model_data <- get_model_response(trial_data,
+                                     set_size = set_size,
+                                     K = K,
+                                     p_t = p_t,
+                                     p_u = p_u,
+                                     p_n = 0)
+
+  } else {
+    model_data <- get_model_response(trial_data,
+                                     set_size = set_size,
+                                     K = K,
+                                     p_t = p_t,
+                                     p_u = p_u,
+                                     p_n = n)
+  }
+
+  # print message to user
+  print("Simulating data finished.")
+
+  return(model_data)
+}
