@@ -462,15 +462,35 @@ academic social media\! This way, **mixtur** can play nicely with all.
 
 ## Modelling
 
-Coming soon\!
+The main reason for using **mixtur** for most users will likely be to
+fit mixture models to data already collected. The **mixtur** package can
+currently fit both the 2-component mixture model (i.e., that of Zhang &
+Luck, 2008) and the 3-component mixture model (i.e., that of Bays et
+al., 2009).
 
 ### Two-component mixture models
 
-Coming soon\!
+The two-component mixture model of Zhang and Luck (2008) assumes that
+participant responses are a probabilistic mixture of two types of
+response:
+
+  - A (noisy) response to the correct target value, which is modelled as
+    a Gaussian distribution for circular data (i.e., a [von
+    Mises](https://en.wikipedia.org/wiki/Von_Mises_distribution)
+    distribution) centered on the true target value.
+  - Guessing, which is modelled as a uniform distribution with equal
+    probability across all possible responses.
+
+The two-component model has two main parameters that are estimated via
+model fitting:
+
+  - *K:* The concentration parameter of the von Mises distrubition,
+    estimating the variability in response error. Larger values of K
+    reflect
 
 ### Three-component mixture models
 
-Coming soon\!
+The three-component model takes into account
 
 #### Bays et al. (2009 Figure 1d & 1e)
 

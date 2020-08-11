@@ -294,6 +294,13 @@ fit_mixtur <- function(data,
   # print message to user
   print("Model fit finished.")
 
+
+  # remove p_n column if the user was fitting the 2-component model
+  if(components == 2){
+    fit <- fit %>%
+      select(-p_n)
+  }
+
   return(fit)
 
 }
@@ -344,16 +351,7 @@ fit_level <- function(data,
     response <- as.matrix(df[, response_var])
     target <- as.matrix(df[, target_var])
 
-    # get the non-target values for this set size if set size is above one
-    if(set_size > 1){
-      non_target_cols <- df %>%
-        select(starts_with(non_target_var)) %>%
-        colnames()
 
-      non_targets <- as.matrix(df[, non_target_cols])
-      colnames(non_targets) <- NULL
-      non_targets <- as.matrix(non_targets[, 1:(set_size - 1)])
-    }
 
     #--- pass the data to the fit function
 
@@ -367,6 +365,18 @@ fit_level <- function(data,
     # if the 3-component model is called, pass non-target info to fit
     # only if set size is greater than one (i.e., there is non-target info)
     if(components == 3){
+
+      # get the non-target values for this set size if set size is above one
+      if(set_size > 1){
+        non_target_cols <- df %>%
+          select(starts_with(non_target_var)) %>%
+          colnames()
+
+        non_targets <- as.matrix(df[, non_target_cols])
+        colnames(non_targets) <- NULL
+        non_targets <- as.matrix(non_targets[, 1:(set_size - 1)])
+      }
+
       if(is.null(non_target_var)) {
         fit <- fit_model(response,
                          target,
