@@ -1,8 +1,68 @@
 # fit the mixtur model ----------------------------------------------------
-#' Fit the mixture model. This is the function to be called by the user
-#' TODO: Documentation!
+#' Fit the mixture model.
+#'
+#' This is the function called by the user to fit either the two- or three-
+#' component mixture model.
+#'
+#' @param data A data frame with columns containing (at the very least)
+#' trial-level participant response and target values This data can either be
+#' in degrees (1-360 or 1-180) or radians. If the 3-component mixture model is
+#' to be fitted to the data, the data frame also needs to contain the values
+#' of all non-targets. In addition, the model can be fit to individual
+#' individual participants, individual set-sizes, and individual additional
+#' conditions; if the user wishes for this, then the data frame should have
+#' columns coding for this information.
+#'
+#' @param components A numeric value indicating whether the 2-component or
+#' 3-component mixture model should be fitted to the data.
+#'
+#' @param unit A character indicating the unit of measurement in the data frame:
+#' "degrees" (measurement is in degrees, from 1 to 360); "degrees_180
+#' (measurement is in degrees, but limited to 1 to 180); or "radians"
+#' (measurement is in radians, from pi to 2 * pi, but could also be already in
+#' the range -pi to pi).
+#'
+#' @param id_var The quoted column name coding for participant id. If the data is from
+#' a single participant (i.e., there is no id column) set to NULL.
+#'
+#' @param response_var The quoted column name coding for the participants' responses
+#'
+#' @param target_var The quoted column name coding for the target value.
+#'
+#' @param non_target_var The quoted variable name common to all columns (if
+#' applicable) storing non-target values. If the user wishes to fit the
+#' 3-component mixture model, the user should have one column coding for each
+#' non-target's value in the data frame. If there is more than one non-target,
+#' each column name should begin with a common term (e.g., the "non_target"
+#' term is common to the non-target columns "non_target_1", "non_target_2"
+#' etc.), which should then be passed to the function via the
+#' \code{non_target_var} variable.
+#'
+#' @param set_size_var The quoted column name (if applicable) coding for the set
+#' size of each response.
+#'
+#' @param condition_var The quoted column name (if applicable) coding for the
+#' condition of each response.
+#'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
+#'
+#' @examples
+#'
+#' # load the example data
+#' data <- bays2009_full
+#'
+#' # fit the 3-component mixture model ignoring condition
+#' fit <- fit_mixtur(data = data,
+#'                   components = 3,
+#'                   unit = "radians",
+#'                   id_var = "id",
+#'                   response_var = "response",
+#'                   target_var = "target",
+#'                   non_target_var = "non_target",
+#'                   set_size_var = "set_size",
+#'                   condition_var = NULL)
+#'
 #' @export
 fit_mixtur <- function(data,
                        components = 3,
@@ -47,8 +107,6 @@ fit_mixtur <- function(data,
 
   # TODO: Radians not in range -pi to pi
 
-
-
   # print message to user
   print("Model fit running. Please wait...")
 
@@ -72,6 +130,7 @@ fit_mixtur <- function(data,
                      non_target_var = non_target_var,
                      set_size = level_set_size)
   }
+
 
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
@@ -117,6 +176,7 @@ fit_mixtur <- function(data,
     fit <- fit %>%
       rename(!!condition_var:=condition)
   }
+
 
   # set size manipulation, but no condition manipulation
   if(!is.null(set_size_var) && is.null(condition_var)){
@@ -169,6 +229,7 @@ fit_mixtur <- function(data,
     fit <- fit %>%
       rename(!!set_size_var:=set_size)
   }
+
 
   # both set size & condition manipulation
   if(!is.null(set_size_var) && !is.null(condition_var)){
@@ -240,9 +301,15 @@ fit_mixtur <- function(data,
 
 
 # fit model to a single level ---------------------------------------------
-#' fit model to a single level
+#' Fit model to a single level.
+#'
+#' This wrapper function is called by the \code{fit_mixtur} function to fit the
+#' models to a single level from the data frame. It is not expected that this
+#' function be called by the user.
+#'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
+#'
 #' @export
 fit_level <- function(data,
                       components = 3,
@@ -325,7 +392,12 @@ fit_level <- function(data,
 
 
 # fit model ---------------------------------------------------------------
-#' fit model
+#' Fit the mixture model.
+#'
+#' This is the function that is called by the wrapper function
+#' \code{fit_level}. It is not expected that this function be called by the
+#' user.
+#'
 #' @export
 fit_model <- function(response,
                       target,
@@ -388,7 +460,10 @@ fit_model <- function(response,
 
 
 # likelihood function -----------------------------------------------------
-#' likelihood function
+#' Calculate the likelihood function of the mixture model.
+#'
+#' It is not expected that this function be called by the user.
+#'
 #' @export
 likelihood_function <- function(response,
                                 target,
@@ -422,7 +497,6 @@ likelihood_function <- function(response,
 
   # get the number of non-targets present
   nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
-
 
   # set default starting parameter if not provided, else assign starting
   # parameters to parameter variabls

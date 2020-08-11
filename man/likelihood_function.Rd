@@ -2,10 +2,10 @@
 % Please edit documentation in R/modelling.R
 \name{likelihood_function}
 \alias{likelihood_function}
-\title{likelihood function}
+\title{Calculate the likelihood function of the mixture model.}
 \usage{
 likelihood_function(response, target, non_targets, start_parms = NULL)
 }
 \description{
-likelihood function
+It is not expected that this function be called by the user.
 }

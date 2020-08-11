@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelling.R
 \name{fit_level}
 \alias{fit_level}
-\title{fit model to a single level}
+\title{Fit model to a single level.}
 \usage{
 fit_level(
   data,
@@ -15,5 +15,7 @@ fit_level(
 )
 }
 \description{
-fit model to a single level
+This wrapper function is called by the \code{fit_mixtur} function to fit the
+models to a single level from the data frame. It is not expected that this
+function be called by the user.
 }

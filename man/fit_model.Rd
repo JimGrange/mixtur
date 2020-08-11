@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelling.R
 \name{fit_model}
 \alias{fit_model}
-\title{fit model}
+\title{Fit the mixture model.}
 \usage{
 fit_model(
   response,
@@ -12,5 +12,7 @@ fit_model(
 )
 }
 \description{
-fit model
+This is the function that is called by the wrapper function
+\code{fit_level}. It is not expected that this function be called by the
+user.
 }
