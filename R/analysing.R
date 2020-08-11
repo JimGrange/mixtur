@@ -1,39 +1,56 @@
 # analyse behavioural precision ----------------------------------------------
+#' Obtain measures of precision
+#'
 #' Returns participant-level data for precision estimates ready for inferential
 #' analysis. Note that the function does not actually conduct the analysis.
 #'
-#'This note is a TODO for later.
+#' Precision is defined as the reciprocal of the circular standard deviation of
+#' the response error corrected for guessing.
 #'
-#'@param data A data frame with columns containing: participant identifier
-#'('id_var'); the participants' response per trial ('response_var'); the
-#'target value ('target_var'); and, if applicable, the set size of each
-#'response ('set_size_var'), and the condition of each response
-#'('condition_var').
-#'@param unit The unit of measurement in the data frame: "degrees"
-#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
-#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-#'from pi to 2 * pi, but could also be already in -pi to pi).
-#'@param id_var The column name coding for participant id. If the data is from
-#'a single participant (i.e., there is no id column) set to "NULL".
-#'@param response_var The column name coding for the participants' responses
-#'@param target_var The column name coding for the target value
-#'@param set_size_var The column name (if applicable) coding for the set
-#'size of each response
-#'@param condition_var The column name (if applicable) coding for the
-#'condition of each response
+#' This note is a TODO for later.
+#'
+#' @param data A data frame with columns containing: participant identifier
+#' (declared via variable 'id_var'); the participants' response per trial ('response_var'); the
+#' target value ('target_var'); and, if applicable, the set size of each
+#' response ('set_size_var'), and the condition of each response
+#' ('condition_var').
+#' @param unit The unit of measurement in the data frame: "degrees"
+#' (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#' degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#' from pi to 2 * pi, but could also be already in -pi to pi).
+#' @param id_var The quoted column name coding for participant id. If the data is from
+#' a single participant (i.e., there is no id column) set to NULL.
+#' @param response_var The quoted column name coding for the participants' responses
+#' @param target_var The quoted column name coding for the target value.
+#' @param set_size_var The quoted column name (if applicable) coding for the set
+#' size of each response.
+#' @param condition_var The quoted column name (if applicable) coding for the
+#' condition of each response.
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
+#'
+#'
+#' @examples
+#' # load an example data frame
+#' data(bays2009_full)
+#'
+#' # calculate the precision per condition per set size
+#' precision_data <- analyse_precision(data = bays2009_full,
+#'                                     unit = "radians",
+#'                                     condition_var = "delay",
+#'                                     set_size_var = "set_size")
+#'
 #' @export
 analyse_precision <- function(data,
                               unit = "degrees",
                               id_var = "id",
                               response_var = "response",
                               target_var = "target",
-                              set_size_var = "NULL",
-                              condition_var = "NULL"){
+                              set_size_var = NULL,
+                              condition_var = NULL){
 
   # get the list of participant ids
   ids <- unique(data[[id_var]])
@@ -65,9 +82,9 @@ analyse_precision <- function(data,
   # find precision----
 
   # no set size or condition manipulation
-  if(set_size_var == "NULL" && condition_var == "NULL"){
+  if(is.null(set_size_var) && is.null(condition_var)){
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -80,13 +97,12 @@ analyse_precision <- function(data,
 
   }
 
-
   # no set size manipulation but there is a condition manipulation
-  if(set_size_var == "NULL" && condition_var != "NULL"){
+  if(is.null(set_size_var) && !is.null(condition_var)){
 
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -100,13 +116,12 @@ analyse_precision <- function(data,
 
   }
 
-
   # set size manipulation, but no condition manipulation
-  if(set_size_var != "NULL" && condition_var == "NULL"){
+  if(!is.null(set_size_var) && is.null(condition_var)){
 
     data$set_size <- data[[set_size_var]]
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, set_size) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -121,12 +136,12 @@ analyse_precision <- function(data,
   }
 
   # both set size & condition manipulation
-  if(set_size_var != "NULL" && condition_var != "NULL"){
+  if(!is.null(set_size_var) && !is.null(condition_var)){
 
     data$set_size <- data[[set_size_var]]
     data$condition <- as.factor(data[[condition_var]])
 
-    if(id_var != "NULL"){
+    if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition, set_size) %>%
         summarise(precision = get_precision_single(error)[, 1],
@@ -139,7 +154,6 @@ analyse_precision <- function(data,
 
     }
   }
-
 
   return(final_data)
 

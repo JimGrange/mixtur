@@ -2,8 +2,7 @@
 % Please edit documentation in R/analysing.R
 \name{analyse_precision}
 \alias{analyse_precision}
-\title{Returns participant-level data for precision estimates ready for inferential
-analysis. Note that the function does not actually conduct the analysis.}
+\title{Obtain measures of precision}
 \usage{
 analyse_precision(
   data,
@@ -11,13 +10,13 @@ analyse_precision(
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  set_size_var = "NULL",
-  condition_var = "NULL"
+  set_size_var = NULL,
+  condition_var = NULL
 )
 }
 \arguments{
 \item{data}{A data frame with columns containing: participant identifier
-('id_var'); the participants' response per trial ('response_var'); the
+(declared via variable 'id_var'); the participants' response per trial ('response_var'); the
 target value ('target_var'); and, if applicable, the set size of each
 response ('set_size_var'), and the condition of each response
 ('condition_var').}
@@ -27,19 +26,37 @@ response ('set_size_var'), and the condition of each response
 degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
 from pi to 2 * pi, but could also be already in -pi to pi).}
 
-\item{id_var}{The column name coding for participant id. If the data is from
-a single participant (i.e., there is no id column) set to "NULL".}
+\item{id_var}{The quoted column name coding for participant id. If the data is from
+a single participant (i.e., there is no id column) set to NULL.}
 
-\item{response_var}{The column name coding for the participants' responses}
+\item{response_var}{The quoted column name coding for the participants' responses}
 
-\item{target_var}{The column name coding for the target value}
+\item{target_var}{The quoted column name coding for the target value.}
 
-\item{set_size_var}{The column name (if applicable) coding for the set
-size of each response}
+\item{set_size_var}{The quoted column name (if applicable) coding for the set
+size of each response.}
 
-\item{condition_var}{The column name (if applicable) coding for the
-condition of each response}
+\item{condition_var}{The quoted column name (if applicable) coding for the
+condition of each response.}
 }
 \description{
+Returns participant-level data for precision estimates ready for inferential
+analysis. Note that the function does not actually conduct the analysis.
+}
+\details{
+Precision is defined as the reciprocal of the circular standard deviation of
+the response error corrected for guessing.
+
 This note is a TODO for later.
+}
+\examples{
+# load an example data frame
+data(bays2009_full)
+
+# calculate the precision per condition per set size
+precision_data <- analyse_precision(data = bays2009_full,
+                                    unit = "radians",
+                                    condition_var = "delay",
+                                    set_size_var = "set_size")
+
 }
