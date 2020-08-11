@@ -150,10 +150,10 @@ need these names as you can set this within function calls; see examples
 later).
 
   - **id:** A column indicating the participant numbers / identifiers.
-  - **response:** A column providing the participant response. This can
-    either be in degrees (i.e., 1-360), degrees limited to the range
-    1-180 (i.e., if your experiment uses bar orientations), or radians
-    (typically in the range 0-2PI, but could also be -PI to PI).
+  - **response:** A column providing the participant response value.
+    This can either be in degrees (i.e., 1-360), degrees limited to the
+    range 1-180 (i.e., if your experiment uses bar orientations), or
+    radians (typically in the range 0-2PI, but could also be -PI to PI).
   - **target:** A column providing the target value. This will be used
     to calculate response error (i.e., the deviation between the
     participant’s response and the target value).
@@ -166,7 +166,7 @@ later).
   - **set-size:** A column indicating the current trial’s set size
     (i.e., number of items to remember during the encoding phase), if
     your experiment manipulated this.
-  - **other condition:** A colum indicating the current trial’s
+  - **other condition:** A column indicating the current trial’s
     condition if your experiment had an additional manipulation (for
     example the *delay* of the retention interval, as in the Bays
     \[2009\] data).
