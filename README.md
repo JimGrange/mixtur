@@ -157,7 +157,12 @@ later).
   - **target:** A column providing the target value. This will be used
     to calculate response error (i.e., the deviation between the
     participant’s response and the target value).
-  - **non-target:** NEED TO WORK ON THIS IN THE MODELLING SECTION.
+  - **non-target:** If the experiment had set sizes greater than one,
+    the data should include columns that provide the non-target values
+    (one column for each non-target). If there is more than one
+    non-target, each column name should begin with a common term (e.g.,
+    the “non-target” term is common to the non-target columns
+    “non\_target\_1”, “non\_target\_2” etc.).
   - **set-size:** A column indicating the current trial’s set size
     (i.e., number of items to remember during the encoding phase), if
     your experiment manipulated this.
