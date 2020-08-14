@@ -21,6 +21,7 @@ studies.
       - plot model parameters
       - ~~plot model fit against participant error data~~
       - ~~need to test degress\_180 data works~~
+      - return log-likelihood of fit?
       - formal model comparison tests?
   - Simulating
       - ~~base simulate\_mixtur function~~
@@ -493,9 +494,41 @@ model fitting:
     estimated probability of making a response to the target
     value—**p\_t**—which is simply 1-**p\_u**.
 
+#### Passing data to the fitting function
+
+The same function—**fit\_mixtur**—is used to fit both the two- and
+three-component mixture models. It accepts the following arguments
+(which we have seen before):
+
+  - **data:** A data frame containing the data that is to be modelled
+    See the [data structure section](#data-structures-in-mixtur) for how
+    this should be formatted.
+  - **components:** A numeric value indicating whether the two-component
+    or three-component mixture model should be fitted to the data.
+  - **unit:** A character variable indicating the unit of measurement in
+    the data. **mixtur** accepts units in degrees (1-360), degrees\_180
+    capped at 180 (1-180), and radians (either 0-2PI or -PI to PI).
+    Defaults to “degrees”.
+  - **id\_var:** A character variable indicating the column name that
+    codes for participant identification. Defaults to “id”.
+  - **response\_var:** A character variable indicating the column name
+    that codes for participants’ responses. Defaults to “response”.
+  - **target\_var:** A character variable indicating the column name
+    that codes for the target value. Defaults to “target”.
+  - **set\_size\_var:** If set size was manipulated, a character
+    variable indicating the column name that codes for the set size.
+    Defaults to NULL.
+  - **conditon\_var:** If an additional condition was manipulated, a
+    character indicating the column name that codes for this condition.
+    Defaults to NULL.
+
 As the two-component model does not take into account non-target
 responses (cf., the three-component model), the user’s data frame does
 not need to include non-target values.
+
+Here’s an example of fitting the two-component model to Bays et al.’s
+(2009) data, where there was a set size manipulation, and a condition
+manipulation of “delay”:
 
 ``` r
 
@@ -514,19 +547,58 @@ model_fit <- fit_mixtur(data = data,
 #> [1] "Model fit finished."
 
 # look at the top of the fit object
-head(model_fit)
-#>   id      K p_t p_u set_size delay
-#> 1  1 17.171   1   0        1   100
-#> 2  2 13.469   1   0        1   100
-#> 3  3 12.041   1   0        1   100
-#> 4  4 28.565   1   0        1   100
-#> 5  5 13.350   1   0        1   100
-#> 6  6 26.987   1   0        1   100
+head(model_fit, n = 20)
+#>    id      K   p_t   p_u set_size delay
+#> 1   1 17.171 1.000 0.000        1   100
+#> 2   2 13.469 1.000 0.000        1   100
+#> 3   3 12.041 1.000 0.000        1   100
+#> 4   4 28.565 1.000 0.000        1   100
+#> 5   5 13.350 1.000 0.000        1   100
+#> 6   6 26.987 1.000 0.000        1   100
+#> 7   7 12.292 1.000 0.000        1   100
+#> 8   8 16.344 1.000 0.000        1   100
+#> 9   9 13.461 0.973 0.027        1   100
+#> 10 10 20.824 0.973 0.027        1   100
+#> 11 11 14.996 0.973 0.027        1   100
+#> 12 12 30.382 1.000 0.000        1   100
+#> 13  1 17.501 1.000 0.000        1   500
+#> 14  2 18.368 1.000 0.000        1   500
+#> 15  3 18.617 1.000 0.000        1   500
+#> 16  4 26.077 1.000 0.000        1   500
+#> 17  5 11.565 1.000 0.000        1   500
+#> 18  6 37.132 0.980 0.020        1   500
+#> 19  7 11.568 1.000 0.000        1   500
+#> 20  8 20.272 0.974 0.026        1   500
 ```
 
 ### Three-component mixture models
 
-The three-component model takes into account
+The three-component model of Bays et al. (2009) assumes that participant
+responses are a probabilistic mixture of three type of response:
+
+  - A (noisy) response to the correct target value, which is modelled as
+    a Gaussian distribution for circular data (i.e., a [von
+    Mises](https://en.wikipedia.org/wiki/Von_Mises_distribution)
+    distribution) centered on the true target value.
+  - Guessing, which is modelled as a uniform distribution with equal
+    probability across all possible responses.
+  - Responses to non-target values. On some trials, participants
+    erroneously report the value associated with one of the non-probed
+    target values
+
+The three-component model has three main parameters that are estimated
+via model fitting. The first two are the same as the two-component model
+of Zhang & Luck (2008).
+
+  - **K:** The concentration parameter of the von Mises distrubition,
+    estimating the variability in response error. Larger values of K
+    reflect more precise responses.
+  - **p\_u:** The estimated probability of guessing (i.e., the
+    probability of a uniform response, hence the *u*).
+  - **p\_n:** The estimated probability of a non-target response.
+  - To assist the user, the model fitting routine also returns the
+    estimated probability of making a response to the target
+    value—**p\_t**—which is simply 1–**p\_u**–**p\_n**.
 
 #### Bays et al. (2009 Figure 1d & 1e)
 
@@ -860,3 +932,10 @@ head(fit)
 Coming soon\!
 
 ## References
+
+Bays, P. M., Catalao, R. F. G., & Husain, M. (2009). The precision of
+visual working memory is set by allocation of a shared resource.
+*Journal of Vision, 9*(10): 7, 1–11.
+
+Zhang, W., & Luck, S. J. (2008). Discrete fixed-resolution
+representations in visual working memory. *Nature, 453,* 233–235.
