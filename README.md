@@ -1,10 +1,6 @@
 
 # mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
 
-**mixtur** is a package to assist researchers in designing, analysing,
-and modelling data from continuous report visual short-term memory
-studies.
-
 ## ToDo List
 
   - Plotting
@@ -62,6 +58,10 @@ studies.
 
 ## Package Overview
 
+**mixtur** is a package to assist researchers in designing, analysing,
+and modelling data from continuous report visual short-term memory
+studies.
+
 ### Installation
 
 To install the package from GitHub, you need the devtools package:
@@ -110,8 +110,8 @@ familiarise themselves with the package:
     delay of 500ms. This sample data is provided if the user wishes to
     interact with a simpler data structure. The response, target, and
     non-target values are in radians (-PI to PI).
-  - **berrt\_2009**: TODO - Write blurb about studt. Data set has
-    respone, target, and non-target values in degrees in the range -180
+  - **berry\_2009**: TODO - Write blurb about studt. Data set has
+    response, target, and non-target values in degrees in the range -180
     to 180.
 
 Data can be loaded in the following way:
@@ -156,8 +156,8 @@ later).
     range 1-180 (i.e., if your experiment uses bar orientations), or
     radians (typically in the range 0-2PI, but could also be -PI to PI).
   - **target:** A column providing the target value. This will be used
-    to calculate response error (i.e., the deviation between the
-    participant’s response and the target value).
+    by the **mixtur** package to calculate response error (i.e., the
+    deviation between the participant’s response and the target value).
   - **non-target:** If the experiment had set sizes greater than one,
     the data should include columns that provide the non-target values
     (one column for each non-target). If there is more than one
