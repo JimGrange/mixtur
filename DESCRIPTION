@@ -11,11 +11,9 @@ Description: A set of utility functions for analysing and modelling data from
     descriptions here...]. Users are able to simulate from these models, too. 
     Helper functions are also included to assist with experiment design.
 Depends: 
-  R (>= 4.0), 
-  tidyverse, 
-  RColorBrewer
+  R (>= 4.0)
 Imports:
-  tidyverse, 
+  ggplot2, 
   dplyr, 
   tidyr,
   RColorBrewer
