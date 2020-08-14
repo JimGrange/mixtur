@@ -484,9 +484,45 @@ response:
 The two-component model has two main parameters that are estimated via
 model fitting:
 
-  - *K:* The concentration parameter of the von Mises distrubition,
+  - **K:** The concentration parameter of the von Mises distrubition,
     estimating the variability in response error. Larger values of K
-    reflect
+    reflect more precise responses.
+  - **p\_u:** The estimated probability of guessing (i.e., the
+    probability of a uniform response, hence the *u*).
+  - To assist the user, the model fitting routine also returns the
+    estimated probability of making a response to the target
+    value—**p\_t**—which is simply 1-**p\_u**.
+
+As the two-component model does not take into account non-target
+responses (cf., the three-component model), the user’s data frame does
+not need to include non-target values.
+
+``` r
+
+# load the data
+data <- bays2009_full
+
+# fit the 2-component model
+model_fit <- fit_mixtur(data = data, 
+                        components = 2, 
+                        unit = "radians", 
+                        response_var = "response", 
+                        target_var = "target", 
+                        set_size_var = "set_size", 
+                        condition_var = "delay")
+#> [1] "Model fit running. Please wait..."
+#> [1] "Model fit finished."
+
+# look at the top of the fit object
+head(model_fit)
+#>   id      K p_t p_u set_size delay
+#> 1  1 17.171   1   0        1   100
+#> 2  2 13.469   1   0        1   100
+#> 3  3 12.041   1   0        1   100
+#> 4  4 28.565   1   0        1   100
+#> 5  5 13.350   1   0        1   100
+#> 6  6 26.987   1   0        1   100
+```
 
 ### Three-component mixture models
 
@@ -525,7 +561,7 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-16-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 data <- bays2009_full
@@ -557,7 +593,7 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
 
 #### Bayes et al. (2009 Figure 1h & 1i)
 
@@ -580,50 +616,22 @@ fit <- fit_mixtur(data = data,
 pd <- position_dodge(0.0)
 
 fit %>% 
-  group_by(set_size, condition) %>% 
+  group_by(set_size, delay) %>% 
   summarise(mean_parm = mean(p_n), 
             se_parm = sd(p_n) / sqrt(length(p_n))) %>% 
-  mutate(condition = as.factor(condition)) %>% 
+  mutate(delay = as.factor(delay)) %>% 
   ggplot(aes(x = set_size, 
              y = mean_parm, 
-             group = condition)) + 
-  geom_point(aes(colour = condition), 
+             group = delay)) + 
+  geom_point(aes(colour = delay), 
              position = pd, 
              size = 2.5) + 
-  geom_line(aes(colour = condition, 
-                linetype = condition), 
+  geom_line(aes(colour = delay, 
+                linetype = delay), 
             position = pd) +
   geom_errorbar(aes(ymax = mean_parm + se_parm,
                     ymin = mean_parm - se_parm, 
-                    colour = condition),
-                width = 0.05, 
-                position = pd) + 
-  scale_y_continuous(limits = c(0, 0.4)) + 
-  scale_colour_brewer(palette = "Dark2") +
-  theme_bw()
-#> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
-```
-
-![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
-
-``` r
-fit %>% 
-  group_by(set_size, condition) %>% 
-  summarise(mean_parm = mean(p_u), 
-            se_parm = sd(p_u) / sqrt(length(p_u))) %>% 
-  mutate(condition = as.factor(condition)) %>% 
-  ggplot(aes(x = set_size, 
-             y = mean_parm, 
-             group = condition)) + 
-  geom_point(aes(colour = condition), 
-             position = pd, 
-             size = 2.5) + 
-  geom_line(aes(colour = condition, 
-                linetype = condition), 
-            position = pd) +
-  geom_errorbar(aes(ymax = mean_parm + se_parm,
-                    ymin = mean_parm - se_parm, 
-                    colour = condition),
+                    colour = delay),
                 width = 0.05, 
                 position = pd) + 
   scale_y_continuous(limits = c(0, 0.4)) + 
@@ -633,6 +641,34 @@ fit %>%
 ```
 
 ![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+
+``` r
+fit %>% 
+  group_by(set_size, delay) %>% 
+  summarise(mean_parm = mean(p_u), 
+            se_parm = sd(p_u) / sqrt(length(p_u))) %>% 
+  mutate(delay = as.factor(delay)) %>% 
+  ggplot(aes(x = set_size, 
+             y = mean_parm, 
+             group = delay)) + 
+  geom_point(aes(colour = delay), 
+             position = pd, 
+             size = 2.5) + 
+  geom_line(aes(colour = delay, 
+                linetype = delay), 
+            position = pd) +
+  geom_errorbar(aes(ymax = mean_parm + se_parm,
+                    ymin = mean_parm - se_parm, 
+                    colour = delay),
+                width = 0.05, 
+                position = pd) + 
+  scale_y_continuous(limits = c(0, 0.4)) + 
+  scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
+#> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
+```
+
+![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
 
 #### Plotting by condition
 
@@ -662,6 +698,7 @@ pd <- position_dodge(0.8)
 
 # plot the fit
 fit %>% 
+  mutate(delay = as.factor(delay)) %>% 
   group_by(delay) %>% 
   summarise(mean_parm = mean(p_t), 
             se_parm = sd(p_t) / sqrt(length(p_t))) %>% 
@@ -678,7 +715,7 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
 
 ## Plotting 2: Plotting Model Fit
 
@@ -710,7 +747,7 @@ plot_model_fit(human_data = data,
                condition_var = NULL)
 ```
 
-![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
 ``` r
 
@@ -738,7 +775,7 @@ plot_model_fit(human_data = data,
                condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
 
 ## Simulating: Generating Data From Mixture Models
 
@@ -756,12 +793,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1 -1.012    0.582       -2.548        1.414        2.793
-#> 2  1  2.147    2.119       -2.251        0.925       -0.908
-#> 3  1 -0.262   -0.100       -2.094        2.182        2.897
-#> 4  1 -1.833   -1.701        0.454       -0.454       -2.897
-#> 5  1  1.152    1.175        2.653       -2.007        0.192
-#> 6  1 -0.733   -0.719       -2.374        1.885        0.698
+#> 1  1  2.548    0.160        0.244       -2.775        1.030
+#> 2  1 -2.321   -2.327        0.628       -2.688        1.815
+#> 3  1  0.925   -0.407        1.361        2.147       -1.641
+#> 4  1  1.326    1.241        0.541       -0.157        1.763
+#> 5  1  2.478    2.794        1.955        3.019       -2.234
+#> 6  1  1.065    0.905        0.698       -1.885        2.967
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -776,8 +813,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t p_n   p_u
-#> 1  1 15.194 0.748   0 0.252
+#>   id      K   p_t   p_u
+#> 1  1 15.169 0.755 0.245
 ```
 
 ### Three-component model
@@ -794,12 +831,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  0.663    0.929        1.937       -1.065        2.985
-#> 2  1 -3.142   -3.267       -0.140        0.960        1.868
-#> 3  1  1.553    1.520       -2.793       -1.676       -0.977
-#> 4  1 -2.478    1.130        0.454        2.688        1.606
-#> 5  1 -0.209   -0.073       -2.304        3.072        1.187
-#> 6  1  1.204    1.486       -1.222        2.862       -2.601
+#> 1  1  1.518    1.202       -2.374       -0.524        2.356
+#> 2  1  2.705    0.105       -0.035        0.332        1.693
+#> 3  1 -0.506   -0.874        1.728        0.995        0.105
+#> 4  1 -0.942   -2.754       -2.880       -2.234        1.868
+#> 5  1 -1.536   -1.105       -0.698        1.449       -0.262
+#> 6  1 -1.292   -2.262        0.087       -0.297       -2.670
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -814,8 +851,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id     K   p_t   p_n   p_u
-#> 1  1 15.32 0.752 0.153 0.095
+#>   id      K   p_t   p_n   p_u
+#> 1  1 14.436 0.763 0.153 0.084
 ```
 
 ## Designing

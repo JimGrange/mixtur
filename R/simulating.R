@@ -21,7 +21,7 @@ simulate_mixtur <- function(n_trials,
 
   # check that p_t, p_n, and p_u sum to 1
   if(is.null(p_n)){
-    if(dplyr::near((p_t + p_u), 1)){
+    if(dplyr::near((p_t + p_u), 1) != TRUE){
       stop("error: p_t and p_u do not sum to 1.", call. = FALSE)
     }
   }
