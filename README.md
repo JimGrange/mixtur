@@ -8,8 +8,8 @@
       - ~~plot precision of responses~~
       - ~~need to test degress\_180 data works~~
   - Analysing
-      - return response error by id for inferential analysis (is this
-        even worthwhile??)
+      - ~~return response error by id for inferential analysis (is this
+        even worthwhile??)~~
       - ~~return precision by id for inferential analysis~~
   - Modelling
       - ~~fit the 3-component model to data~~
@@ -857,7 +857,6 @@ plot_model_fit(human_data = data,
 simulated_data <- simulate_mixtur(n_trials = 5000, 
                                   K = 15, 
                                   p_t = 0.75, 
-                                  p_n = NULL, 
                                   p_u = 0.25, 
                                   set_size = 4)
 #> [1] "Simulating data. Please wait..."
@@ -865,12 +864,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  2.548    0.160        0.244       -2.775        1.030
-#> 2  1 -2.321   -2.327        0.628       -2.688        1.815
-#> 3  1  0.925   -0.407        1.361        2.147       -1.641
-#> 4  1  1.326    1.241        0.541       -0.157        1.763
-#> 5  1  2.478    2.794        1.955        3.019       -2.234
-#> 6  1  1.065    0.905        0.698       -1.885        2.967
+#> 1  1  1.606    1.717       -1.414        2.461        2.094
+#> 2  1 -2.583    0.476       -2.985       -2.094       -0.384
+#> 3  1  2.932    0.699        0.785        1.588        2.112
+#> 4  1  1.815   -2.038        0.890       -2.932       -0.489
+#> 5  1  1.361    1.433       -3.019       -0.925       -2.112
+#> 6  1  1.414    1.586       -2.409        2.601       -1.937
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -885,8 +884,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t   p_u
-#> 1  1 15.169 0.755 0.245
+#>   id      K  p_t  p_u
+#> 1  1 15.073 0.76 0.24
 ```
 
 ### Three-component model
