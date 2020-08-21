@@ -55,7 +55,7 @@ plot_error <- function(data,
   ids <- unique(data[[id_var]])
 
 
-  # calculate response error mapped onto circular space ----
+  # calculate response error mapped onto circular space ------
   if(unit == "degrees"){
     response <- data[[response_var]] / 180 * pi
     target <- data[[target_var]] / 180 * pi
