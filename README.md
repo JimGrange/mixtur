@@ -323,7 +323,7 @@ plot_error(data = bays2009_full,
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
-### Plotting precision of reponses
+### Plotting precision of responses
 
 Once response error is known, a formal estimate of the **precision** of
 a participant’s response is possible. Following Bays et al. (2009),
@@ -521,6 +521,9 @@ three-component mixture models. It accepts the following arguments
   - **conditon\_var:** If an additional condition was manipulated, a
     character indicating the column name that codes for this condition.
     Defaults to NULL.
+  - **return\_fit:** If set to TRUE, the function will return the
+    negative log-likelihhod of the model fit routine. This is set to
+    FALSE by default, but can be useful for model comparison.
 
 As the two-component model does not take into account non-target
 responses (cf., the three-component model), the user’s data frame does

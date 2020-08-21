@@ -10,7 +10,7 @@ model_comparison(
   id_var = "id",
   response_var = "response",
   target_var = "target",
-  non_target_var = NULL,
+  non_target_var,
   set_size_var = NULL,
   condition_var = NULL
 )
