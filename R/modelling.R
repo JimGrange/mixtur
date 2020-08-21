@@ -1,3 +1,377 @@
+
+# model comparison --------------------------------------------------------
+#' Conduct formal model comparison.
+#'
+#' This function will fit both the 2- and 3-component models to the data
+#' and provide an assessment of which fits best.
+#'
+#' @export
+#'
+model_comparison <- function(data,
+                             unit = "degrees",
+                             id_var = "id",
+                             response_var = "response",
+                             target_var = "target",
+                             non_target_var,
+                             set_size_var = NULL,
+                             condition_var = NULL){
+
+  # get the non-target column names
+  non_target_cols <- data %>%
+    select(contains(non_target_var)) %>%
+    colnames()
+
+  # change degrees to radians
+  if(unit == "degrees"){
+    data[[response_var]] <- data[[response_var]] / 180 * pi
+    data[[target_var]] <- data[[target_var]] / 180 * pi
+
+    if(!is.null(non_target_var)){
+      data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
+    }
+  }
+
+  # change degrees_180 to radians
+  if(unit == "degrees_180"){
+    data[[response_var]] <- data[[response_var]] / 90 * pi
+    data[[target_var]] <- data[[target_var]] / 90 * pi
+
+    if(!is.null(non_target_var)){
+      data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
+    }
+  }
+
+  if(unit == "radians"){
+    data <- data
+  }
+
+  # TODO: Radians not in range -pi to pi
+
+  # print message to user
+  print("Model fit running. Please wait...")
+
+  # no set size or condition manipulation
+  if(is.null(set_size_var) && is.null(condition_var)){
+
+    # get the set size of the level
+    level_set_size <- length(non_target_cols) + 1
+
+    # fit the 2-component model
+    fit_2 <- fit_level(data,
+                       components = 2,
+                       id_var = id_var,
+                       response_var = response_var,
+                       target_var = target_var,
+                       non_target_var = NULL,
+                       set_size = level_set_size,
+                       return_fit = TRUE)
+
+    # fit the 3-component model
+    fit_3 <- fit_level(data,
+                       components = 3,
+                       id_var = id_var,
+                       response_var = response_var,
+                       target_var = target_var,
+                       non_target_var = non_target_var,
+                       set_size = level_set_size,
+                       return_fit = TRUE)
+
+    # collate together into a final data frame
+    final_data <- data.frame(id = fit_2$id,
+                             ll_2 = fit_2$LL,
+                             ll_3 = fit_3$LL,
+                             aic_2 = aic(fit_2$LL, 2),
+                             aic_3 = aic(fit_3$LL, 3))
+    final_data <- final_data %>%
+      mutate(delta_aic = aic_2 - aic_3)
+
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(is.null(set_size_var) && !is.null(condition_var)){
+
+    # get the list of conditions
+    data$condition <- data[[condition_var]]
+    conditions <- unique(data[, "condition"])
+
+    # loop over each condition
+    for(i in 1:length(conditions)){
+
+      # get the current level's data
+      level_data <- data %>%
+        filter(condition == conditions[i])
+
+      # get the set size of the level
+      if(!is.null(non_target_var)){
+        level_set_size <- length(non_target_cols) + 1
+      } else {
+        level_set_size <- 1
+      }
+
+      # fit the 2-component model
+      level_fit_2 <- fit_level(level_data,
+                               components = 2,
+                               id_var = id_var,
+                               response_var = response_var,
+                               target_var = target_var,
+                               non_target_var = NULL,
+                               set_size = level_set_size,
+                               return_fit = TRUE)
+      level_fit_2 <- level_fit_2 %>%
+        mutate(condition = conditions[i])
+
+      # fit the 3-component model
+      level_fit_3 <- fit_level(level_data,
+                               components = 3,
+                               id_var = id_var,
+                               response_var = response_var,
+                               target_var = target_var,
+                               non_target_var = non_target_var,
+                               set_size = level_set_size,
+                               return_fit = TRUE)
+      level_fit_3 <- level_fit_3 %>%
+        mutate(condition = conditions[i])
+
+
+      # stitch data together
+      if(i == 1){
+        fit_2 <- level_fit_2
+        fit_3 <- level_fit_3
+      } else {
+        fit_2 <- rbind(fit_2, level_fit_2)
+        fit_3 <- rbind(fit_3, level_fit_3)
+      }
+
+    }
+
+    # rename columns
+    fit_2 <- fit_2 %>%
+      rename(!!condition_var:=condition)
+
+    fit_3 <- fit_3 %>%
+      rename(!!condition_var:=condition)
+
+
+    # collate together into a final data frame
+    final_data <- data.frame(id = fit_2$id,
+                             condition = fit_2[[condition_var]],
+                             ll_2 = fit_2$LL,
+                             ll_3 = fit_3$LL,
+                             aic_2 = aic(fit_2$LL, 2),
+                             aic_3 = aic(fit_3$LL, 3))
+    final_data <- final_data %>%
+      mutate(delta_aic = aic_2 - aic_3) %>%
+      rename(!!condition_var:=condition)
+
+  }
+
+
+  # set size manipulation, but no condition manipulation
+  if(!is.null(set_size_var) && is.null(condition_var)){
+
+    # get the list of set_sizes
+    data$set_size <- data[[set_size_var]]
+    set_sizes <- unique(data[[set_size_var]])
+
+    # loop over each set size
+    for(i in 1:length(set_sizes)){
+
+      # get the current set size's data
+      level_data <- data %>%
+        filter(set_size == set_sizes[i])
+
+      # fit the 2-component model
+      level_fit_2 <- fit_level(level_data,
+                               components = 2,
+                               id_var = id_var,
+                               response_var = response_var,
+                               target_var = target_var,
+                               non_target_var = NULL,
+                               set_size = set_sizes[i],
+                               return_fit = TRUE)
+      level_fit_2 <- level_fit_2 %>%
+        mutate(set_size = set_sizes[i])
+
+      # fit the 3-component model
+      if(set_sizes[i] == 1){
+        level_fit_3 <- fit_level(level_data,
+                                 components = 3,
+                                 id_var = id_var,
+                                 response_var = response_var,
+                                 target_var = target_var,
+                                 non_target_var = NULL,
+                                 set_size = 1,
+                                 return_fit = TRUE)
+      } else {
+        level_fit_3 <- fit_level(level_data,
+                                 components = 3,
+                                 id_var = id_var,
+                                 response_var = response_var,
+                                 target_var = target_var,
+                                 non_target_var = non_target_var,
+                                 set_size = set_sizes[i],
+                                 return_fit = TRUE)
+      }
+      level_fit_3 <- level_fit_3 %>%
+        mutate(set_size = set_sizes[i])
+
+
+      # stitch data together
+      if(i == 1){
+        fit_2 <- level_fit_2
+        fit_3 <- level_fit_3
+      } else {
+        fit_2 <- rbind(fit_2, level_fit_2)
+        fit_3 <- rbind(fit_3, level_fit_3)
+      }
+
+    }
+
+
+    # rename columns
+    fit_2 <- fit_2 %>%
+      rename(!!set_size_var:=set_size)
+
+    fit_3 <- fit_3 %>%
+      rename(!!set_size_var:=set_size)
+
+
+    # collate together into a final data frame
+    final_data <- data.frame(id = fit_2$id,
+                             set_size = fit_2[[set_size_var]],
+                             ll_2 = fit_2$LL,
+                             ll_3 = fit_3$LL,
+                             aic_2 = aic(fit_2$LL, 2),
+                             aic_3 = aic(fit_3$LL, 3))
+    final_data <- final_data %>%
+      mutate(delta_aic = aic_2 - aic_3) %>%
+      rename(!!set_size_var:=set_size)
+  }
+
+
+
+  # both set size & condition manipulation
+  if(!is.null(set_size_var) && !is.null(condition_var)){
+
+    # get the list of set sizes
+    data$set_size <- data[[set_size_var]]
+    set_sizes <- unique(data[[set_size_var]])
+
+    # get the list of conditions
+    data$condition <- data[[condition_var]]
+    conditions <- unique(data[, "condition"])
+
+    # loop over each set size & condition
+    for(i in 1:length(set_sizes)){
+      for(j in 1:length(conditions)){
+
+        # get the current level's data
+        level_data <- data %>%
+          filter(set_size == set_sizes[i]) %>%
+          filter(condition == conditions[j])
+
+        # fit the 2-component model
+        if(set_sizes[i] == 1){
+          level_fit_2 <- fit_level(level_data,
+                                   components = 2,
+                                   id_var = id_var,
+                                   response_var = response_var,
+                                   target_var = target_var,
+                                   non_target_var = NULL,
+                                   set_size = 1,
+                                   return_fit = TRUE)
+        } else {
+          level_fit_2<- fit_level(level_data,
+                                   components = 2,
+                                   id_var = id_var,
+                                   response_var = response_var,
+                                   target_var = target_var,
+                                   non_target_var = NULL,
+                                   set_size = set_sizes[i],
+                                   return_fit = TRUE)
+        }
+        level_fit_2 <- level_fit_2 %>%
+          mutate(set_size = set_sizes[i],
+                 condition = conditions[j])
+
+
+        # fit the 3-component model
+        if(set_sizes[i] == 1){
+          level_fit_3 <- fit_level(level_data,
+                                   components = 3,
+                                   id_var = id_var,
+                                   response_var = response_var,
+                                   target_var = target_var,
+                                   non_target_var = NULL,
+                                   set_size = 1,
+                                   return_fit = TRUE)
+        } else {
+          level_fit_3<- fit_level(level_data,
+                                  components = 3,
+                                  id_var = id_var,
+                                  response_var = response_var,
+                                  target_var = target_var,
+                                  non_target_var = non_target_var,
+                                  set_size = set_sizes[i],
+                                  return_fit = TRUE)
+        }
+        level_fit_3 <- level_fit_3 %>%
+          mutate(set_size = set_sizes[i],
+                 condition = conditions[j])
+
+
+        # stitch data together
+        if(i == 1){
+          fit_2 <- level_fit_2
+          fit_3 <- level_fit_3
+        } else {
+          fit_2 <- rbind(fit_2, level_fit_2)
+          fit_3 <- rbind(fit_3, level_fit_3)
+        }
+
+      }
+    }
+
+    # rename columns
+    fit_2 <- fit_2 %>%
+      rename(!!condition_var:=condition) %>%
+      rename(!!set_size_var:=set_size)
+
+    fit_3 <- fit_3 %>%
+      rename(!!condition_var:=condition) %>%
+      rename(!!set_size_var:=set_size)
+
+
+    # collate together into a final data frame
+    final_data <- data.frame(id = fit_2$id,
+                             set_size = fit_2[[set_size_var]],
+                             condition = fit_2[[condition_var]],
+                             ll_2 = fit_2$LL,
+                             ll_3 = fit_3$LL,
+                             aic_2 = aic(fit_2$LL, 2),
+                             aic_3 = aic(fit_3$LL, 3))
+    final_data <- final_data %>%
+      mutate(delta_aic = aic_2 - aic_3) %>%
+      rename(!!set_size_var:=set_size,
+             !!condition_var:=condition)
+
+  }
+
+
+  # print message to user
+  print("Model fit finished.")
+
+
+  return(final_data)
+
+
+}
+
+
+
+
+
 # fit the mixtur model ----------------------------------------------------
 #' Fit the mixture model.
 #'
@@ -44,6 +418,9 @@
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
 #'
+#' @param return_fit If set to TRUE, the function will return the negative
+#' log-likelihood of the model fit.
+#'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #'
@@ -72,7 +449,8 @@ fit_mixtur <- function(data,
                        target_var = "target",
                        non_target_var = NULL,
                        set_size_var = NULL,
-                       condition_var = NULL){
+                       condition_var = NULL,
+                       return_fit = FALSE){
 
   # get the non-target column names, if applicable
   if(!is.null(non_target_var)){
@@ -128,7 +506,8 @@ fit_mixtur <- function(data,
                      response_var = response_var,
                      target_var = target_var,
                      non_target_var = non_target_var,
-                     set_size = level_set_size)
+                     set_size = level_set_size,
+                     return_fit = return_fit)
   }
 
 
@@ -160,7 +539,9 @@ fit_mixtur <- function(data,
                              response_var = response_var,
                              target_var = target_var,
                              non_target_var = non_target_var,
-                             set_size = level_set_size)
+                             set_size = level_set_size,
+                             return_fit = return_fit)
+
       level_fit <- level_fit %>%
         mutate(condition = conditions[i])
 
@@ -200,7 +581,8 @@ fit_mixtur <- function(data,
                                response_var = "response",
                                target_var = "target",
                                non_target_var = NULL,
-                               set_size = 1)
+                               set_size = 1,
+                               return_fit = return_fit)
 
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
@@ -212,7 +594,9 @@ fit_mixtur <- function(data,
                                response_var = "response",
                                target_var = "target",
                                non_target_var = non_target_var,
-                               set_size = set_sizes[i])
+                               set_size = set_sizes[i],
+                               return_fit = return_fit)
+
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
       }
@@ -259,7 +643,9 @@ fit_mixtur <- function(data,
                                  response_var = response_var,
                                  target_var = target_var,
                                  non_target_var = NULL,
-                                 set_size = 1)
+                                 set_size = 1,
+                                 return_fit = return_fit)
+
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
                    condition = conditions[j])
@@ -270,7 +656,9 @@ fit_mixtur <- function(data,
                                  response_var = response_var,
                                  target_var = target_var,
                                  non_target_var = non_target_var,
-                                 set_size = set_sizes[i])
+                                 set_size = set_sizes[i],
+                                 return_fit = return_fit)
+
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
                    condition = conditions[j])
@@ -324,7 +712,8 @@ fit_level <- function(data,
                       response_var = "response",
                       target_var = "target",
                       non_target_var,
-                      set_size = 1){
+                      set_size = 1,
+                      return_fit = FALSE){
 
   if(is.null(non_target_var)){
     non_target_var <- NULL
@@ -339,7 +728,7 @@ fit_level <- function(data,
 
   # initiate data frame to store parameters
   parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
-                      p_u = FALSE)
+                      p_u = FALSE, LL = FALSE)
 
   # loop over every partiipant
   for(i in seq_along(l)) {
@@ -359,7 +748,7 @@ fit_level <- function(data,
     if(components == 2){
       fit <- fit_model(response,
                        target,
-                       return.ll = FALSE)
+                       return.ll = return_fit)
     }
 
     # if the 3-component model is called, pass non-target info to fit
@@ -380,22 +769,35 @@ fit_level <- function(data,
       if(is.null(non_target_var)) {
         fit <- fit_model(response,
                          target,
-                         return.ll = FALSE)
+                         return.ll = return_fit)
       } else {
         fit <- fit_model(response,
                          target,
                          non_targets,
-                         return.ll = FALSE)
+                         return.ll = return_fit)
       }
     }
 
     # store the parameters
     id <- as.character(df[1, id_var])
     parms[i, 1] <- id
-    parms[i, 2:5] <- round(fit, 3)
+
+    if(return_fit == TRUE){
+      parms[i, 2:5] <- round(fit$parameters, 3)
+      parms[i, 6] <- round(fit$LL, 3)
+    } else{
+      parms[i, 2:5] <- round(fit, 3)
+    }
+
   }
 
-  return(parms)
+  if(return_fit == TRUE){
+    return(parms)
+  } else {
+    parms <- parms %>% select(-LL)
+    return(parms)
+  }
+
 
 }
 

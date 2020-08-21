@@ -13,7 +13,8 @@ fit_mixtur(
   target_var = "target",
   non_target_var = NULL,
   set_size_var = NULL,
-  condition_var = NULL
+  condition_var = NULL,
+  return_fit = FALSE
 )
 }
 \arguments{
@@ -56,6 +57,9 @@ size of each response.}
 
 \item{condition_var}{The quoted column name (if applicable) coding for the
 condition of each response.}
+
+\item{return_fit}{If set to TRUE, the function will return the negative
+log-likelihood of the model fit.}
 }
 \description{
 This is the function called by the user to fit either the two- or three-

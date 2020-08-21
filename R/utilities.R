@@ -247,3 +247,12 @@ sd2k <- function(s){
 
   return(k)
 }
+
+
+
+# calculate akiakes information criterion ---------------------------------
+#' @export
+aic <- function(ll, parms){
+  value <- (2 * parms) - (2 * ll)
+  return(value)
+}

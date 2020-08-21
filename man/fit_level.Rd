@@ -11,7 +11,8 @@ fit_level(
   response_var = "response",
   target_var = "target",
   non_target_var,
-  set_size = 1
+  set_size = 1,
+  return_fit = FALSE
 )
 }
 \description{
