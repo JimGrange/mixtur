@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot_precision}
 \alias{plot_precision}
-\title{Plot precision behavioural data}
+\title{Plot precision of behavioural data}
 \usage{
 plot_precision(
   data,
@@ -40,11 +40,12 @@ size of each response}
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response}
 
-\item{return_data}{A boolean indicating whether the data for the plot should
-be returned.}
+\item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
+the plot should be returned.}
 }
 \description{
-This note is a TODO for later.
+Function to plot the response precision of behavioural data. Requires a data
+frame that (at least) has target value data and participant response data.
 }
 \examples{
 library(tidyverse)

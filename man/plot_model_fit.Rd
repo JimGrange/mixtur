@@ -6,7 +6,7 @@
 \usage{
 plot_model_fit(
   human_data,
-  model_data,
+  model_fit,
   unit = "degrees",
   id_var = "id",
   response_var = "response",
@@ -14,6 +14,36 @@ plot_model_fit(
   set_size_var = NULL,
   condition_var = NULL
 )
+}
+\arguments{
+\item{human_data}{A data frame of the participant data, with columns
+containing: participant identifier ('id_var'); the participants' response
+per trial ('response_var'); the target value ('target_var'); and, if
+applicable, the set size of each response ('set_size_var'), and the condition
+of each response ('condition_var').}
+
+\item{model_fit}{The model fit object to be plotted against participant data.}
+
+\item{unit}{The unit of measurement in the data frame: "degrees"
+(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+from pi to 2 * pi, but could also be already in -pi to pi).}
+
+\item{id_var}{The column name coding for participant id. If the data is from
+a single participant (i.e., there is no id column) set to "NULL".}
+
+\item{response_var}{The column name coding for the participants' responses}
+
+\item{target_var}{The column name coding for the target value}
+
+\item{set_size_var}{The column name (if applicable) coding for the set
+size of each response}
+
+\item{condition_var}{The column name (if applicable) coding for the
+condition of each response}
+
+\item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
+the plot should be returned.}
 }
 \description{
 Plot model fit against human error data (target errors)

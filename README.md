@@ -915,20 +915,20 @@ model_com
 
 data <- bays2009_full
 
-model_data <- fit_mixtur(data,
-                         components=  3,
-                         unit = "radians",
-                         id_var = "id",
-                         response_var = "response",
-                         target_var = "target",
-                         non_target_var = "non_target",
-                         set_size_var = "set_size",
-                         condition_var = NULL)
+model_fit <- fit_mixtur(data,
+                        components=  3,
+                        unit = "radians",
+                        id_var = "id",
+                        response_var = "response",
+                        target_var = "target",
+                        non_target_var = "non_target",
+                        set_size_var = "set_size",
+                        condition_var = NULL)
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
 plot_model_fit(human_data = data,
-               model_data = model_data,
+               model_fit = model_fit,
                unit = "radians",
                id_var = "id",
                response_var = "response",
@@ -943,20 +943,20 @@ plot_model_fit(human_data = data,
 
 data <- bays2009_full
 
-model_data <- fit_mixtur(data,
-                         components=  3,
-                         unit = "radians",
-                         id_var = "id",
-                         response_var = "response",
-                         target_var = "target",
-                         non_target_var = "non_target",
-                         set_size_var = "set_size",
-                         condition_var = "delay")
+model_fit <- fit_mixtur(data,
+                        components=  3,
+                        unit = "radians",
+                        id_var = "id",
+                        response_var = "response",
+                        target_var = "target",
+                        non_target_var = "non_target",
+                        set_size_var = "set_size",
+                        condition_var = "delay")
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
 plot_model_fit(human_data = data,
-               model_data = model_data,
+               model_fit = model_fit,
                unit = "radians",
                id_var = "id",
                response_var = "response",

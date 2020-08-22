@@ -8,11 +8,11 @@
 #'Function to plot the response error in behavioural data. Requires a data
 #'frame that (at least) has target value data and participant response data.
 #'
-#' @param data A data frame with columns containing: participant identifier
-#' ('id_var'); the participants' response per trial ('response_var'); the
-#' target value ('target_var'); and, if applicable, the set size of each
-#' response ('set_size_var'), and the condition of each response
-#' ('condition_var').
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'target value ('target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
 #'@param unit The unit of measurement in the data frame: "degrees"
 #'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 #'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
@@ -25,8 +25,9 @@
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
-#'@param return_data A boolean indicating whether the data for the plot should
-#'be returned.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
 #'@examples
 #'data(example_data)
 #'plot_error(example_data, condition_var = "condition")
@@ -101,8 +102,8 @@ plot_error <- function(data,
         summarise(mean_error = mean(y),
                   se_error = (sd(y) / sqrt(length(y))))
     }
-
   }
+
 
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
@@ -126,7 +127,6 @@ plot_error <- function(data,
         summarise(mean_error = mean(y),
                   se_error = (sd(y) / sqrt(length(y))))
     }
-
   }
 
 
@@ -151,7 +151,6 @@ plot_error <- function(data,
         summarise(mean_error = mean(y),
                   se_error = (sd(y) / sqrt(length(y))))
     }
-
   }
 
 
@@ -177,9 +176,7 @@ plot_error <- function(data,
         summarise(mean_error = mean(y),
                   se_error = (sd(y) / sqrt(length(y))))
     }
-
   }
-
 
 
   # plot the data ----
@@ -200,8 +197,8 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density")
+    }
 
-  }
 
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
@@ -284,6 +281,7 @@ plot_error <- function(data,
 
   }
 
+
   # return the plot & the plot data
   if(return_data == TRUE){
     return(list(plot = plot, data = final_data))
@@ -296,9 +294,10 @@ plot_error <- function(data,
 
 
 # plot behavioural precision ----------------------------------------------
-#' Plot precision behavioural data
+#' Plot precision of behavioural data
 #'
-#'This note is a TODO for later.
+#'Function to plot the response precision of behavioural data. Requires a data
+#'frame that (at least) has target value data and participant response data.
 #'
 #'@param data A data frame with columns containing: participant identifier
 #'('id_var'); the participants' response per trial ('response_var'); the
@@ -317,8 +316,9 @@ plot_error <- function(data,
 #'size of each response
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response
-#'@param return_data A boolean indicating whether the data for the plot should
-#'be returned.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
 #'@examples
 #'library(tidyverse)
 #'data(example_data)
@@ -389,7 +389,6 @@ plot_precision <- function(data,
                   mean_bias = mean(bias),
                   se_bias = sd(bias) / sqrt(length(bias)))
     }
-
   }
 
 
@@ -419,7 +418,6 @@ plot_precision <- function(data,
                   mean_bias = mean(bias),
                   se_bias = sd(bias) / sqrt(length(bias)))
     }
-
   }
 
 
@@ -449,8 +447,8 @@ plot_precision <- function(data,
                   mean_bias = mean(bias),
                   se_bias = sd(bias) / sqrt(length(bias)))
     }
-
   }
+
 
   # both set size & condition manipulation
   if(!is.null(set_size_var) && !is.null(condition_var)){
@@ -479,7 +477,6 @@ plot_precision <- function(data,
                   mean_bias = mean(bias),
                   se_bias = sd(bias) / sqrt(length(bias)))
     }
-
 }
 
 
@@ -578,9 +575,31 @@ plot_precision <- function(data,
 
 # plot model fit ----------------------------------------------------------
 #' Plot model fit against human error data (target errors)
+#'
+#'@param human_data A data frame of the participant data, with columns
+#'containing: participant identifier ('id_var'); the participants' response
+#'per trial ('response_var'); the target value ('target_var'); and, if
+#'applicable, the set size of each response ('set_size_var'), and the condition
+#'of each response ('condition_var').
+#'@param model_fit The model fit object to be plotted against participant data.
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#'from pi to 2 * pi, but could also be already in -pi to pi).
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
+#'@param response_var The column name coding for the participants' responses
+#'@param target_var The column name coding for the target value
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
 #' @export
 plot_model_fit <- function(human_data,
-                           model_data,
+                           model_fit,
                            unit = "degrees",
                            id_var = "id",
                            response_var = "response",
@@ -607,9 +626,9 @@ plot_model_fit <- function(human_data,
     # get the mean K, p_t, and p_u parameters from the model fit
     # 2-component and 3-component model make same predictions for
     # target error
-    mean_k <- mean(model_data$K)
-    mean_p_t <- mean(model_data$p_t)
-    mean_p_u <- mean(model_data$p_n) + mean(model_data$p_u)
+    mean_k <- mean(model_fit$K)
+    mean_p_t <- mean(model_fit$p_t)
+    mean_p_u <- mean(model_fit$p_n) + mean(model_fit$p_u)
 
     # get the model predictions
     model_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
@@ -638,18 +657,18 @@ plot_model_fit <- function(human_data,
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
     human_error$condition <- human_error[[condition_var]]
-    model_data$condition <- model_data[[condition_var]]
+    model_fit$condition <- model_fit[[condition_var]]
 
     # get the mean K, p_t, and p_u parameters from the model fit
     # 2-component and 3-component model make same predictions for
     # target error
-    mean_k <- model_data %>%
+    mean_k <- model_fit %>%
       group_by(condition) %>%
       summarise(mean_k = mean(K))
-    mean_p_t <- model_data %>%
+    mean_p_t <- model_fit %>%
       group_by(condition) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_data %>%
+    mean_p_u <- model_fit %>%
       group_by(condition) %>%
       summarise(mean_p_u = mean(p_n) + mean(p_u))
 
@@ -708,18 +727,18 @@ plot_model_fit <- function(human_data,
   if(!is.null(set_size_var) && is.null(condition_var)){
 
     human_error$set_size <- human_error[[set_size_var]]
-    model_data$set_size <- model_data[[set_size_var]]
+    model_fit$set_size <- model_fit[[set_size_var]]
 
     # get the mean K, p_t, and p_u parameters from the model fit
     # 2-component and 3-component model make same predictions for
     # target error
-    mean_k <- model_data %>%
+    mean_k <- model_fit %>%
       group_by(set_size) %>%
       summarise(mean_k = mean(K))
-    mean_p_t <- model_data %>%
+    mean_p_t <- model_fit %>%
       group_by(set_size) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_data %>%
+    mean_p_u <- model_fit %>%
       group_by(set_size) %>%
       summarise(mean_p_u = mean(p_n) + mean(p_u))
 
@@ -776,29 +795,30 @@ plot_model_fit <- function(human_data,
 
   }
 
+  # set size manipulation and condition manipulation
   if(!is.null(set_size_var) && !is.null(condition_var)){
 
     human_error$set_size <- human_error[[set_size_var]]
     human_error$condition <- human_error[[condition_var]]
-    model_data$set_size <- model_data[[set_size_var]]
-    model_data$condition <- model_data[[condition_var]]
+    model_fit$set_size <- model_fit[[set_size_var]]
+    model_fit$condition <- model_fit[[condition_var]]
 
     # get the mean K, p_t, and p_u parameters from the model fit
     # 2-component and 3-component model make same predictions for
     # target error
-    mean_k <- model_data %>%
+    mean_k <- model_fit %>%
       group_by(set_size, condition) %>%
       summarise(mean_k = mean(K))
-    mean_p_t <- model_data %>%
+    mean_p_t <- model_fit %>%
       group_by(set_size, condition) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_data %>%
+    mean_p_u <- model_fit %>%
       group_by(set_size, condition) %>%
       summarise(mean_p_u = mean(p_n) + mean(p_u))
 
     # get the model predictions for each level
-    set_sizes <- unique(model_data$set_size)
-    conditions <- unique(model_data$condition)
+    set_sizes <- unique(model_fit$set_size)
+    conditions <- unique(model_fit$condition)
 
     for(i in 1:length(set_sizes)){
       for(j in 1:length(conditions)){
@@ -861,8 +881,5 @@ plot_model_fit <- function(human_data,
 
   }
 
-
   return(plot)
-
 }
-

@@ -40,8 +40,8 @@ size of each response.}
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response.}
 
-\item{return_data}{A boolean indicating whether the data for the plot should
-be returned.}
+\item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
+the plot should be returned.}
 }
 \description{
 Function to plot the response error in behavioural data. Requires a data
