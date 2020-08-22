@@ -17,12 +17,14 @@
       - plot model parameters
       - ~~plot model fit against participant error data~~
       - ~~need to test degress\_180 data works~~
-      - return log-likelihood of fit?
-      - formal model comparison tests?
+      - ~~return log-likelihood of fit?~~
+      - ~~formal model comparison tests?~~
   - Simulating
       - ~~base simulate\_mixtur function~~
       - ~~check parameter recovery 3-component~~
       - ~~check parameter recovery 2-component~~
+      - check model recovery (e.g., sim from 2-component, and see if
+        2-component wins model competition).
   - General
       - update documentation of all functions
       - add more example data sets
@@ -50,6 +52,7 @@
   - [Modelling: Fitting mixture models to data](#modelling)
       - [2-component mixture models](#two-component-mixture-models)
       - [3-component mixture models](#three-component-mixture-models)
+      - [Formal model comparison](#formal-model-comparison)
   - [Plotting 2: Visualising model fit](#plotting-2-plotting-model-fit)
   - [Simulating: Generating data from mixture
     models](#simulating-generating-data-from-mixture-models)
@@ -534,7 +537,6 @@ Here’s an example of fitting the two-component model to Bays et al.’s
 manipulation of “delay”:
 
 ``` r
-
 # load the data
 data <- bays2009_full
 
@@ -603,6 +605,51 @@ of Zhang & Luck (2008).
     estimated probability of making a response to the target
     value—**p\_t**—which is simply 1–**p\_u**–**p\_n**.
 
+Here’s an example of fitting the two-component model to Bays et al.’s
+(2009) data, where there was a set size manipulation, and a condition
+manipulation of “delay”:
+
+``` r
+# load the data
+data <- bays2009_full
+
+# fit the 2-component model
+model_fit <- fit_mixtur(data = data, 
+                        components = 3, 
+                        unit = "radians", 
+                        response_var = "response", 
+                        target_var = "target",
+                        non_target_var = "non_target", 
+                        set_size_var = "set_size", 
+                        condition_var = "delay")
+#> [1] "Model fit running. Please wait..."
+#> [1] "Model fit finished."
+
+# look at the top of the fit object
+head(model_fit, n = 20)
+#>    id      K   p_t p_n   p_u set_size delay
+#> 1   1 17.171 1.000   0 0.000        1   100
+#> 2   2 13.469 1.000   0 0.000        1   100
+#> 3   3 12.041 1.000   0 0.000        1   100
+#> 4   4 28.565 1.000   0 0.000        1   100
+#> 5   5 13.350 1.000   0 0.000        1   100
+#> 6   6 26.987 1.000   0 0.000        1   100
+#> 7   7 12.292 1.000   0 0.000        1   100
+#> 8   8 16.344 1.000   0 0.000        1   100
+#> 9   9 13.461 0.973   0 0.027        1   100
+#> 10 10 20.824 0.973   0 0.027        1   100
+#> 11 11 14.996 0.973   0 0.027        1   100
+#> 12 12 30.382 1.000   0 0.000        1   100
+#> 13  1 17.501 1.000   0 0.000        1   500
+#> 14  2 18.368 1.000   0 0.000        1   500
+#> 15  3 18.617 1.000   0 0.000        1   500
+#> 16  4 26.077 1.000   0 0.000        1   500
+#> 17  5 11.565 1.000   0 0.000        1   500
+#> 18  6 37.132 0.980   0 0.020        1   500
+#> 19  7 11.568 1.000   0 0.000        1   500
+#> 20  8 20.272 0.974   0 0.026        1   500
+```
+
 #### Bays et al. (2009 Figure 1d & 1e)
 
 ``` r
@@ -636,7 +683,7 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 data <- bays2009_full
@@ -668,7 +715,7 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
 
 #### Bayes et al. (2009 Figure 1h & 1i)
 
@@ -715,7 +762,7 @@ fit %>%
 #> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 fit %>% 
@@ -743,7 +790,7 @@ fit %>%
 #> `summarise()` regrouping output by 'set_size' (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
 
 #### Plotting by condition
 
@@ -790,7 +837,75 @@ fit %>%
 #> `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
-![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+
+### Formal model comparison
+
+``` r
+# load the data
+data <- bays2009_full
+
+
+# conduct model comparison
+model_com <- model_comparison(data, 
+                              unit = "radians", 
+                              non_target_var = "non_target",
+                              set_size_var = "set_size",
+                              condition_var = NULL)
+#> [1] "Model fit running. Please wait..."
+#> [1] "Model fit finished."
+
+model_com
+#>    id set_size     ll_2     ll_3   aic_2   aic_3 aic_difference
+#> 1   1        1    3.657    3.657  -3.314  -1.314         -2.000
+#> 2   2        1  -19.852  -19.852  43.704  45.704         -2.000
+#> 3   3        1   -8.944   -8.944  21.888  23.888         -2.000
+#> 4   4        1   27.502   27.502 -51.004 -49.004         -2.000
+#> 5   5        1  -36.137  -36.137  76.274  78.274         -2.000
+#> 6   6        1   19.953   19.953 -35.906 -33.906         -2.000
+#> 7   7        1  -22.084  -22.084  48.168  50.168         -2.000
+#> 8   8        1  -26.802  -26.802  57.604  59.604         -2.000
+#> 9   9        1  -57.290  -57.290 118.580 120.580         -2.000
+#> 10 10        1    7.738    7.738 -11.476  -9.476         -2.000
+#> 11 11        1   -8.296   -8.296  20.592  22.592         -2.000
+#> 12 12        1   49.962   49.962 -95.924 -93.924         -2.000
+#> 13  1        2  -62.159  -60.979 128.318 127.958          0.360
+#> 14  2        2 -115.393 -110.155 234.786 226.310          8.476
+#> 15  3        2  -70.533  -68.704 145.066 143.408          1.658
+#> 16  4        2  -50.452  -48.147 104.904 102.294          2.610
+#> 17  5        2 -145.476 -144.203 294.952 294.406          0.546
+#> 18  6        2  -34.038  -30.430  72.076  66.860          5.216
+#> 19  7        2  -63.938  -63.938 131.876 133.876         -2.000
+#> 20  8        2  -99.035  -97.289 202.070 200.578          1.492
+#> 21  9        2 -131.037 -130.539 266.074 267.078         -1.004
+#> 22 10        2  -43.289  -34.832  90.578  75.664         14.914
+#> 23 11        2 -101.719  -99.011 207.438 204.022          3.416
+#> 24 12        2  -39.581  -37.877  83.162  81.754          1.408
+#> 25  1        4 -191.728 -191.729 387.456 389.458         -2.002
+#> 26  2        4 -198.460 -196.924 400.920 399.848          1.072
+#> 27  3        4 -123.059 -122.868 250.118 251.736         -1.618
+#> 28  4        4 -101.779  -93.653 207.558 193.306         14.252
+#> 29  5        4 -212.699 -208.749 429.398 423.498          5.900
+#> 30  6        4 -115.931 -108.085 235.862 222.170         13.692
+#> 31  7        4 -173.820 -173.784 351.640 353.568         -1.928
+#> 32  8        4 -187.528 -187.223 379.056 380.446         -1.390
+#> 33  9        4 -204.724 -203.638 413.448 413.276          0.172
+#> 34 10        4 -123.469 -121.529 250.938 249.058          1.880
+#> 35 11        4 -208.914 -198.760 421.828 403.520         18.308
+#> 36 12        4 -139.401 -129.301 282.802 264.602         18.200
+#> 37  1        6 -212.529 -212.537 429.058 431.074         -2.016
+#> 38  2        6 -239.674 -229.859 483.348 465.718         17.630
+#> 39  3        6 -173.238 -170.149 350.476 346.298          4.178
+#> 40  4        6 -176.652 -161.928 357.304 329.856         27.448
+#> 41  5        6 -256.807 -250.208 517.614 506.416         11.198
+#> 42  6        6 -179.869 -168.159 363.738 342.318         21.420
+#> 43  7        6 -197.266 -191.056 398.532 388.112         10.420
+#> 44  8        6 -214.229 -207.818 432.458 421.636         10.822
+#> 45  9        6 -228.104 -226.937 460.208 459.874          0.334
+#> 46 10        6 -174.753 -167.190 353.506 340.380         13.126
+#> 47 11        6 -231.404 -219.800 466.808 445.600         21.208
+#> 48 12        6 -221.139 -212.556 446.278 431.112         15.166
+```
 
 ## Plotting 2: Plotting Model Fit
 
@@ -822,7 +937,7 @@ plot_model_fit(human_data = data,
                condition_var = NULL)
 ```
 
-![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
 ``` r
 
@@ -850,7 +965,7 @@ plot_model_fit(human_data = data,
                condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
 
 ## Simulating: Generating Data From Mixture Models
 
@@ -867,12 +982,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  1.606    1.717       -1.414        2.461        2.094
-#> 2  1 -2.583    0.476       -2.985       -2.094       -0.384
-#> 3  1  2.932    0.699        0.785        1.588        2.112
-#> 4  1  1.815   -2.038        0.890       -2.932       -0.489
-#> 5  1  1.361    1.433       -3.019       -0.925       -2.112
-#> 6  1  1.414    1.586       -2.409        2.601       -1.937
+#> 1  1 -2.374   -2.376       -0.960        1.676       -2.967
+#> 2  1  1.571    1.306       -0.628       -2.094       -0.140
+#> 3  1 -1.100   -0.831        0.489       -0.157        2.356
+#> 4  1  0.436    0.934        2.583       -2.269        0.820
+#> 5  1  0.890   -1.393       -2.094        2.199        2.566
+#> 6  1  0.908   -2.208        1.466       -0.175       -0.733
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -888,7 +1003,7 @@ fit <- fit_mixtur(data = simulated_data,
 
 head(fit)
 #>   id      K  p_t  p_u
-#> 1  1 15.073 0.76 0.24
+#> 1  1 15.374 0.74 0.26
 ```
 
 ### Three-component model
@@ -905,12 +1020,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  1.518    1.202       -2.374       -0.524        2.356
-#> 2  1  2.705    0.105       -0.035        0.332        1.693
-#> 3  1 -0.506   -0.874        1.728        0.995        0.105
-#> 4  1 -0.942   -2.754       -2.880       -2.234        1.868
-#> 5  1 -1.536   -1.105       -0.698        1.449       -0.262
-#> 6  1 -1.292   -2.262        0.087       -0.297       -2.670
+#> 1  1 -1.623   -1.624       -2.042        1.536       -0.035
+#> 2  1 -2.059   -1.974       -0.593        1.361        0.192
+#> 3  1 -0.052   -2.870       -0.524        1.553       -2.251
+#> 4  1 -0.105    1.496        2.321       -2.217        1.798
+#> 5  1  2.950    1.202        1.222        2.112       -1.798
+#> 6  1  0.471    0.436        1.658        0.035        1.030
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -925,8 +1040,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t   p_n   p_u
-#> 1  1 14.436 0.763 0.153 0.084
+#>   id     K   p_t   p_n   p_u
+#> 1  1 14.47 0.744 0.142 0.114
 ```
 
 ## Designing

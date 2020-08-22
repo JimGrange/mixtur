@@ -2,7 +2,7 @@
 % Please edit documentation in R/modelling.R
 \name{model_comparison}
 \alias{model_comparison}
-\title{Conduct formal model comparison.}
+\title{Conduct formal model comparison of the 2-component and 3-component model.}
 \usage{
 model_comparison(
   data,
@@ -15,7 +15,60 @@ model_comparison(
   condition_var = NULL
 )
 }
+\arguments{
+\item{data}{A data frame with columns containing (at the very least)
+trial-level participant response and target values This data can either be
+in degrees (1-360 or 1-180) or radians. If the 3-component mixture model is
+to be fitted to the data, the data frame also needs to contain the values
+of all non-targets. In addition, the model can be fit to individual
+individual participants, individual set-sizes, and individual additional
+conditions; if the user wishes for this, then the data frame should have
+columns coding for this information.}
+
+\item{unit}{A character indicating the unit of measurement in the data frame:
+"degrees" (measurement is in degrees, from 1 to 360); "degrees_180
+(measurement is in degrees, but limited to 1 to 180); or "radians"
+(measurement is in radians, from pi to 2 * pi, but could also be already in
+the range -pi to pi).}
+
+\item{id_var}{The quoted column name coding for participant id. If the data is from
+a single participant (i.e., there is no id column) set to NULL.}
+
+\item{response_var}{The quoted column name coding for the participants' responses}
+
+\item{target_var}{The quoted column name coding for the target value.}
+
+\item{non_target_var}{The quoted variable name common to all columns (if
+applicable) storing non-target values. If the user wishes to fit the
+3-component mixture model, the user should have one column coding for each
+non-target's value in the data frame. If there is more than one non-target,
+each column name should begin with a common term (e.g., the "non_target"
+term is common to the non-target columns "non_target_1", "non_target_2"
+etc.), which should then be passed to the function via the
+\code{non_target_var} variable.}
+
+\item{set_size_var}{The quoted column name (if applicable) coding for the set
+size of each response.}
+
+\item{condition_var}{The quoted column name (if applicable) coding for the}
+}
+\value{
+\code{ll_2} The log-likelihood values for the 2-component model.
+
+\code{ll_3} The log-likelihood values for the 3-component model.
+
+\code{aic_2} Akaike's information criterion for the 2-component
+model.
+
+\code{aic_3} Akaike's information criterion for the 2-component
+model.
+
+\code{aic_difference}. The difference of AIC values between models.
+Calculated as aic_2 minus aic_3, positive values indicate better fit for
+the 3-component model.
+}
 \description{
 This function will fit both the 2- and 3-component models to the data
-and provide an assessment of which fits best.
+and provide an assessment of which fits best via Akiake's Information
+Criterion (AIC).
 }
