@@ -607,6 +607,14 @@ plot_model_fit <- function(human_data,
                            condition_var = NULL){
 
 
+
+  # check how many components in the model fit object
+  if(is.null(human_data$p_n)){
+    components <- 2
+  } else {
+    components <- 3
+  }
+
   # get the error data for the participant data
   human_error <- plot_error(human_data,
                             id_var = id_var,
@@ -627,7 +635,13 @@ plot_model_fit <- function(human_data,
     # target error
     mean_k <- mean(model_fit$K)
     mean_p_t <- mean(model_fit$p_t)
-    mean_p_u <- mean(model_fit$p_n) + mean(model_fit$p_u)
+
+    if(components == 3){
+      mean_p_u <- mean(model_fit$p_n) + mean(model_fit$p_u)
+    } else {
+      mean_p_u <- mean(model_fit$p_u)
+    }
+
 
     # get the model predictions
     model_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
@@ -667,9 +681,17 @@ plot_model_fit <- function(human_data,
     mean_p_t <- model_fit %>%
       group_by(condition) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_fit %>%
-      group_by(condition) %>%
-      summarise(mean_p_u = mean(p_n) + mean(p_u))
+
+    if(components == 3){
+      mean_p_u <- model_fit %>%
+        group_by(condition) %>%
+        summarise(mean_p_u = mean(p_n) + mean(p_u))
+    } else {
+      mean_p_u <- model_fit %>%
+        group_by(condition) %>%
+        summarise(mean_p_u = mean(p_u))
+    }
+
 
     # get the model predictions
     conditions <- unique(human_error$condition)
@@ -737,12 +759,20 @@ plot_model_fit <- function(human_data,
     mean_p_t <- model_fit %>%
       group_by(set_size) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_fit %>%
-      group_by(set_size) %>%
-      summarise(mean_p_u = mean(p_n) + mean(p_u))
+
+    if(components == 3){
+      mean_p_u <- model_fit %>%
+        group_by(set_size) %>%
+        summarise(mean_p_u = mean(p_n) + mean(p_u))
+    } else {
+      mean_p_u <- model_fit %>%
+        group_by(set_size) %>%
+        summarise(mean_p_u = mean(p_u))
+    }
+
 
     # get the model predictions
-    set_sizes <- unique(data$set_size)
+    set_sizes <- unique(model_fit$set_size)
 
     for(i in 1:length(set_sizes)){
 
@@ -811,9 +841,17 @@ plot_model_fit <- function(human_data,
     mean_p_t <- model_fit %>%
       group_by(set_size, condition) %>%
       summarise(mean_p_t = mean(p_t))
-    mean_p_u <- model_fit %>%
-      group_by(set_size, condition) %>%
-      summarise(mean_p_u = mean(p_n) + mean(p_u))
+
+    if(components == 3){
+      mean_p_u <- model_fit %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_p_u = mean(p_n) + mean(p_u))
+    } else {
+      mean_p_u <- model_fit %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_p_u = mean(p_u))
+    }
+
 
     # get the model predictions for each level
     set_sizes <- unique(model_fit$set_size)
