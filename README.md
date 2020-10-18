@@ -894,7 +894,6 @@ plot_parameters(model_fit = model_fit,
 ``` r
 simulated_data <- simulate_mixtur(n_trials = 5000, 
                                   K = 15, 
-                                  p_t = 0.75, 
                                   p_u = 0.25, 
                                   set_size = 4)
 #> [1] "Simulating data. Please wait..."
@@ -902,12 +901,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1 -1.292    3.067       -0.419        0.000       -2.653
-#> 2  1 -1.047    0.877        1.815        0.052       -1.449
-#> 3  1  0.576    0.535        0.105        2.286       -0.768
-#> 4  1  2.042    1.997       -0.052       -2.304       -2.967
-#> 5  1 -0.087   -0.078       -0.873        0.384       -2.443
-#> 6  1 -2.461   -2.082       -2.862       -2.094        0.262
+#> 1  1  0.436   -0.772       -1.641        2.356        0.925
+#> 2  1 -1.780    0.139        0.908        1.484        0.000
+#> 3  1 -0.942    1.753        2.426        0.646       -0.401
+#> 4  1 -3.002   -2.875       -0.105       -1.361        2.705
+#> 5  1 -1.292   -1.200       -0.175        0.925        0.436
+#> 6  1  2.426   -0.380        1.012        1.833        2.915
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -922,8 +921,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t   p_u
-#> 1  1 15.057 0.755 0.245
+#>   id     K   p_t   p_u
+#> 1  1 15.24 0.754 0.246
 ```
 
 ### Three-component model
@@ -931,7 +930,6 @@ head(fit)
 ``` r
 simulated_data <- simulate_mixtur(n_trials = 5000, 
                                   K = 15, 
-                                  p_t = 0.75, 
                                   p_n = 0.15, 
                                   p_u = 0.10, 
                                   set_size = 4)
@@ -940,12 +938,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  0.471    0.451        3.124        2.094       -1.100
-#> 2  1  0.070   -3.453       -2.880        1.658       -2.374
-#> 3  1 -3.124    2.977       -0.332        2.339        1.972
-#> 4  1  1.414    1.292       -0.716        2.094       -0.279
-#> 5  1 -1.920   -1.743        1.326       -0.873       -0.384
-#> 6  1  1.344    0.640        0.314       -2.234       -1.623
+#> 1  1  0.367   -0.105        0.855       -1.012        2.164
+#> 2  1 -2.793   -2.366       -2.251        2.862        0.349
+#> 3  1  1.082    0.853        0.105       -2.269       -1.152
+#> 4  1  2.374    2.661        0.646       -2.775        1.414
+#> 5  1  0.471    0.731       -2.897        2.496       -1.065
+#> 6  1  1.309   -2.782       -2.775        2.548        1.710
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -961,7 +959,7 @@ fit <- fit_mixtur(data = simulated_data,
 
 head(fit)
 #>   id      K   p_t   p_n   p_u
-#> 1  1 15.085 0.764 0.152 0.083
+#> 1  1 15.704 0.743 0.149 0.108
 ```
 
 ## Designing

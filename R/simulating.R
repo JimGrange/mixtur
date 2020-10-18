@@ -9,7 +9,6 @@
 #' @export
 simulate_mixtur <- function(n_trials,
                             K,
-                            p_t,
                             p_n = NULL,
                             p_u,
                             set_size = 4,
@@ -19,19 +18,25 @@ simulate_mixtur <- function(n_trials,
   # print message to user
   print("Simulating data. Please wait...")
 
-  # check that p_t, p_n, and p_u sum to 1
+  # check that p_u (or p_u + p_n) do not exceed 1
   if(is.null(p_n)){
-    if(dplyr::near((p_t + p_u), 1) != TRUE){
-      stop("error: p_t and p_u do not sum to 1.", call. = FALSE)
+    if(p_u > 1){
+      stop("error: p_u is greater than 1")
     }
   }
 
   if(!is.null(p_n)){
-    if(dplyr::near((p_t + p_n + p_u), 1) != TRUE){
-      stop("p_t, p_n, and p_u do not sum to 1.", call. = FALSE)
+    if(p_n + p_u > 1){
+      stop("error: p_n plus p_u is greater than 1")
     }
   }
 
+  # calculate p_t from user input
+  if(is.null(p_n)){
+    p_t <- 1 - p_u
+  } else{
+    p_t <- 1 - p_u - p_n
+  }
 
 
   # create the trial structure to present to the model
