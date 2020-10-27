@@ -575,7 +575,7 @@ plot_precision <- function(data,
 # plot model fit ----------------------------------------------------------
 #' Plot model fit against human error data (target errors)
 #'
-#'@param human_data A data frame of the participant data, with columns
+#'@param participant_data A data frame of the participant data, with columns
 #'containing: participant identifier ('id_var'); the participants' response
 #'per trial ('response_var'); the target value ('target_var'); and, if
 #'applicable, the set size of each response ('set_size_var'), and the condition
@@ -597,7 +597,7 @@ plot_precision <- function(data,
 #'the plot should be returned.
 #'
 #' @export
-plot_model_fit <- function(human_data,
+plot_model_fit <- function(participant_data,
                            model_fit,
                            unit = "degrees",
                            id_var = "id",
@@ -609,14 +609,14 @@ plot_model_fit <- function(human_data,
 
 
   # check how many components in the model fit object
-  if(is.null(human_data$p_n)){
+  if(is.null(participant_data$p_n)){
     components <- 2
   } else {
     components <- 3
   }
 
   # get the error data for the participant data
-  human_error <- plot_error(human_data,
+  human_error <- plot_error(participant_data,
                             id_var = id_var,
                             unit = unit,
                             response_var = response_var,

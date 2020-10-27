@@ -750,7 +750,7 @@ model_fit <- fit_mixtur(data,
 #> [1] "Model fit finished."
 
 # plot the model fit to the data
-plot_model_fit(human_data = data,
+plot_model_fit(participant_data = data,
                model_fit = model_fit,
                unit = "radians",
                id_var = "id",
@@ -778,7 +778,7 @@ model_fit <- fit_mixtur(data,
 #> [1] "Model fit running. Please wait..."
 #> [1] "Model fit finished."
 
-plot_model_fit(human_data = data,
+plot_model_fit(participant_data = data,
                model_fit = model_fit,
                unit = "radians",
                id_var = "id",
