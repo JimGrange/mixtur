@@ -992,6 +992,7 @@ plot_parameters <- function(model_fit,
                           ymin = mean_value - se_value),
                       width = 0.05) +
         geom_point() +
+        labs(y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
     }
@@ -1009,6 +1010,7 @@ plot_parameters <- function(model_fit,
                           ymin = mean_value - se_value),
                       width = 0.05) +
         geom_point() +
+        labs(y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
 
@@ -1056,6 +1058,7 @@ plot_parameters <- function(model_fit,
                           ymin = mean_value - se_value),
                       width = 0.05) +
         geom_point() +
+        labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
@@ -1076,6 +1079,7 @@ plot_parameters <- function(model_fit,
                           ymin = mean_value - se_value),
                       width = 0.05) +
         geom_point() +
+        labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
@@ -1133,7 +1137,8 @@ plot_parameters <- function(model_fit,
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
-        geom_point()
+        geom_point() +
+        labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
@@ -1154,6 +1159,7 @@ plot_parameters <- function(model_fit,
                           ymin = mean_value - se_value),
                       width = 0.05) +
         geom_point() +
+        labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
@@ -1216,7 +1222,7 @@ plot_parameters <- function(model_fit,
         geom_point() +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
-             y = "Parameter Value") +
+             y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
     }
@@ -1244,7 +1250,7 @@ plot_parameters <- function(model_fit,
                    position = pd) +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
-             y = "Parameter Value") +
+             y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
     }
