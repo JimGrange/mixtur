@@ -186,10 +186,10 @@ plot_error <- function(data,
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
       scale_y_continuous(limits = c(0,
@@ -205,10 +205,10 @@ plot_error <- function(data,
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
       scale_y_continuous(limits = c(0,
@@ -229,10 +229,10 @@ plot_error <- function(data,
 
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error)) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
       scale_y_continuous(limits = c(0,
@@ -257,13 +257,13 @@ plot_error <- function(data,
     plot <- ggplot(final_data, aes(x = x,
                                    y = mean_error,
                                    group = condition)) +
-      geom_point(aes(colour = condition),
-                 position = pd) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error,
                         colour = condition),
                     width = 0.05,
                     position = pd) +
+      geom_point(aes(colour = condition),
+                 position = pd) +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
       scale_y_continuous(limits = c(0,
@@ -492,10 +492,10 @@ plot_precision <- function(data,
 
     plot <- ggplot(final_data, aes(x = condition,
                                    y = mean_precision)) +
-      geom_point(size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
                     width = 0.05) +
+      geom_point(size = 2.5) +
       theme_bw() +
       labs(x = condition_var,
            y = "Precision")
@@ -514,10 +514,10 @@ plot_precision <- function(data,
 
     plot <- ggplot(final_data, aes(x = set_size,
                                    y = mean_precision)) +
-      geom_point(size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
                     width = 0.05) +
+      geom_point(size = 2.5) +
       theme_bw() +
       labs(x = "Set Size",
            y = "Precision")
@@ -540,14 +540,14 @@ plot_precision <- function(data,
     plot <- ggplot(final_data, aes(x = set_size,
                                    y = mean_precision,
                                    group = condition)) +
-      geom_point(aes(colour = condition),
-                 position = pd,
-                 size = 2.5) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision,
                         colour = condition),
                     width = 0.05,
                     position = pd) +
+      geom_point(aes(colour = condition),
+                 position = pd,
+                 size = 2.5) +
       theme_bw() +
       scale_colour_brewer(palette = "Dark2", name = condition_var) +
       labs(x = "Set Size",
@@ -656,10 +656,10 @@ plot_model_fit <- function(participant_data,
                 alpha = 0.8,
                 col = "#D95F02",
                 lwd = 1.3) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       theme_bw() +
       labs(x = "Error (Radians)",
            y = "Probability Density")
@@ -732,10 +732,10 @@ plot_model_fit <- function(participant_data,
                 alpha = 0.8,
                 col = "#D95F02",
                 lwd = 1.3) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       facet_wrap(vars(condition), ncol = 4) +
       theme_bw() +
       labs(x = "Error (Radians)",
@@ -812,10 +812,10 @@ plot_model_fit <- function(participant_data,
                 alpha = 0.8,
                 col = "#D95F02",
                 lwd = 1.3) +
-      geom_point() +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
                     width = 0.05) +
+      geom_point() +
       facet_wrap(vars(set_size), ncol = 2) +
       theme_bw() +
       scale_colour_brewer(palette = "Dark2") +
@@ -904,11 +904,11 @@ plot_model_fit <- function(participant_data,
                     colour = condition),
                 alpha = 0.8,
                 lwd = 1) +
-      geom_point(aes(colour = condition)) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error,
                         colour = condition),
                     width = 0.05) +
+      geom_point(aes(colour = condition)) +
       facet_wrap(vars(set_size), ncol = 2) +
       theme_bw() +
       scale_colour_brewer(palette = "Dark2") +
@@ -988,10 +988,10 @@ plot_parameters <- function(model_fit,
 
       plot <- ggplot(plot_data, aes(x = Parameter,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
     }
@@ -1005,10 +1005,10 @@ plot_parameters <- function(model_fit,
 
       plot <- ggplot(plot_data, aes(x = Parameter,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
 
@@ -1052,10 +1052,10 @@ plot_parameters <- function(model_fit,
                                     levels = c("K", "p_t", "p_u"))
       plot <- ggplot(plot_data, aes(x = condition,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         labs(x = condition_var) +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
@@ -1072,10 +1072,10 @@ plot_parameters <- function(model_fit,
                                     levels = c("K", "p_t", "p_n", "p_u"))
       plot <- ggplot(plot_data, aes(x = condition,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         labs(x = condition_var) +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
@@ -1129,11 +1129,11 @@ plot_parameters <- function(model_fit,
       plot_data$Parameter <- factor(plot_data$Parameter,
                                     levels = c("K", "p_t", "p_u"))
       plot <- ggplot(plot_data, aes(x = set_size,
-                                    y = mean_value)) +
-        geom_point() +
+                                    y = mean_value)) ++
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point()
         labs(x = "Set Size") +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
         theme_bw()
@@ -1150,10 +1150,10 @@ plot_parameters <- function(model_fit,
                                     levels = c("K", "p_t", "p_n", "p_u"))
       plot <- ggplot(plot_data, aes(x = set_size,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         labs(x = "Set Size") +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
         theme_bw()
@@ -1210,10 +1210,10 @@ plot_parameters <- function(model_fit,
                                     levels = c("K", "p_t", "p_u"))
       plot <- ggplot(plot_data, aes(x = set_size,
                                     y = mean_value)) +
-        geom_point() +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
                       width = 0.05) +
+        geom_point() +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Parameter Value") +
@@ -1235,13 +1235,13 @@ plot_parameters <- function(model_fit,
       plot <- ggplot(plot_data, aes(x = set_size,
                                     y = mean_value,
                                     group = condition)) +
-        geom_point(aes(colour = condition),
-                   position = pd) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value,
                           colour = condition),
                       width = 0.05,
                       position = pd) +
+        geom_point(aes(colour = condition),
+                   position = pd) +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Parameter Value") +
