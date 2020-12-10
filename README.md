@@ -1,12 +1,13 @@
 
-# mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
+# mixtur <a img src='images/logo/mixtur_logo.png' align="right" height="30" /></a>
 
 <img src="images/logo/mixtur_logo.png" width="45%" style="display: block; margin: auto;" />
 
-**mixtur** is an R package that allows users to implement the
-2-component (Zhang & Luck, 2008) and 3-component (Bays, Catalao, &
-Husain, 2009) mixture models of continuous-report visual short-term
-memory data.
+**mixtur** is an R package for designing, analysing, and modelling
+continuous report visual short-term memory studies. The package allows
+users to implement the 2-component (Zhang & Luck, 2008) and 3-component
+(Bays, Catalao, & Husain, 2009) mixture models of continuous-report
+visual short-term memory data.
 
 The package allows users to:
 
