@@ -1,11 +1,11 @@
 
 # mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
 
-![](images/logo/mixtur_logo.png)
+<img src="images/logo/mixtur_logo.png" width="30%" />
 
 ## Pre-print
 
-  - Grange, J.A., Moore, S.M., & Berr, E.D.J. (under review). *mixtur:
+  - Grange, J.A., Moore, S.M., & Berry, E.D.J. (under review). *mixtur:
     An R package for designing, analysing, and modelling continuous
     report visual short-term memory studies*.()\[\]
 
@@ -185,7 +185,7 @@ plot_error(data = bays2009_sample,
            unit = "radians")
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 If you wish to receive the data underpinning the plot, save the
 plot\_error call to a new variable and set *return\_data* to TRUE.
@@ -242,7 +242,7 @@ plot_error(data = bays2009_full,
            condition_var = NULL)
 ```
 
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
 Maybe your experiment didn’t manipulate set size, but it did manipulate
 something else. In the full data set of Bays et al. (2009) they
@@ -258,7 +258,7 @@ plot_error(data = bays2009_full,
            condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
 Maybe your experiment manipulated both set size AND an additional
 condition. No worries; **mixtur** can handle this. By default the
@@ -276,7 +276,7 @@ plot_error(data = bays2009_full,
            condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
 ### Plotting precision of responses
 
@@ -286,7 +286,7 @@ precision is calculated as the reciprocol of the standard deviation of
 the response error distribution (calculated as SD for circular space).
 Below are two example conditions that differ in their precision:
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 Condition A has lower precision (i.e., higher SD) than Condition B. The
 arguments to pass to the function that calcualtes & plots
@@ -309,7 +309,7 @@ plot_precision(data = bays2009_full,
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 Again, if we wanted the data underlying the plot, we can ask **mixtur**
 for this:
@@ -367,7 +367,7 @@ plot_precision(data = bays2009_full,
                set_size_var = NULL)
 ```
 
-![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
 As before, if we want to plot both set size and an additional condition,
 we can do so:
@@ -380,7 +380,7 @@ plot_precision(data = bays2009_full,
                set_size_var = "set_size")
 ```
 
-![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
 
 ## Analysing
 
@@ -708,7 +708,7 @@ plot_model_fit(participant_data = data,
                condition_var = NULL)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 
@@ -736,7 +736,7 @@ plot_model_fit(participant_data = data,
                condition_var = "delay")
 ```
 
-![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
 
 ### Plotting model parameter values
 
@@ -768,7 +768,7 @@ plot_parameters(model_fit = model_fit,
                 return_data = FALSE)
 ```
 
-![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
 #### Visualising condition
 
@@ -803,7 +803,7 @@ plot_parameters(model_fit = model_fit,
                 return_data = FALSE)
 ```
 
-![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
 
 #### Visualising both set size & condition
 
@@ -833,7 +833,7 @@ plot_parameters(model_fit = model_fit,
                 return_data = FALSE)
 ```
 
-![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
 ## Simulating: Generating Data From Mixture Models
 
@@ -849,12 +849,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1 -0.367   -0.123       -2.251        0.087        1.728
-#> 2  1 -3.124   -3.489        0.087        2.182       -1.972
-#> 3  1  0.593   -3.111        1.379        1.012       -1.990
-#> 4  1 -2.426   -2.517        0.768        1.134        1.990
-#> 5  1 -3.019   -2.804        1.344       -1.047        2.374
-#> 6  1  2.985    2.606        1.082       -2.461        2.374
+#> 1  1  0.925    1.414        1.623       -1.222       -2.618
+#> 2  1 -1.763   -1.461       -2.862       -1.396       -0.628
+#> 3  1 -2.531   -2.350       -0.070       -0.611       -2.967
+#> 4  1 -1.047    1.329       -1.449       -0.681       -1.990
+#> 5  1 -1.117   -0.931        2.077        2.827       -0.628
+#> 6  1  1.047    0.818       -0.349       -2.723        2.793
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 2,
@@ -870,7 +870,7 @@ fit <- fit_mixtur(data = simulated_data,
 
 head(fit)
 #>   id      K   p_t   p_u
-#> 1  1 14.062 0.756 0.244
+#> 1  1 15.009 0.749 0.251
 ```
 
 ### Three-component model
@@ -886,12 +886,12 @@ simulated_data <- simulate_mixtur(n_trials = 5000,
 
 head(simulated_data)
 #>   id target response non_target_1 non_target_2 non_target_3
-#> 1  1  2.094    2.535       -0.471        2.967       -1.257
-#> 2  1 -2.321   -2.626       -1.239        1.239       -0.716
-#> 3  1 -1.379   -1.204        0.524        1.222       -0.750
-#> 4  1 -0.593    0.677        1.606        0.489       -2.635
-#> 5  1  0.820   -0.517       -0.908        0.436       -2.845
-#> 6  1 -2.670    2.320        2.356        0.628        1.239
+#> 1  1 -2.740   -2.983       -1.431        2.775        0.192
+#> 2  1  0.017    0.210        1.449       -1.955        2.897
+#> 3  1  0.314    0.646       -0.227       -1.222        2.723
+#> 4  1 -2.496   -2.366        2.845        1.361       -1.972
+#> 5  1 -2.810   -2.608        0.175       -2.112        2.217
+#> 6  1  2.566   -1.037        0.105       -0.349        1.850
 
 fit <- fit_mixtur(data = simulated_data,
                   components = 3,
@@ -906,8 +906,8 @@ fit <- fit_mixtur(data = simulated_data,
 #> [1] "Model fit finished."
 
 head(fit)
-#>   id      K   p_t   p_n   p_u
-#> 1  1 14.306 0.744 0.154 0.102
+#>   id      K  p_t   p_n   p_u
+#> 1  1 14.347 0.75 0.154 0.096
 ```
 
 ## Designing
