@@ -2,10 +2,11 @@ Package: mixtur
 Title: An R package for designing, analysing, and modelling continuous 
     report visual short-term memory studies
 Version: 1.0.0
+Date: 2021-01-01
 Authors@R: c(
     person("Jim", "Grange", email = "grange.jim@gmail.com", role = c("aut", "cre")),
-    person("Stuart", "Moore", email = "StuartBryanMoore@outlook.com", role = "aut"), 
-    person("Ed", "Berry", email = "enter_here@gmail.com", role = c("aut", "ctb")))
+    person("Stuart", "Moore", role = "aut"), 
+    person("Ed", "Berry", role = c("aut", "ctb")))
 Description: A set of utility functions for analysing and modelling data from 
     continuous report short-term memory experiments using [enter model 
     descriptions here...]. Users are able to simulate from these models, too. 
@@ -25,5 +26,6 @@ Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 License: GPL-3
 LazyData: true
+URL: https://github.com/JimGrange/mixtur
 Encoding: UTF-8
 RoxygenNote: 7.1.1
