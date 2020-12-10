@@ -4,9 +4,9 @@ Title: An R package for designing, analysing, and modelling continuous
 Version: 1.0.0
 Date: 2021-01-01
 Authors@R: c(
-    person("Jim", "Grange", email = "grange.jim@gmail.com", role = c("aut", "cre")),
-    person("Stuart", "Moore", role = "aut"), 
-    person("Ed", "Berry", role = c("aut", "ctb")))
+    person("Jim A.", "Grange", email = "grange.jim@gmail.com", role = c("aut", "cre")),
+    person("Stuart B.", "Moore", role = "aut"), 
+    person("Ed D.J.", "Berry", role = c("aut", "ctb")))
 Description: A set of utility functions for analysing and modelling data from 
     continuous report short-term memory experiments using [enter model 
     descriptions here...]. Users are able to simulate from these models, too. 

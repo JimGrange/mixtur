@@ -7,7 +7,6 @@
 simulate_mixtur(
   n_trials,
   K,
-  p_t,
   p_n = NULL,
   p_u,
   set_size = 4,

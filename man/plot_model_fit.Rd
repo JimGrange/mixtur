@@ -5,7 +5,7 @@
 \title{Plot model fit against human error data (target errors)}
 \usage{
 plot_model_fit(
-  human_data,
+  participant_data,
   model_fit,
   unit = "degrees",
   id_var = "id",
@@ -16,7 +16,7 @@ plot_model_fit(
 )
 }
 \arguments{
-\item{human_data}{A data frame of the participant data, with columns
+\item{participant_data}{A data frame of the participant data, with columns
 containing: participant identifier ('id_var'); the participants' response
 per trial ('response_var'); the target value ('target_var'); and, if
 applicable, the set size of each response ('set_size_var'), and the condition
