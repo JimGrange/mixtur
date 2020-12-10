@@ -1,67 +1,15 @@
 
 # mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
 
-## ToDo List
+![](images/logo/mixtur_logo.png)
 
-  - Plotting
-      - ~~plot response error~~
-      - ~~plot precision of responses~~
-      - ~~need to test degress\_180 data works~~
-  - Analysing
-      - ~~return response error by id for inferential analysis (is this
-        even worthwhile??)~~
-      - ~~return precision by id for inferential analysis~~
-  - Modelling
-      - ~~fit the 3-component model to data~~
-      - ~~fit the 2-component model to data~~
-      - ~~plot model parameters~~
-      - ~~plot model fit against participant error data~~
-      - ~~need to test degress\_180 data works~~
-      - ~~return log-likelihood of fit?~~
-      - ~~formal model comparison tests?~~
-  - Simulating
-      - ~~base simulate\_mixtur function~~
-      - ~~check parameter recovery 3-component~~
-      - ~~check parameter recovery 2-component~~
-      - ~~check model recovery (e.g., sim from 2-component, and see if
-        2-component wins model competition).~~
-  - General
-      - update documentation of all functions
-      - add more example data sets
-      - vignettes for all functions & use cases
-  - Designing
-      - ~~generate trial-level data for a user’s experiment~~
-      - ensure this works for multiple participants
-      - cie-lab calculation
-      - cie2rgb converter
-      - rgb2cie converter
+## Pre-print
+
+  - Grange, J.A., Moore, S.M., & Berr, E.D.J. (under review). *mixtur:
+    An R package for designing, analysing, and modelling continuous
+    report visual short-term memory studies*.()\[\]
 
 ## Contents
-
-  - [Package Overview](#package-overview)
-      - [How to install the package](#installation)
-      - [An overview of continuous report
-        tasks](#continuous-report-tasks)
-      - [Example data shipped with mixtur](#example-data)
-      - [An overview of data structures in
-        mixtur](#data-structures-in-mixtur)
-  - [Plotting: Visualising behavioural data](#plotting)
-      - [Plotting response error](#plotting-response-error)
-      - [Plotting response precision](#plotting-precision-of-responses)
-  - [Analysing: Preparing data for inferential analysis](#analysing)
-  - [Modelling: Fitting mixture models to data](#modelling)
-      - [2-component mixture models](#two-component-mixture-models)
-      - [3-component mixture models](#three-component-mixture-models)
-      - [Formal model comparison](#formal-model-comparison)
-  - [Plotting 2: Visualising model
-    data](#plotting-2-visualising-model-data)
-      - [Plotting model fit](#plotting-model-fit)
-      - [Plotting model parameter
-        values](#plotting-model-parameter-values)
-  - [Simulating: Generating data from mixture
-    models](#simulating-generating-data-from-mixture-models)
-  - [Designing: Experiment design tools](#designing)
-  - [References](#references)
 
 ## Package Overview
 
@@ -71,17 +19,17 @@ studies.
 
 ### Installation
 
-To install the package from GitHub, you need the devtools package:
+To install the package from GitHub, you need the remotes package:
 
 ``` r
-install.packages("devtools")
-library(devtools)
+install.packages("remotes")
 ```
 
 Then **mixtur** can be directly installed:
 
 ``` r
-devtools::install_github("JimGrange/mixtur")
+remotes::install_github("JimGrange/mixtur")
+library(mixtur)
 ```
 
 ### Continuous report tasks
