@@ -4,6 +4,10 @@
 \alias{wrap}
 \title{Map values onto circular space
 This function maps the input radians onto the circular space -pi to pi.}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 wrap(data, bound = pi)
 }

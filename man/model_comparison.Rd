@@ -3,6 +3,10 @@
 \name{model_comparison}
 \alias{model_comparison}
 \title{Conduct formal model comparison of the 2-component and 3-component model.}
+\source{
+The code for the 3-component model has been adapted from Matlab code
+written by Paul Bays (https://paulbays.com).
+}
 \usage{
 model_comparison(
   data,

@@ -4,8 +4,11 @@
 \alias{sd2k}
 \title{Translate from standard deviation to Von Mises K parameter
 Returns the Von Mises concentration parameter K corresponding
-to a standard deviation S of a wrapped normal distributions
-Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta}
+to a standard deviation S of a wrapped normal distributions}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 sd2k(s)
 }
@@ -13,5 +16,4 @@ sd2k(s)
 Translate from standard deviation to Von Mises K parameter
 Returns the Von Mises concentration parameter K corresponding
 to a standard deviation S of a wrapped normal distributions
-Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
 }

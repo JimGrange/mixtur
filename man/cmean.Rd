@@ -3,6 +3,10 @@
 \name{cmean}
 \alias{cmean}
 \title{Calculate the circular equivalent of the mean}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 cmean(x)
 }

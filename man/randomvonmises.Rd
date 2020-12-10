@@ -4,6 +4,10 @@
 \alias{randomvonmises}
 \title{Generates N random samples from a Von Mises distribution with mean mu and
 concentration k}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 randomvonmises(n, mu, k)
 }

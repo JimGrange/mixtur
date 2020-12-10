@@ -2,14 +2,14 @@
 % Please edit documentation in R/utilities.R
 \name{A1inv}
 \alias{A1inv}
-\title{Inverse of A1 function.
-This is available in the circular package but we have recreated it here from
-Bays' code}
+\title{Inverse of A1 function.}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 A1inv(r)
 }
 \description{
 Inverse of A1 function.
-This is available in the circular package but we have recreated it here from
-Bays' code
 }

@@ -3,6 +3,10 @@
 \name{cstd}
 \alias{cstd}
 \title{Calculate the circular equivalent of standard deviation}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 cstd(x)
 }

@@ -2,12 +2,15 @@
 % Please edit documentation in R/utilities.R
 \name{repmat}
 \alias{repmat}
-\title{Recreate Matlab's repmat function
-repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html}
+\title{Recreate Matlab's repmat function}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com) which itself was adapted from
+http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
+}
 \usage{
 repmat(x, nn)
 }
 \description{
 Recreate Matlab's repmat function
-repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
 }

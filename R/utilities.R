@@ -5,6 +5,9 @@
 # get precision of single condition ---------------------------------------
 #' Obtain the precision of a single condition
 #' @importFrom tidyr tibble
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 get_precision_single <- function(error, target = 0) {
 
@@ -37,6 +40,9 @@ get_precision_single <- function(error, target = 0) {
 #'
 #' A function to transform degrees into radians
 #' @param deg Degree value to transform into radians
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 degrees_to_radians <- function(deg){deg * pi / 180}
 
@@ -47,6 +53,9 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #'
 #' A function to transform radians into degrees
 #' @param deg Radian value to transform into degrees
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 
@@ -56,6 +65,9 @@ radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 #' Map values onto circular space
 #' This function maps the input radians onto the circular space -pi to pi.
 #' @param data The data (in radians) to be mapped
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 wrap <- function(data, bound = pi) {
   result <- ((data + bound) %% (bound * 2)) - bound
@@ -66,6 +78,9 @@ wrap <- function(data, bound = pi) {
 
 # calculate circular mean -------------------------------------------------
 #' Calculate the circular equivalent of the mean
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 cmean <- function(x) {
 
@@ -81,6 +96,9 @@ cmean <- function(x) {
 
 # calculate the circular SD -----------------------------------------------
 #' Calculate the circular equivalent of standard deviation
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 cstd <- function(x) {
 
@@ -102,6 +120,9 @@ cstd <- function(x) {
 # generate random samples from vin mises ----------------------------------
 #' Generates N random samples from a Von Mises distribution with mean mu and
 #' concentration k
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 randomvonmises <- function(n, mu, k) {
 
@@ -139,6 +160,9 @@ randomvonmises <- function(n, mu, k) {
 #' Returns the probability density function for the Von Mises distribution with
 #' mean MU and concentration K, evaluated at the values in X (given in
 #' radians).
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 vonmisespdf <- function(x, mu, k) {
   p <- exp(k * cos(x - mu)) / (2 * pi * besselI(k, 0))
@@ -150,7 +174,10 @@ vonmisespdf <- function(x, mu, k) {
 # obtain logarithmically spaced vectors -----------------------------------
 #' Obtain logarithmically spaced vectors
 #' logspace function for logarithmically spaced vectors
-#' soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com). See also
+#' http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
 #' @export
 logspace <- function(a, b, n){
   exp(log(10) * seq(a, b, length.out = n))
@@ -160,6 +187,9 @@ logspace <- function(a, b, n){
 
 # trapz function ----------------------------------------------------------
 #' trapz function from the caTools package by Jarek Tuszynski
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 trapz <- function(x, y) {
   idx <- 2:length(x)
@@ -170,7 +200,10 @@ trapz <- function(x, y) {
 
 # Matlab's repmat function ------------------------------------------------
 #' Recreate Matlab's repmat function
-#' repmat function adapted from http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com) which itself was adapted from
+#' http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
 #' @export
 repmat = function(x, nn){
 
@@ -188,8 +221,9 @@ repmat = function(x, nn){
 
 # inverse of A1 function --------------------------------------------------
 #' Inverse of A1 function.
-#' This is available in the circular package but we have recreated it here from
-#' Bays' code
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 A1inv <- function(r) {
 
@@ -211,7 +245,9 @@ A1inv <- function(r) {
 #' Standard deviation of Von Mises K parameter
 #' Returns the standard deviation of a wrapped normal distribution
 #' corresponding to a Von Mises concentration parameter of K
-#' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 k2sd <- function(k){
 
@@ -233,7 +269,9 @@ k2sd <- function(k){
 #' Translate from standard deviation to Von Mises K parameter
 #' Returns the Von Mises concentration parameter K corresponding
 #' to a standard deviation S of a wrapped normal distributions
-#' Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
+#' @source
+#' The code has been adapted from Matlab code written by Paul Bays
+#' (https://paulbays.com).
 #' @export
 sd2k <- function(s){
 
@@ -250,7 +288,7 @@ sd2k <- function(s){
 
 
 
-# calculate akiakes information criterion ---------------------------------
+# calculate akiake's information criterion --------------------------------
 #' @export
 aic <- function(ll, parms){
   value <- (2 * parms) - (2 * ll)

@@ -3,6 +3,10 @@
 \name{get_precision_single}
 \alias{get_precision_single}
 \title{Obtain the precision of a single condition}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 get_precision_single(error, target = 0)
 }

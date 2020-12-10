@@ -3,6 +3,10 @@
 \name{fit_mixtur}
 \alias{fit_mixtur}
 \title{Fit the mixture model.}
+\source{
+The code for the 3-component model has been adapted from Matlab code
+written by Paul Bays (https://paulbays.com).
+}
 \usage{
 fit_mixtur(
   data,

@@ -3,13 +3,16 @@
 \name{logspace}
 \alias{logspace}
 \title{Obtain logarithmically spaced vectors
-logspace function for logarithmically spaced vectors
-soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html}
+logspace function for logarithmically spaced vectors}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com). See also
+http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
+}
 \usage{
 logspace(a, b, n)
 }
 \description{
 Obtain logarithmically spaced vectors
 logspace function for logarithmically spaced vectors
-soure: http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
 }

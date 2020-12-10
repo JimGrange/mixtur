@@ -3,6 +3,10 @@
 \name{trapz}
 \alias{trapz}
 \title{trapz function from the caTools package by Jarek Tuszynski}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 trapz(x, y)
 }

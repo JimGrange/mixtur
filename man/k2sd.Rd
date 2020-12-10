@@ -4,8 +4,11 @@
 \alias{k2sd}
 \title{Standard deviation of Von Mises K parameter
 Returns the standard deviation of a wrapped normal distribution
-corresponding to a Von Mises concentration parameter of K
-Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta}
+corresponding to a Von Mises concentration parameter of K}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 k2sd(k)
 }
@@ -13,5 +16,4 @@ k2sd(k)
 Standard deviation of Von Mises K parameter
 Returns the standard deviation of a wrapped normal distribution
 corresponding to a Von Mises concentration parameter of K
-Ref: Topics in Circular Statistics, S. R. Jammalamadaka & A. Sengupta
 }

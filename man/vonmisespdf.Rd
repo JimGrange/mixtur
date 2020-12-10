@@ -6,6 +6,10 @@
 Returns the probability density function for the Von Mises distribution with
 mean MU and concentration K, evaluated at the values in X (given in
 radians).}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 vonmisespdf(x, mu, k)
 }

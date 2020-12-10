@@ -4,6 +4,9 @@
 #' This is the function called by the user to fit either the two- or three-
 #' component mixture model.
 #'
+#' @source
+#' The code for the 3-component model has been adapted from Matlab code
+#' written by Paul Bays (https://paulbays.com).
 #' @param data A data frame with columns containing (at the very least)
 #' trial-level participant response and target values This data can either be
 #' in degrees (1-360 or 1-180) or radians. If the 3-component mixture model is
@@ -640,6 +643,9 @@ likelihood_function <- function(response,
 #' This function will fit both the 2- and 3-component models to the data
 #' and provide an assessment of which fits best via Akiake's Information
 #' Criterion (AIC).
+#' @source
+#' The code for the 3-component model has been adapted from Matlab code
+#' written by Paul Bays (https://paulbays.com).
 #'
 #' @param data A data frame with columns containing (at the very least)
 #' trial-level participant response and target values This data can either be

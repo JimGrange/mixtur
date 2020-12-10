@@ -3,6 +3,10 @@
 \name{degrees_to_radians}
 \alias{degrees_to_radians}
 \title{Transform degrees into radians}
+\source{
+The code has been adapted from Matlab code written by Paul Bays
+(https://paulbays.com).
+}
 \usage{
 degrees_to_radians(deg)
 }
