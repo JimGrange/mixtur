@@ -1,7 +1,7 @@
 
 # mixtur: An R package for designing, analysing, and modelling continuous report visual short-term memory studies
 
-<img src="images/logo/mixtur_logo.png" width="30%" />
+<img src="images/logo/mixtur_logo.png" width="45%" />
 
 ## Pre-print
 
