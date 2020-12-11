@@ -21,9 +21,9 @@ The package allows users to:
 
 We have a pre-print showing users how to use the package:
 
-  - Grange, J.A., Moore, S.M., & Berry, E.D.J. (under review). *mixtur:
+  - Grange, J.A., Moore, S.B., & Berry, E.D.J. (under review). *mixtur:
     An R package for designing, analysing, and modelling continuous
-    report visual short-term memory studies*.()\[\]
+    report visual short-term memory studies*.[link](link)
 
 The pre-print also includes several simulation studies exploring some
 properties of the models (including parameter recovery simulations,

@@ -8,8 +8,8 @@ Authors@R: c(
     person("Stuart B.", "Moore", role = "aut"), 
     person("Ed D.J.", "Berry", role = c("aut", "ctb")))
 Description: A set of utility functions for analysing and modelling data from 
-    continuous report short-term memory experiments using [enter model 
-    descriptions here...]. Users are able to simulate from these models, too. 
+    continuous report short-term memory experiments using either the 2-component or 
+    3-component mixture model. Users are able to simulate from these models, too. 
     Helper functions are also included to assist with experiment design.
 Depends: 
   R (>= 4.0), 
