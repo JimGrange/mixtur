@@ -2,36 +2,6 @@
 
 
 
-# get precision of single condition ---------------------------------------
-#' Obtain the precision of a single condition
-#' @importFrom tidyr tibble
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
-#' @export
-get_precision_single <- function(error, target = 0) {
-
-  if(any(abs(error) > pi) | any(abs(target) > pi)) {
-    stop("Error: Input values must be in radians, range -PI to PI", call. = FALSE)
-  }
-
-  # transform error to column vector
-  error <- tibble(error)
-
-  #--- calculate precision
-  n <- NROW(error)
-
-  # expected precision under uniform distribution
-  x <- logspace(-2, 2, 100)
-  p0 <- trapz(x, n / (sqrt(x) * exp(x + (n * exp(-x)))))
-
-  precision <- (1 / cstd(error)) - p0
-
-  # Bias
-  bias <- cmean(error)
-
-  return(data.frame(precision = precision, bias = bias))
-}
 
 
 
