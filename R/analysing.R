@@ -50,13 +50,13 @@
 #'                                   set_size_var = "set_size")
 #'
 #' @export
-summary_statistics <- function(data,
-                               unit = "degrees",
-                               id_var = "id",
-                               response_var = "response",
-                               target_var = "target",
-                               set_size_var = NULL,
-                               condition_var = NULL){
+get_summary_statistics <- function(data,
+                                   unit = "degrees",
+                                   id_var = "id",
+                                   response_var = "response",
+                                   target_var = "target",
+                                   set_size_var = NULL,
+                                   condition_var = NULL){
 
 
   # get the list of participant ids
