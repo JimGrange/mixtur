@@ -40,7 +40,7 @@
 #'
 #'
 #' @examples
-#' # load an example data frame
+#' # hello load an example data frame
 #' data(bays2009_full)
 #'
 #' # calculate the summary statistics per condition per set size

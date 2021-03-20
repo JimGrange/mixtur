@@ -58,7 +58,7 @@ ready for inferential analysis. Note that the function does not actually
 conduct the analysis.
 }
 \examples{
-# load an example data frame
+# hello load an example data frame
 data(bays2009_full)
 
 # calculate the summary statistics per condition per set size
