@@ -384,20 +384,19 @@ get_precision_single <- function(error, target = 0) {
 
 
 # get mean absolute error -------------------------------------------------
-#' Obtain mean absolute
+#' Obtain mean absolute error
 #' @export
 get_mean_absolute_error <- function(error){
 
-  error = abs(error)
+ error <- abs(error)
 
-  # get x and y of response vectors
-  x_r <- sum(cos(error))
-  y_r <- sum(sin(error))
+ mae <- cmean(error)
 
-  # get mean absolute error vector
-  mae <- atan(y_r / x_r)
+ return(mae)
 
 }
+
+
 
 # get resultant vector length ---------------------------------------------
 #' Obtain resultant vector length

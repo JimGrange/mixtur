@@ -2,10 +2,10 @@
 % Please edit documentation in R/analysing.R
 \name{get_mean_absolute_error}
 \alias{get_mean_absolute_error}
-\title{Obtain mean absolute}
+\title{Obtain mean absolute error}
 \usage{
 get_mean_absolute_error(error)
 }
 \description{
-Obtain mean absolute
+Obtain mean absolute error
 }
