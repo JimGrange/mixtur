@@ -63,7 +63,8 @@ size of each response.}
 condition of each response.}
 
 \item{return_fit}{If set to TRUE, the function will return the negative
-log-likelihood of the model fit.}
+log-likelihood of the model fit as well as the number of trials used in the fit
+(which is important for calculating some model comparison statistics).}
 }
 \description{
 This is the function called by the user to fit either the two- or three-

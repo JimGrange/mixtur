@@ -294,3 +294,13 @@ aic <- function(ll, parms){
   value <- (2 * parms) - (2 * ll)
   return(value)
 }
+
+
+
+# calculate bayesian information criterion --------------------------------
+#' @export
+bic <- function(ll, parms, n){
+  value <- (parms * log(n)) - (2 * ll)
+  return(value)
+}
+

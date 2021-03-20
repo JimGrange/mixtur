@@ -48,7 +48,8 @@
 #' condition of each response.
 #'
 #' @param return_fit If set to TRUE, the function will return the negative
-#' log-likelihood of the model fit.
+#' log-likelihood of the model fit as well as the number of trials used in the fit
+#' (which is important for calculating some model comparison statistics).
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
@@ -138,6 +139,11 @@ fit_mixtur <- function(data,
                      set_size = level_set_size,
                      return_fit = return_fit)
   }
+
+
+
+
+
 
 
   # no set size manipulation but there is a condition manipulation
@@ -324,6 +330,10 @@ fit_mixtur <- function(data,
 
 
 
+
+
+
+
 # fit model to a single level ---------------------------------------------
 #' Fit model to a single level.
 #'
@@ -357,9 +367,16 @@ fit_level <- function(data,
 
   # initiate data frame to store parameters
   parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
-                      p_u = FALSE, LL = FALSE)
+                      p_u = FALSE, LL = FALSE, n = FALSE)
 
-  # loop over every partiipant
+
+
+
+
+
+
+
+  # loop over every participant
   for(i in seq_along(l)) {
 
     # get the current participant's data
@@ -414,6 +431,7 @@ fit_level <- function(data,
     if(return_fit == TRUE){
       parms[i, 2:5] <- round(fit$parameters, 3)
       parms[i, 6] <- round(fit$LL, 3)
+      parms[i, 7] <- nrow(df)
     } else{
       parms[i, 2:5] <- round(fit, 3)
     }
@@ -423,7 +441,7 @@ fit_level <- function(data,
   if(return_fit == TRUE){
     return(parms)
   } else {
-    parms <- parms %>% select(-LL)
+    parms <- parms %>% select(-LL, -n)
     return(parms)
   }
 
@@ -470,7 +488,7 @@ fit_model <- function(response,
   # initialise log likelihood
   log_lik = -Inf
 
-  # iterate over all starting parmeters and conduct model fit
+  # iterate over all starting parameters and conduct model fit
   for(i in seq_along(K)) {
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
@@ -540,7 +558,7 @@ likelihood_function <- function(response,
   nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
 
   # set default starting parameter if not provided, else assign starting
-  # parameters to parameter variabls
+  # parameters to parameter variables
   if(is.null(start_parms)) {
     K <- 5
     p_t <- 0.5
@@ -566,7 +584,7 @@ likelihood_function <- function(response,
   # initialise likelihood and fit routine values
   LL <- 0
   dLL <- 1
-  iter <- 1
+  iter <- 0
 
   # iterate to minimise log likelihood
   while(TRUE) {
@@ -685,12 +703,20 @@ likelihood_function <- function(response,
 #'
 #'@return \code{ll_2} The log-likelihood values for the 2-component model.
 #'@return \code{ll_3} The log-likelihood values for the 3-component model.
+#'@return \code{n} The number of trials used in the log-likelihood calculation.
 #'@return \code{aic_2} Akaike's information criterion for the 2-component
 #'model.
 #'@return \code{aic_3} Akaike's information criterion for the 2-component
 #'model.
-#'@return \code{aic_difference}. The difference of AIC values between models.
-#'Calculated as aic_2 minus aic_3, positive values indicate better fit for
+#'@return \code{aic_difference}. The difference of AIC values between models,
+#'calculated as aic_2 minus aic_3. Positive values indicate better fit for
+#'the 3-component model.
+#'@return \code{bic_2} Bayesian information criterion for the 2-component
+#'model.
+#'@return \code{bic_3} Bayesian information criterion for the 2-component
+#'model.
+#'@return \code{bic_difference}. The difference of BIC values between models,
+#'calculated as bic_2 minus bic_3. Positive values indicate better fit for
 #'the 3-component model.
 #'
 #'@importFrom dplyr %>%
@@ -772,10 +798,14 @@ model_comparison <- function(data,
     final_data <- data.frame(id = fit_2$id,
                              ll_2 = fit_2$LL,
                              ll_3 = fit_3$LL,
+                             n = fit_2$n,
                              aic_2 = aic(fit_2$LL, 2),
                              aic_3 = aic(fit_3$LL, 3))
     final_data <- final_data %>%
       mutate(aic_difference = aic_2 - aic_3)
+    mutate(bic_2 = round(bic(ll_2, 2, n), 3),
+           bic_3 = round(bic(ll_3, 3, n), 3)) %>%
+      mutate(bic_difference = bic_2 - bic_3)
 
   }
 
@@ -848,10 +878,14 @@ model_comparison <- function(data,
                              condition = fit_2[[condition_var]],
                              ll_2 = fit_2$LL,
                              ll_3 = fit_3$LL,
+                             n = fit_2$n,
                              aic_2 = aic(fit_2$LL, 2),
                              aic_3 = aic(fit_3$LL, 3))
     final_data <- final_data %>%
       mutate(aic_difference = aic_2 - aic_3) %>%
+      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
+             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
+      mutate(bic_difference = bic_2 - bic_3) %>%
       rename(!!condition_var:=condition)
 
   }
@@ -929,10 +963,14 @@ model_comparison <- function(data,
                              set_size = fit_2[[set_size_var]],
                              ll_2 = fit_2$LL,
                              ll_3 = fit_3$LL,
+                             n = fit_2$n,
                              aic_2 = aic(fit_2$LL, 2),
                              aic_3 = aic(fit_3$LL, 3))
     final_data <- final_data %>%
       mutate(aic_difference = aic_2 - aic_3) %>%
+      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
+             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
+      mutate(bic_difference = bic_2 - bic_3) %>%
       rename(!!set_size_var:=set_size)
   }
 
@@ -1032,10 +1070,14 @@ model_comparison <- function(data,
                              condition = fit_2[[condition_var]],
                              ll_2 = fit_2$LL,
                              ll_3 = fit_3$LL,
+                             n = fit_2$n,
                              aic_2 = aic(fit_2$LL, 2),
                              aic_3 = aic(fit_3$LL, 3))
     final_data <- final_data %>%
       mutate(aic_difference = aic_2 - aic_3) %>%
+      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
+             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
+      mutate(bic_difference = bic_2 - bic_3) %>%
       rename(!!set_size_var:=set_size,
              !!condition_var:=condition)
 

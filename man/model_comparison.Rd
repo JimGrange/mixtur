@@ -61,14 +61,26 @@ size of each response.}
 
 \code{ll_3} The log-likelihood values for the 3-component model.
 
+\code{n} The number of trials used in the log-likelihood calculation.
+
 \code{aic_2} Akaike's information criterion for the 2-component
 model.
 
 \code{aic_3} Akaike's information criterion for the 2-component
 model.
 
-\code{aic_difference}. The difference of AIC values between models.
-Calculated as aic_2 minus aic_3, positive values indicate better fit for
+\code{aic_difference}. The difference of AIC values between models,
+calculated as aic_2 minus aic_3. Positive values indicate better fit for
+the 3-component model.
+
+\code{bic_2} Bayesian information criterion for the 2-component
+model.
+
+\code{bic_3} Bayesian information criterion for the 2-component
+model.
+
+\code{bic_difference}. The difference of BIC values between models,
+calculated as bic_2 minus bic_3. Positive values indicate better fit for
 the 3-component model.
 }
 \description{

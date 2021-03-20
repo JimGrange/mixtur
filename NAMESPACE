@@ -3,6 +3,7 @@
 export(A1inv)
 export(aic)
 export(analyse_precision)
+export(bic)
 export(cmean)
 export(cstd)
 export(degrees_to_radians)
