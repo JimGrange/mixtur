@@ -32,12 +32,12 @@
 #' A full data set including data from 12 participants in a continuous report
 #' visual short-term memory experiment. The stimuli were coloured squares
 #' in the range radians -pi to pi. The experiment had various set sizes and
-#' an additional manipulation of delay of retention interval.
+#' an additional manipulation of duration of the sample array presentation.
 #'
 #' @format A data frame with 7271 rows and 10 variables:
 #' \describe{
 #'   \item{id}{participant identification}
-#'   \item{delay}{the delay of the retention interval (in milliseconds, ms),
+#'   \item{duration}{the duration of the sample array (in milliseconds, ms),
 #'   with levels 100ms, 500ms, 2000ms}
 #'   \item{response}{the participant's recollection of the target orientation
 #'   in radians (-pi to pi)}
@@ -68,7 +68,7 @@
 #' A sample data set including data from 12 participants in a continuous report
 #' visual short-term memory experiment. The stimuli were coloured squares
 #' in the range radians -pi to pi. The sample data set only consists of trials
-#' with a set size of 4 and a retention interval delay of 500ms.
+#' with a set size of 4 and a sample array duration of 500ms.
 #'
 #' @format A data frame with 7271 rows and 10 variables:
 #' \describe{

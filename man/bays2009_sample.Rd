@@ -30,7 +30,7 @@ bays2009_sample
 A sample data set including data from 12 participants in a continuous report
 visual short-term memory experiment. The stimuli were coloured squares
 in the range radians -pi to pi. The sample data set only consists of trials
-with a set size of 4 and a retention interval delay of 500ms.
+with a set size of 4 and a sample array duration of 500ms.
 }
 \references{
 Bays, P.M., Catalao, R.F.G., & Husain, M. (2009). The precision of visual

@@ -13,7 +13,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 bays_data <- data.frame(
   id = data$subject,
   set_size = data$n.items,
-  delay = data$delay,
+  duration = data$delay,
   response = data$response,
   target = data$target,
   non_target_1 = data$nontarget[, 1],
@@ -76,8 +76,8 @@ bays_data[, 3:10] <- round(bays_data[, 3:10], 3)
 # only select a snippet of the data for simple overview
 bays2009_sample <- bays_data %>%
   filter(set_size == 4) %>%
-  filter(delay == 500) %>%
-  select(-set_size, -delay, -non_target_4, -non_target_5)
+  filter(duration == 500) %>%
+  select(-set_size, -duration, -non_target_4, -non_target_5)
 
 
 # save data file

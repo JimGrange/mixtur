@@ -8,7 +8,7 @@
 A data frame with 7271 rows and 10 variables:
 \describe{
   \item{id}{participant identification}
-  \item{delay}{the delay of the retention interval (in milliseconds, ms),
+  \item{duration}{the duration of the sample array (in milliseconds, ms),
   with levels 100ms, 500ms, 2000ms}
   \item{response}{the participant's recollection of the target orientation
   in radians (-pi to pi)}
@@ -36,7 +36,7 @@ bays2009_full
 A full data set including data from 12 participants in a continuous report
 visual short-term memory experiment. The stimuli were coloured squares
 in the range radians -pi to pi. The experiment had various set sizes and
-an additional manipulation of delay of retention interval.
+an additional manipulation of duration of the sample array presentation.
 }
 \references{
 Bays, P.M., Catalao, R.F.G., & Husain, M. (2009). The precision of visual

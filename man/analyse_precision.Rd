@@ -62,7 +62,7 @@ data(bays2009_full)
 # calculate the precision per condition per set size
 precision_data <- analyse_precision(data = bays2009_full,
                                     unit = "radians",
-                                    condition_var = "delay",
+                                    condition_var = "duration",
                                     set_size_var = "set_size")
 
 }

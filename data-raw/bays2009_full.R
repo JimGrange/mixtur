@@ -12,7 +12,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 bays_data <- data.frame(
   id = data$subject,
   set_size = data$n.items,
-  delay = data$delay,
+  duration = data$delay,
   response = data$response,
   target = data$target,
   non_target_1 = data$nontarget[, 1],
