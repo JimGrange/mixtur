@@ -1,4 +1,271 @@
 ### plotting functions
+# plot mean absolute error ------------------------------------------------
+
+#' Plot mean absolute error of behavioural data
+#'
+#'Function to plot the mean absolute error of response error in behavioural
+#'data. Requires a data frame that (at least) has target value data and
+#'participant response data.
+#'
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'target value ('target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#'from pi to 2 * pi, but could also be already in -pi to pi).
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
+#'@param response_var The column name coding for the participants' responses.
+#'@param target_var The column name coding for the target value.
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response.
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
+#'@examples
+#'data(example_data)
+#'plot_mean_absolute_error(example_data, condition_var = "condition")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom dplyr rename
+#' @importFrom graphics hist
+#' @export
+plot_mean_absolute_error <- function(data,
+                                     unit = "degrees",
+                                     id_var = "id",
+                                     response_var = "response",
+                                     target_var = "target",
+                                     set_size_var = NULL,
+                                     condition_var = NULL,
+                                     return_data = FALSE){
+
+  # add id column
+  data$id <- data[[id_var]]
+
+  # calculate response error mapped onto circular space ----
+  if(unit == "degrees"){
+    response <- data[[response_var]] / 180 * pi
+    target <- data[[target_var]] / 180 * pi
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "degrees_180"){
+    response <- data[[response_var]] / 90 * pi
+    target <- data[[target_var]] / 90 * pi
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "radians"){
+    response <- data[[response_var]]
+    target <- data[[target_var]]
+    data$error <- wrap(response - target)
+  }
+
+  if(unit == "wrapped_radians"){
+    data$error <- data$response
+  }
+
+
+
+  # find mean_absolute_error----
+
+  # no set size or condition manipulation
+  if(is.null(set_size_var) && is.null(condition_var)){
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        group_by(id) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    } else{
+      final_data <- data %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    }
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(is.null(set_size_var) && !is.null(condition_var)){
+
+    data$condition <- as.factor(data[[condition_var]])
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        group_by(id, condition) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(condition) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    } else{
+      final_data <- data %>%
+        group_by(condition) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(condition) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    }
+  }
+
+
+  # set size manipulation, but no condition manipulation
+  if(!is.null(set_size_var) && is.null(condition_var)){
+
+    data$set_size <- data[[set_size_var]]
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        group_by(id, set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(set_size) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    } else{
+      final_data <- data %>%
+        group_by(set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(set_size) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    }
+  }
+
+
+  # both set size & condition manipulation
+  if(!is.null(set_size_var) && !is.null(condition_var)){
+
+    data$set_size <- data[[set_size_var]]
+    data$condition <- as.factor(data[[condition_var]])
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        group_by(id, condition, set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    } else{
+      final_data <- data %>%
+        group_by(condition, set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(error)) %>%
+        group_by(set_size, condition) %>%
+        summarise(mean_value = mean(individual_value),
+                  se_value = sd(individual_value) /
+                    sqrt(length(individual_value)))
+    }
+  }
+
+
+  # plot the data----
+
+  # no set size or condition manipulation
+  if(is.null(set_size_var) && is.null(condition_var)){
+    plot <- "NULL"
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(is.null(set_size_var) && !is.null(condition_var)){
+
+    plot <- ggplot(final_data, aes(x = condition,
+                                   y = mean_value)) +
+      geom_errorbar(aes(ymax = mean_value + se_value,
+                        ymin = mean_value - se_value),
+                    width = 0.00) +
+      geom_point(size = 2.5) +
+      theme_bw() +
+      labs(x = condition_var,
+           y = "Mean Absolute Error")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- condition_var
+
+  }
+
+
+  # set size manipulation but no condition manipulation
+  if(!is.null(set_size_var) && is.null(condition_var)){
+
+    # ensure set size is numeric
+    final_data$set_size <- as.numeric(as.character(final_data$set_size))
+
+    plot <- ggplot(final_data, aes(x = set_size,
+                                   y = mean_value)) +
+      geom_errorbar(aes(ymax = mean_value + se_value,
+                        ymin = mean_value - se_value),
+                    width = 0.00) +
+      geom_point(size = 2.5) +
+      theme_bw() +
+      labs(x = "Set Size",
+           y = "Mean Absolute Error")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+
+  }
+
+
+  # both set size & condition manipulation
+  if(!is.null(set_size_var) && !is.null(condition_var)){
+
+    # ensure set size is numeric
+    final_data$set_size <- as.numeric(as.character(final_data$set_size))
+
+    # add some jitter to the plotting position
+    pd = position_dodge(0.2)
+
+    plot <- ggplot(final_data, aes(x = set_size,
+                                   y = mean_value,
+                                   group = condition)) +
+      geom_errorbar(aes(ymax = mean_value + se_value,
+                        ymin = mean_value - se_value,
+                        colour = condition),
+                    width = 0.00,
+                    position = pd) +
+      geom_point(aes(colour = condition),
+                 position = pd,
+                 size = 2.5) +
+      theme_bw() +
+      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      labs(x = "Set Size",
+           y = "Mean Absolute Error")
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+    colnames(final_data)[2] <- condition_var
+
+  }
+
+
+  # return the plot & the plot data
+  if(return_data == TRUE){
+    return(list(plot = plot, data = final_data))
+  } else {
+    return(plot)
+  }
+
+
+}
+
+
+
 
 # plot behavioral error --------------------------------------------------
 #' Plot response error of behavioural data
@@ -186,7 +453,7 @@ plot_error <- function(data,
                                    y = mean_error)) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
@@ -205,7 +472,7 @@ plot_error <- function(data,
                                    y = mean_error)) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
@@ -229,7 +496,7 @@ plot_error <- function(data,
                                    y = mean_error)) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +
@@ -258,7 +525,7 @@ plot_error <- function(data,
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error,
                         colour = condition),
-                    width = 0.05,
+                    width = 0.00,
                     position = pd) +
       geom_point(aes(colour = condition),
                  position = pd) +
@@ -335,9 +602,6 @@ plot_precision <- function(data,
                            set_size_var = NULL,
                            condition_var = NULL,
                            return_data = FALSE){
-
-  # get the list of participant ids
-  ids <- unique(data[[id_var]])
 
   # add id column
   data$id <- data[[id_var]]
@@ -495,7 +759,7 @@ plot_precision <- function(data,
                                    y = mean_precision)) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
       labs(x = condition_var,
@@ -517,7 +781,7 @@ plot_precision <- function(data,
                                    y = mean_precision)) +
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
       labs(x = "Set Size",
@@ -544,7 +808,7 @@ plot_precision <- function(data,
       geom_errorbar(aes(ymax = mean_precision + se_precision,
                         ymin = mean_precision - se_precision,
                         colour = condition),
-                    width = 0.05,
+                    width = 0.00,
                     position = pd) +
       geom_point(aes(colour = condition),
                  position = pd,
@@ -659,7 +923,7 @@ plot_model_fit <- function(participant_data,
                 lwd = 1.3) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       theme_bw() +
       labs(x = "Error (Radians)",
@@ -735,7 +999,7 @@ plot_model_fit <- function(participant_data,
                 lwd = 1.3) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       facet_wrap(vars(condition), ncol = 4) +
       theme_bw() +
@@ -815,7 +1079,7 @@ plot_model_fit <- function(participant_data,
                 lwd = 1.3) +
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point() +
       facet_wrap(vars(set_size), ncol = 2) +
       theme_bw() +
@@ -908,7 +1172,7 @@ plot_model_fit <- function(participant_data,
       geom_errorbar(aes(ymax = mean_error + se_error,
                         ymin = mean_error - se_error,
                         colour = condition),
-                    width = 0.05) +
+                    width = 0.00) +
       geom_point(aes(colour = condition)) +
       facet_wrap(vars(set_size), ncol = 2) +
       theme_bw() +
@@ -991,7 +1255,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
@@ -1009,7 +1273,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
@@ -1057,7 +1321,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
@@ -1078,7 +1342,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
@@ -1137,7 +1401,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) ++
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
@@ -1158,7 +1422,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
@@ -1219,7 +1483,7 @@ plot_parameters <- function(model_fit,
                                     y = mean_value)) +
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value),
-                      width = 0.05) +
+                      width = 0.00) +
         geom_point() +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
@@ -1245,7 +1509,7 @@ plot_parameters <- function(model_fit,
         geom_errorbar(aes(ymax = mean_value + se_value,
                           ymin = mean_value - se_value,
                           colour = condition),
-                      width = 0.05,
+                      width = 0.00,
                       position = pd) +
         geom_point(aes(colour = condition),
                    position = pd) +
