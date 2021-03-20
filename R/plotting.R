@@ -1,6 +1,100 @@
 ### plotting functions
 
 
+# plot summary statistics -------------------------------------------------
+#' Plot summary statistics of behavioural data
+#'
+#' Function to plot model-free summary statistics of behavioural data. Users
+#' can plot mean absolute error, resultant vector length, and precision of the
+#' behavioural data.
+#'
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'target value ('target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
+#'@param statistic The summary statistic to plot. This can be set to
+#'"mean_absolute_error", "resultant_vector_length", or "precision".
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#'from pi to 2 * pi, but could also be already in -pi to pi).
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
+#'@param response_var The column name coding for the participants' responses.
+#'@param target_var The column name coding for the target value.
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response.
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
+#'@examples
+#'data(example_data)
+#'plot_summary_statistics(example_data, condition_var = "condition")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom dplyr rename
+#' @importFrom graphics hist
+#' @export
+plot_summary_statistics <- function(data,
+                                    statistic = "precision",
+                                    unit = "degrees",
+                                    id_var = "id",
+                                    response_var = "response",
+                                    target_var = "target",
+                                    set_size_var = NULL,
+                                    condition_var = NULL,
+                                    return_data = FALSE){
+
+
+  if(statistic == "precision"){
+    plot <- plot_precision(data = data,
+                   unit = unit,
+                   id_var = id_var,
+                   response_var = response_var,
+                   target_var = target_var,
+                   set_size_var = set_size_var,
+                   condition_var = condition_var,
+                   return_data = return_data)
+  }
+
+  if(statistic == "mean_absolute_error"){
+    plot <- plot_mean_absolute_error(data = data,
+                             unit = unit,
+                             id_var = id_var,
+                             response_var = response_var,
+                             target_var = target_var,
+                             set_size_var = set_size_var,
+                             condition_var = condition_var,
+                             return_data = return_data)
+  }
+
+
+  if(statistic == "resultant_vector_length"){
+    plot <- plot_resultant_vector_length(data = data,
+                                 unit = unit,
+                                 id_var = id_var,
+                                 response_var = response_var,
+                                 target_var = target_var,
+                                 set_size_var = set_size_var,
+                                 condition_var = condition_var,
+                                 return_data = return_data)
+  }
+
+
+  return(plot)
+
+}
+
+
+
+
+
 # plot resultant vector length --------------------------------------------
 
 #' Plot resultant vector length of behavioural data
