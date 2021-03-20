@@ -39,6 +39,12 @@ size of each response.}
 \item{condition_var}{The quoted column name (if applicable) coding for the
 condition of each response.}
 }
+\value{
+\code{precision} The reciprocal of the circular standard deviation of
+the response error, with correction for guessing.
+
+\code{bias} The bias of the precision estimate.
+}
 \description{
 Returns participant-level data for precision estimates ready for inferential
 analysis. Note that the function does not actually conduct the analysis.
