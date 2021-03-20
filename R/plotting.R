@@ -1,7 +1,5 @@
 ### plotting functions
 
-
-
 # plot behavioral error --------------------------------------------------
 #' Plot response error of behavioural data
 #'
@@ -340,6 +338,9 @@ plot_precision <- function(data,
 
   # get the list of participant ids
   ids <- unique(data[[id_var]])
+
+  # add id column
+  data$id <- data[[id_var]]
 
   # calculate response error mapped onto circular space ----
   if(unit == "degrees"){
