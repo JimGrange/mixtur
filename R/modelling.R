@@ -701,30 +701,32 @@ likelihood_function <- function(response,
 #'
 #' @param condition_var The quoted column name (if applicable) coding for the
 #'
+#' @param information_criterion The information criterion to use in the model
+#' comparison: "aic" (Akaike's Information Criterion), "aic_c" (Akaike's
+#' Information Criterion corrected for small trial numbers), "bic" (Bayesian
+#' Information Criterion).
+#'
 #'@return \code{ll_2} The log-likelihood values for the 2-component model.
 #'@return \code{ll_3} The log-likelihood values for the 3-component model.
 #'@return \code{n} The number of trials used in the log-likelihood calculation.
-#'@return \code{aic_2} Akaike's information criterion for the 2-component
-#'model.
-#'@return \code{aic_3} Akaike's information criterion for the 2-component
-#'model.
-#'@return \code{aic_difference}. The difference of AIC values between models,
-#'calculated as aic_2 minus aic_3. Positive values indicate better fit for
-#'the 3-component model.
-#'@return \code{bic_2} Bayesian information criterion for the 2-component
-#'model.
-#'@return \code{bic_3} Bayesian information criterion for the 2-component
-#'model.
-#'@return \code{bic_difference}. The difference of BIC values between models,
-#'calculated as bic_2 minus bic_3. Positive values indicate better fit for
-#'the 3-component model.
+#'@return \code{ic_2} The information criterion (AIC, AIC_c, or BIC, depending
+#'on the "information_criterion" argument value) for the 2-component model.
+#'@return \code{ic_2} The information criterion (AIC, AIC_c, or BIC, depending
+#'on the "information_criterion" argument value) for the 3-component model.
+#'@return \code{ic_difference}. The difference of information criterion values
+#' between models, calculated as ic_2 minus ic_3. Positive values indicate
+#' better fit for the 3-component model.
+#' @examples
+#'model_comparison(bays2009_full,
+#'                 unit = "radians",
+#'                 set_size_var = "set_size",
+#'                 condition_var = "duration")
 #'
 #'@importFrom dplyr %>%
 #'@importFrom dplyr rename
 #'@importFrom dplyr mutate
 #'
 #' @export
-#'
 model_comparison <- function(data,
                              unit = "degrees",
                              id_var = "id",
@@ -732,7 +734,8 @@ model_comparison <- function(data,
                              target_var = "target",
                              non_target_var = "non_target",
                              set_size_var = NULL,
-                             condition_var = NULL){
+                             condition_var = NULL,
+                             information_criterion = "aic_c"){
 
   # get the non-target column names
   non_target_cols <- data %>%
@@ -795,17 +798,39 @@ model_comparison <- function(data,
                        return_fit = TRUE)
 
     # collate together into a final data frame
-    final_data <- data.frame(id = fit_2$id,
-                             ll_2 = fit_2$LL,
-                             ll_3 = fit_3$LL,
-                             n = fit_2$n,
-                             aic_2 = aic(fit_2$LL, 2),
-                             aic_3 = aic(fit_3$LL, 3))
-    final_data <- final_data %>%
-      mutate(aic_difference = aic_2 - aic_3)
-    mutate(bic_2 = round(bic(ll_2, 2, n), 3),
-           bic_3 = round(bic(ll_3, 3, n), 3)) %>%
-      mutate(bic_difference = bic_2 - bic_3)
+    if(information_criterion == "aic_c"){
+      final_data <- data.frame(id = fit_2$id,
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic_c(fit_2$LL, 2, fit_2$n),
+                               ic_3 = aic_c(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3)
+    }
+
+    if(information_criterion == "aic"){
+      final_data <- data.frame(id = fit_2$id,
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic(fit_2$LL, 2),
+                               ic_3 = aic(fit_3$LL, 3))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3)
+    }
+
+    if(information_criterion == "bic"){
+      final_data <- data.frame(id = fit_2$id,
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = bic(fit_2$LL, 2, fit_2$n),
+                               ic_3 = bic(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3)
+    }
+
 
   }
 
@@ -874,19 +899,44 @@ model_comparison <- function(data,
       rename(!!condition_var:=condition)
 
     # collate together into a final data frame
-    final_data <- data.frame(id = fit_2$id,
-                             condition = fit_2[[condition_var]],
-                             ll_2 = fit_2$LL,
-                             ll_3 = fit_3$LL,
-                             n = fit_2$n,
-                             aic_2 = aic(fit_2$LL, 2),
-                             aic_3 = aic(fit_3$LL, 3))
-    final_data <- final_data %>%
-      mutate(aic_difference = aic_2 - aic_3) %>%
-      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
-             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
-      mutate(bic_difference = bic_2 - bic_3) %>%
-      rename(!!condition_var:=condition)
+    if(information_criterion == "aic_c"){
+      final_data <- data.frame(id = fit_2$id,
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic_c(fit_2$LL, 2, fit_2$n),
+                               ic_3 = aic_c(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!condition_var:=condition)
+    }
+
+    if(information_criterion == "aic"){
+      final_data <- data.frame(id = fit_2$id,
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic(fit_2$LL, 2),
+                               ic_3 = aic(fit_3$LL, 3))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!condition_var:=condition)
+    }
+
+    if(information_criterion == "bic"){
+      final_data <- data.frame(id = fit_2$id,
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = bic(fit_2$LL, 2, fit_2$n),
+                               ic_3 = bic(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!condition_var:=condition)
+    }
 
   }
 
@@ -959,19 +1009,45 @@ model_comparison <- function(data,
       rename(!!set_size_var:=set_size)
 
     # collate together into a final data frame
-    final_data <- data.frame(id = fit_2$id,
-                             set_size = fit_2[[set_size_var]],
-                             ll_2 = fit_2$LL,
-                             ll_3 = fit_3$LL,
-                             n = fit_2$n,
-                             aic_2 = aic(fit_2$LL, 2),
-                             aic_3 = aic(fit_3$LL, 3))
-    final_data <- final_data %>%
-      mutate(aic_difference = aic_2 - aic_3) %>%
-      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
-             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
-      mutate(bic_difference = bic_2 - bic_3) %>%
-      rename(!!set_size_var:=set_size)
+    if(information_criterion == "aic_c"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic_c(fit_2$LL, 2, fit_2$n),
+                               ic_3 = aic_c(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size)
+    }
+
+    if(information_criterion == "aic"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic(fit_2$LL, 2),
+                               ic_3 = aic(fit_3$LL, 3))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size)
+    }
+
+    if(information_criterion == "bic"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = bic(fit_2$LL, 2, fit_2$n),
+                               ic_3 = bic(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size)
+    }
+
   }
 
 
@@ -1065,21 +1141,50 @@ model_comparison <- function(data,
       rename(!!set_size_var:=set_size)
 
     # collate together into a final data frame
-    final_data <- data.frame(id = fit_2$id,
-                             set_size = fit_2[[set_size_var]],
-                             condition = fit_2[[condition_var]],
-                             ll_2 = fit_2$LL,
-                             ll_3 = fit_3$LL,
-                             n = fit_2$n,
-                             aic_2 = aic(fit_2$LL, 2),
-                             aic_3 = aic(fit_3$LL, 3))
-    final_data <- final_data %>%
-      mutate(aic_difference = aic_2 - aic_3) %>%
-      mutate(bic_2 = round(bic(ll_2, 2, n), 3),
-             bic_3 = round(bic(ll_3, 3, n), 3)) %>%
-      mutate(bic_difference = bic_2 - bic_3) %>%
-      rename(!!set_size_var:=set_size,
-             !!condition_var:=condition)
+    if(information_criterion == "aic_c"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic_c(fit_2$LL, 2, fit_2$n),
+                               ic_3 = aic_c(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size,
+               !!condition_var:=condition)
+    }
+
+    if(information_criterion == "aic"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = aic(fit_2$LL, 2),
+                               ic_3 = aic(fit_3$LL, 3))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size,
+               !!condition_var:=condition)
+    }
+
+    if(information_criterion == "bic"){
+      final_data <- data.frame(id = fit_2$id,
+                               set_size = fit_2[[set_size_var]],
+                               condition = fit_2[[condition_var]],
+                               ll_2 = fit_2$LL,
+                               ll_3 = fit_3$LL,
+                               n = fit_2$n,
+                               ic_2 = bic(fit_2$LL, 2, fit_2$n),
+                               ic_3 = bic(fit_3$LL, 3, fit_3$n))
+      final_data <- final_data %>%
+        mutate(ic_difference = ic_2 - ic_3) %>%
+        rename(!!set_size_var:=set_size,
+               !!condition_var:=condition)
+    }
 
   }
 

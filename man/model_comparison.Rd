@@ -16,7 +16,8 @@ model_comparison(
   target_var = "target",
   non_target_var = "non_target",
   set_size_var = NULL,
-  condition_var = NULL
+  condition_var = NULL,
+  information_criterion = "aic_c"
 )
 }
 \arguments{
@@ -55,6 +56,11 @@ etc.), which should then be passed to the function via the
 size of each response.}
 
 \item{condition_var}{The quoted column name (if applicable) coding for the}
+
+\item{information_criterion}{The information criterion to use in the model
+comparison: "aic" (Akaike's Information Criterion), "aic_c" (Akaike's
+Information Criterion corrected for small trial numbers), "bic" (Bayesian
+Information Criterion).}
 }
 \value{
 \code{ll_2} The log-likelihood values for the 2-component model.
@@ -63,28 +69,25 @@ size of each response.}
 
 \code{n} The number of trials used in the log-likelihood calculation.
 
-\code{aic_2} Akaike's information criterion for the 2-component
-model.
+\code{ic_2} The information criterion (AIC, AIC_c, or BIC, depending
+on the "information_criterion" argument value) for the 2-component model.
 
-\code{aic_3} Akaike's information criterion for the 2-component
-model.
+\code{ic_2} The information criterion (AIC, AIC_c, or BIC, depending
+on the "information_criterion" argument value) for the 3-component model.
 
-\code{aic_difference}. The difference of AIC values between models,
-calculated as aic_2 minus aic_3. Positive values indicate better fit for
-the 3-component model.
-
-\code{bic_2} Bayesian information criterion for the 2-component
-model.
-
-\code{bic_3} Bayesian information criterion for the 2-component
-model.
-
-\code{bic_difference}. The difference of BIC values between models,
-calculated as bic_2 minus bic_3. Positive values indicate better fit for
-the 3-component model.
+\code{ic_difference}. The difference of information criterion values
+between models, calculated as ic_2 minus ic_3. Positive values indicate
+better fit for the 3-component model.
 }
 \description{
 This function will fit both the 2- and 3-component models to the data
 and provide an assessment of which fits best via Akiake's Information
 Criterion (AIC).
+}
+\examples{
+model_comparison(bays2009_full,
+                unit = "radians",
+                set_size_var = "set_size",
+                condition_var = "duration")
+
 }

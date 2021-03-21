@@ -262,6 +262,7 @@ sd2k <- function(s){
 #' @export
 aic <- function(ll, parms){
   value <- (-2 * ll) + (2 * parms)
+  value <- round(value, 3)
   return(value)
 }
 
@@ -270,6 +271,7 @@ aic <- function(ll, parms){
 #' @export
 aic_c <- function(ll, parms, n){
   value <- (-2 * ll) + ((2 * parms) * (n / (n - parms - 1)))
+  value <- round(value, 3)
   return(value)
 }
 
@@ -278,6 +280,7 @@ aic_c <- function(ll, parms, n){
 #' @export
 bic <- function(ll, parms, n){
   value <- (-2 * ll) +  (parms * log(n))
+  value <- round(value, 3)
   return(value)
 }
 
