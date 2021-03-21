@@ -925,6 +925,7 @@ plot_error <- function(data,
 
 
 # plot error from non-targets ---------------------------------------------
+#' @export
 plot_error_non_targets <- function(data,
                                    unit = "degrees",
                                    id_var = "id",
@@ -934,6 +935,11 @@ plot_error_non_targets <- function(data,
                                    condition_var = NULL,
                                    return_data = FALSE){
 
+
+  ### TO-DO:
+  # need to change to radians
+
+
   # add id column if relevant
   if(!is.null(id_var)){
   data$id <- data[[id_var]]
@@ -942,6 +948,9 @@ plot_error_non_targets <- function(data,
 
   # no set size or condition manipulation
   if(is.null(set_size_var) && is.null(condition_var)){
+
+    # initialise data frame to store final data in
+    final_data <- NULL
 
     if(!is.null(id_var)){
 
@@ -1026,17 +1035,112 @@ plot_error_non_targets <- function(data,
 
 
 
-
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
 
+    # initialise data frame to store final data in
+    final_data <- NULL
+
+    # get the conditions
     data$condition <- as.factor(data[[condition_var]])
+    conditions <- unique(data$condition)
 
     if(!is.null(id_var)){
 
+      for(i in 1:length(conditions)){
+
+        # get the current condition's data
+        temp_data <- data %>%
+          filter(condition == conditions[i])
+
+        # get the id values for each row
+        temp_id <- temp_data$id
+
+        # get the condition
+        temp_condition <- temp_data[[condition_var]]
+
+        # get the response values
+        temp_response <- temp_data[[response_var]]
+
+        # get the non-target values
+        non_target_values <- temp_data %>%
+          select(starts_with(non_target_var)) %>%
+          select_if(function(x) any(!is.na(x)))
+
+
+        # calculate response error from non-target
+        if(ncol(non_target_values) == 0){
+
+          # if there's no non-target (i.e,, set size == 1) then
+          # report error
+          print("Error in plot_error_non_targets: no non-target values provided")
+        } else {
+
+          # otherwise, create a matrix and calculate response error from
+          # each non-target value
+          non_target_error <- matrix(NA, ncol = ncol(non_target_values),
+                                     nrow = nrow(non_target_values))
+          colnames(non_target_error) <- colnames(non_target_values)
+
+          for(j in 1:ncol(non_target_values)){
+            non_target_error[, j] <- wrap(temp_response -
+                                            non_target_values[, j])
+          }
+
+          # add participant id and current condition to data frame
+          non_target_error <- cbind(temp_id, temp_condition, non_target_error)
+
+          # change to long format
+          non_target_error <- non_target_error %>%
+            as.data.frame() %>%
+            rename(id = temp_id,
+                   condition = temp_condition) %>%
+            pivot_longer(cols = starts_with(non_target_var),
+                         values_to = "error") %>%
+            select(id, condition, error)
+        }
+
+        # add to the final data
+        final_data <- rbind(final_data, non_target_error)
+
+      }
+
+
     } else {
 
+      ## do something else if there is no id column....
     }
+
+  # get the plot data
+  plot_data <- final_data %>%
+    select(id, condition, error) %>%
+    group_by(id, condition) %>%
+    summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+              x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+    group_by(condition, x) %>%
+    summarise(mean_error = mean(y),
+              se_error = (sd(y) / sqrt(length(y))))
+
+
+  # do the plot
+  plot <- ggplot(plot_data, aes(x = x,
+                                y = mean_error)) +
+    geom_errorbar(aes(ymax = mean_error + se_error,
+                      ymin = mean_error - se_error),
+                  width = 0.00) +
+    geom_point() +
+    theme_bw() +
+    scale_x_continuous(limits = c(-pi, pi)) +
+    scale_y_continuous(limits = c(0,
+                                  max(plot_data$mean_error) +
+                                    max(plot_data$se_error))) +
+    labs(x = "Error (Radians)",
+         y = "Probability Density") +
+    facet_wrap(vars(condition), ncol = 2)
+
+  # rename the final_data frame
+  colnames(plot_data)[1] <- condition_var
+
   }
 
 

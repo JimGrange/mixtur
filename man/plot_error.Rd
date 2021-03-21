@@ -15,18 +15,6 @@ plot_error(
   n_bins = 18,
   return_data = FALSE
 )
-
-plot_error(
-  data,
-  unit = "degrees",
-  id_var = "id",
-  response_var = "response",
-  target_var = "target",
-  set_size_var = NULL,
-  condition_var = NULL,
-  n_bins = 18,
-  return_data = FALSE
-)
 }
 \arguments{
 \item{data}{A data frame with columns containing: participant identifier
@@ -61,14 +49,8 @@ the plot should be returned.}
 \description{
 Function to plot the response error in behavioural data. Requires a data
 frame that (at least) has target value data and participant response data.
-
-Function to plot the response error in behavioural data. Requires a data
-frame that (at least) has target value data and participant response data.
 }
 \examples{
-data(example_data)
-plot_error(example_data, condition_var = "condition")
-
 data(example_data)
 plot_error(example_data, condition_var = "condition")
 
