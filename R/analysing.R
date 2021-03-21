@@ -44,10 +44,10 @@
 #' data(bays2009_full)
 #'
 #' # calculate the summary statistics per condition per set size
-#'summary_data <- summary_statistics(data = bays2009_full,
-#'                                   unit = "radians",
-#'                                   condition_var = "duration",
-#'                                   set_size_var = "set_size")
+#'summary_data <- get_summary_statistics(data = bays2009_full,
+#'                                       unit = "radians",
+#'                                       condition_var = "duration",
+#'                                       set_size_var = "set_size")
 #'
 #' @export
 get_summary_statistics <- function(data,
