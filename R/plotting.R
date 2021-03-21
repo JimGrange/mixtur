@@ -653,6 +653,7 @@ plot_mean_absolute_error <- function(data,
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
+#'@param n_bins An integer giving the number of cells / bins used in the plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'
@@ -674,11 +675,12 @@ plot_error <- function(data,
                        target_var = "target",
                        set_size_var = NULL,
                        condition_var = NULL,
+                       n_bins = 18,
                        return_data = FALSE){
 
 
   # establish the break points of the density plot
-  break_points <- round(seq(from = -pi, to = pi, length.out = 18), 3)
+  break_points <- round(seq(from = -pi, to = pi, length.out = n_bins), 3)
 
   # get the list of participant ids
   ids <- unique(data[[id_var]])
@@ -1221,8 +1223,8 @@ plot_precision <- function(data,
 #'size of each response
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response
-#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
-#'the plot should be returned.
+#'@param n_bins An integer giving the number of cells / bins used in the plot
+#'of the behavioural data.
 #'
 #' @export
 plot_model_fit <- function(participant_data,
@@ -1232,7 +1234,8 @@ plot_model_fit <- function(participant_data,
                            response_var = "response",
                            target_var = "target",
                            set_size_var = NULL,
-                           condition_var = NULL){
+                           condition_var = NULL,
+                           n_bins = 18){
 
 
 
@@ -1251,6 +1254,7 @@ plot_model_fit <- function(participant_data,
                             target_var = target_var,
                             set_size_var = set_size_var,
                             condition_var = condition_var,
+                            n_bins = n_bins,
                             return_data = TRUE)
 
   human_error <- human_error$data
