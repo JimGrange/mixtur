@@ -261,16 +261,23 @@ sd2k <- function(s){
 # calculate akiake's information criterion --------------------------------
 #' @export
 aic <- function(ll, parms){
-  value <- (2 * parms) - (2 * ll)
+  value <- (-2 * ll) + (2 * parms)
   return(value)
 }
 
+
+# akiake's information criterion, corrected for n -------------------------
+#' @export
+aic_c <- function(ll, parms, n){
+  value <- (-2 * ll) + ((2 * parms) * (n / (n - parms - 1)))
+  return(value)
+}
 
 
 # calculate bayesian information criterion --------------------------------
 #' @export
 bic <- function(ll, parms, n){
-  value <- (parms * log(n)) - (2 * ll)
+  value <- (-2 * ll) +  (parms * log(n))
   return(value)
 }
 
