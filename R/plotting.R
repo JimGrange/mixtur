@@ -1113,6 +1113,7 @@ plot_error_non_targets <- function(data,
 
   # get the plot data
   plot_data <- final_data %>%
+    mutate(condition = as.factor(condition)) %>%
     select(id, condition, error) %>%
     group_by(id, condition) %>%
     summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
@@ -1256,18 +1257,134 @@ plot_error_non_targets <- function(data,
 
   }
 
+
+
   # both set size & condition manipulation
   if(!is.null(set_size_var) && !is.null(condition_var)){
 
-    data$set_size <- data[[set_size_var]]
+    final_data <- NULL
+
+    # get the conditions
     data$condition <- as.factor(data[[condition_var]])
+    conditions <- unique(data$condition)
+
+    # get the set sizes
+    data$set_size <- data[[set_size_var]]
+    set_sizes <- unique(data$set_size)
 
     if(!is.null(id_var)){
 
+      for(i in 1:length(conditions)){
+        for(j in 1:length(set_sizes)){
+
+          # get the current condition's data
+          temp_data <- data %>%
+            filter(condition == conditions[i]) %>%
+            filter(set_size == set_sizes[j])
+
+          # get the id values for each row
+          temp_id <- temp_data$id
+
+          # get the condition
+          temp_condition <- temp_data[[condition_var]]
+
+          # get the set size
+          temp_set_size <- temp_data[[set_size_var]]
+
+          # get the response values
+          temp_response <- temp_data[[response_var]]
+
+          # get the non-target values
+          non_target_values <- temp_data %>%
+            select(starts_with(non_target_var)) %>%
+            select_if(function(x) any(!is.na(x)))
+
+          # calculate response error from non-target
+          if(ncol(non_target_values) == 0){
+
+            # if there's no non-target (i.e,, set size == 1) then just create
+            # a bunch of NAs
+            non_target_error <- data.frame(id = temp_id,
+                                           condition = temp_condition,
+                                           set_size = temp_set_size,
+                                           error = NA)
+          } else {
+            # otherwise, create a matrix and calculate response error from
+            # each non-target value
+            non_target_error <- matrix(NA, ncol = ncol(non_target_values),
+                                       nrow = nrow(non_target_values))
+            colnames(non_target_error) <- colnames(non_target_values)
+
+            for(k in 1:ncol(non_target_values)){
+              non_target_error[, k] <- wrap(temp_response - non_target_values[, k])
+            }
+
+            # add participant id, set size, & current condition to data frame
+            non_target_error <- cbind(temp_id, temp_condition,
+                                      temp_set_size, non_target_error)
+
+            # change to long format
+            non_target_error <- non_target_error %>%
+              as.data.frame() %>%
+              rename(id = temp_id,
+                     set_size = temp_set_size,
+                     condition = temp_condition) %>%
+              pivot_longer(cols = starts_with(non_target_var),
+                           values_to = "error") %>%
+              select(id, condition, set_size, error)
+
+          }
+
+          # add to the final data
+          final_data <- rbind(final_data, non_target_error)
+
+        }
+      }
+
     } else {
 
+      ## do something else if there is no id column....
     }
 
+    # get the plot data
+    plot_data <- final_data %>%
+      mutate(condition = as.factor(condition)) %>%
+      select(id, condition, set_size, error) %>%
+      group_by(id, condition, set_size) %>%
+      summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
+                x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
+      group_by(condition, set_size, x) %>%
+      summarise(mean_error = mean(y),
+                se_error = (sd(y) / sqrt(length(y))))
+
+
+    # do the plot
+
+    # add position jitter to avoid over-plotting
+    pd <- position_dodge(0.1)
+
+    plot <- ggplot(plot_data, aes(x = x,
+                                  y = mean_error,
+                                  group = condition)) +
+      geom_errorbar(aes(ymax = mean_error + se_error,
+                        ymin = mean_error - se_error,
+                        colour = condition),
+                    width = 0.00,
+                    position = pd) +
+      geom_point(aes(colour = condition),
+                 position = pd) +
+      theme_bw() +
+      scale_x_continuous(limits = c(-pi, pi)) +
+      scale_y_continuous(limits = c(0,
+                                    max(plot_data$mean_error) +
+                                      max(plot_data$se_error))) +
+      labs(x = "Error (Radians)",
+           y = "Probability Density") +
+      facet_wrap(vars(set_size), ncol = 2)
+
+    # rename the final_data frame
+    colnames(plot_data)[1] <- condition_var
+    colnames(plot_data)[2] <- set_size_var
   }
 
 
@@ -1277,8 +1394,6 @@ plot_error_non_targets <- function(data,
   } else {
     return(plot)
   }
-
-
 
 }
 
