@@ -41,7 +41,7 @@ set size of each response.}
 condition of each response.}
 }
 \value{
-\code{mean_abs_error} The mean absolute error of the participant
+\code{mean_absolute_error} The mean absolute error of the participant
 response.
 
 \code{resultant_vector_length} The (normalised) resultant vector

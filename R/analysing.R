@@ -25,7 +25,7 @@
 #' set size of each response.
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
-#' @return \code{mean_abs_error} The mean absolute error of the participant
+#' @return \code{mean_absolute_error} The mean absolute error of the participant
 #' response.
 #' @return \code{resultant_vector_length} The (normalised) resultant vector
 #' length of the response errors.
@@ -93,13 +93,13 @@ get_summary_statistics <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
     } else{
       final_data <- data %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
@@ -115,14 +115,14 @@ get_summary_statistics <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
     } else{
       final_data <- data %>%
         group_by(condition) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
@@ -138,14 +138,14 @@ get_summary_statistics <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, set_size) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
     } else{
       final_data <- data %>%
         group_by(set_size) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
@@ -162,14 +162,14 @@ get_summary_statistics <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(id, condition, set_size) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])
     } else{
       final_data <- data %>%
         group_by(condition, set_size) %>%
-        summarise(mean_abs_error = get_mean_absolute_error(error),
+        summarise(mean_absolute_error = get_mean_absolute_error(error),
                   resultant_vector_length = get_resultant_vector_length(error),
                   precision = get_precision_single(error)[, 1],
                   bias = get_precision_single(error)[, 2])

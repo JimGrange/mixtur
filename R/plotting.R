@@ -1,7 +1,7 @@
 ### plotting functions
 
 
-# plot summary statistics -------------------------------------------------
+# plot summary statistic --------------------------------------------------
 #' Plot summary statistics of behavioural data
 #'
 #' Function to plot model-free summary statistics of behavioural data. Users
@@ -32,7 +32,7 @@
 #'
 #'@examples
 #'data(example_data)
-#'plot_summary_statistics(example_data, condition_var = "condition")
+#'plot_summary_statistic(example_data, condition_var = "condition")
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -41,15 +41,15 @@
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
 #' @export
-plot_summary_statistics <- function(data,
-                                    statistic = "precision",
-                                    unit = "degrees",
-                                    id_var = "id",
-                                    response_var = "response",
-                                    target_var = "target",
-                                    set_size_var = NULL,
-                                    condition_var = NULL,
-                                    return_data = FALSE){
+plot_summary_statistic <- function(data,
+                                   statistic = "precision",
+                                   unit = "degrees",
+                                   id_var = "id",
+                                   response_var = "response",
+                                   target_var = "target",
+                                   set_size_var = NULL,
+                                   condition_var = NULL,
+                                   return_data = FALSE){
 
 
   if(statistic == "precision"){
