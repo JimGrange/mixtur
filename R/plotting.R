@@ -930,14 +930,15 @@ plot_error_non_targets <- function(data,
                                    unit = "degrees",
                                    id_var = "id",
                                    response_var = "response",
-                                   target_var = "target",
+                                   non_target_var = "non_target",
                                    set_size_var = NULL,
                                    condition_var = NULL,
+                                   n_bins = 18,
                                    return_data = FALSE){
 
 
-  ### TO-DO:
-  # need to change to radians
+  # establish the break points of the density plot
+  break_points <- round(seq(from = -pi, to = pi, length.out = n_bins), 3)
 
 
   # add id column if relevant
@@ -960,12 +961,14 @@ plot_error_non_targets <- function(data,
       temp_id <- temp_data$id
 
       # get the response values
-      temp_response <- temp_data[[response_var]]
+      temp_response <- map_to_circular(temp_data[[response_var]],
+                                       unit)
 
       # get the non-target values
       non_target_values <- temp_data %>%
         select(starts_with(non_target_var)) %>%
         select_if(function(x) any(!is.na(x)))
+      non_target_values <- map_to_circular(non_target_values, unit)
 
       # calculate response error from non-target
       if(ncol(non_target_values) == 0){
@@ -986,7 +989,7 @@ plot_error_non_targets <- function(data,
         }
 
         # add participant id and current set size to data frame
-        non_target_error <- cbind(temp_id, non_target_error)
+        non_target_error <- data.frame(temp_id, non_target_error)
 
         # change to long format
         non_target_error <- non_target_error %>%
@@ -1060,13 +1063,15 @@ plot_error_non_targets <- function(data,
         temp_condition <- temp_data[[condition_var]]
 
         # get the response values
-        temp_response <- temp_data[[response_var]]
+        temp_response <- map_to_circular(temp_data[[response_var]],
+                                         unit)
 
         # get the non-target values
         non_target_values <- temp_data %>%
           select(starts_with(non_target_var)) %>%
           select_if(function(x) any(!is.na(x)))
-
+        non_target_values <- map_to_circular(non_target_values,
+                                             unit = unit)
 
         # calculate response error from non-target
         if(ncol(non_target_values) == 0){
@@ -1088,7 +1093,7 @@ plot_error_non_targets <- function(data,
           }
 
           # add participant id and current condition to data frame
-          non_target_error <- cbind(temp_id, temp_condition, non_target_error)
+          non_target_error <- data.frame(temp_id, temp_condition, non_target_error)
 
           # change to long format
           non_target_error <- non_target_error %>%
@@ -1173,21 +1178,24 @@ plot_error_non_targets <- function(data,
         temp_set_size <- temp_data[[set_size_var]]
 
         # get the response values
-        temp_response <- temp_data[[response_var]]
+        temp_response <- map_to_circular(temp_data[[response_var]],
+                                         unit = unit)
 
         # get the non-target values
         non_target_values <- temp_data %>%
           select(starts_with(non_target_var)) %>%
           select_if(function(x) any(!is.na(x)))
+        non_target_values <- map_to_circular(non_target_values,
+                                             unit = unit)
 
         # calculate response error from non-target
         if(ncol(non_target_values) == 0){
 
           # if there's no non-target (i.e,, set size == 1) then just create
-          # a bunch of NAs
+          # a bunch of zeros (these are later changed to NAs)
           non_target_error <- data.frame(id = temp_id,
                                          set_size = temp_set_size,
-                                         error = NA)
+                                         error = 0)
         } else {
 
           # otherwise, create a matrix and calculate response error from
@@ -1201,7 +1209,7 @@ plot_error_non_targets <- function(data,
           }
 
           # add participant id and current set size to data frame
-          non_target_error <- cbind(temp_id, temp_set_size, non_target_error)
+          non_target_error <- data.frame(temp_id, temp_set_size, non_target_error)
 
           # change to long format
           non_target_error <- non_target_error %>%
@@ -1233,7 +1241,10 @@ plot_error_non_targets <- function(data,
                 x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
       group_by(set_size, x) %>%
       summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+                se_error = (sd(y) / sqrt(length(y)))) %>%
+      mutate(mean_error = case_when(set_size == 1 ~ as.numeric(NA),
+                           TRUE ~ mean_error))
+
 
 
     # do the plot
@@ -1292,22 +1303,25 @@ plot_error_non_targets <- function(data,
           temp_set_size <- temp_data[[set_size_var]]
 
           # get the response values
-          temp_response <- temp_data[[response_var]]
+          temp_response <- map_to_circular(temp_data[[response_var]],
+                                           unit)
 
           # get the non-target values
           non_target_values <- temp_data %>%
             select(starts_with(non_target_var)) %>%
             select_if(function(x) any(!is.na(x)))
+          non_target_values <- map_to_circular(non_target_values,
+                                               unit = unit)
 
           # calculate response error from non-target
           if(ncol(non_target_values) == 0){
 
             # if there's no non-target (i.e,, set size == 1) then just create
-            # a bunch of NAs
+            # a bunch of zeros (these are later changed to NAs)
             non_target_error <- data.frame(id = temp_id,
                                            condition = temp_condition,
                                            set_size = temp_set_size,
-                                           error = NA)
+                                           error = 0)
           } else {
             # otherwise, create a matrix and calculate response error from
             # each non-target value
@@ -1320,8 +1334,8 @@ plot_error_non_targets <- function(data,
             }
 
             # add participant id, set size, & current condition to data frame
-            non_target_error <- cbind(temp_id, temp_condition,
-                                      temp_set_size, non_target_error)
+            non_target_error <- data.frame(temp_id, temp_condition,
+                                           temp_set_size, non_target_error)
 
             # change to long format
             non_target_error <- non_target_error %>%
@@ -1355,7 +1369,9 @@ plot_error_non_targets <- function(data,
                 x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
       group_by(condition, set_size, x) %>%
       summarise(mean_error = mean(y),
-                se_error = (sd(y) / sqrt(length(y))))
+                se_error = (sd(y) / sqrt(length(y)))) %>%
+      mutate(mean_error = case_when(set_size == 1 ~ as.numeric(NA),
+                                    TRUE ~ mean_error))
 
 
     # do the plot

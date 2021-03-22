@@ -2,6 +2,26 @@
 
 
 
+# map onto circular space -------------------------------------------------
+#' @export
+map_to_circular <- function(data, unit){
+
+  if(unit == "degrees"){
+    circ <- (2 * pi * data) / 360
+  }
+
+  if(unit == "degrees_180"){
+    circ <- (2 * pi * data) / 180
+  }
+
+  if(unit == "radians"){
+    circ <- data
+  }
+
+  return(circ)
+
+}
+
 
 
 
@@ -279,7 +299,7 @@ aic_c <- function(ll, parms, n){
 # calculate bayesian information criterion --------------------------------
 #' @export
 bic <- function(ll, parms, n){
-  value <- (-2 * ll) +  (parms * log(n))
+  value <- (-2 * ll) + (parms * log(n))
   value <- round(value, 3)
   return(value)
 }
