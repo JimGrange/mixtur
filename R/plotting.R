@@ -631,10 +631,11 @@ plot_mean_absolute_error <- function(data,
 
 
 # plot behavioral error --------------------------------------------------
-#' Plot response error of behavioural data
+#' Plot response error of behavioural data relative to target values.
 #'
-#'Function to plot the response error in behavioural data. Requires a data
-#'frame that (at least) has target value data and participant response data.
+#'Function to plot the response error in behavioural data relative to target
+#'values. Requires a data frame that (at least) has target value data and
+#'participant response data.
 #'
 #'@param data A data frame with columns containing: participant identifier
 #'('id_var'); the participants' response per trial ('response_var'); the
@@ -925,6 +926,49 @@ plot_error <- function(data,
 
 
 # plot error from non-targets ---------------------------------------------
+#' Plot response error of behavioural target relative to non-target values
+#' #'
+#'Function to plot the response error in behavioural data relative to
+#'non-target values. Requires a data frame that (at least) has non-target value
+#'data and participant response data.
+#'
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'non-target values ('non-target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#'from pi to 2 * pi, but could also be already in -pi to pi).
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
+#'@param response_var The column name coding for the participants' responses.
+#'The quoted variable name common to all columns (if applicable) storing
+#'non-target values. The user should have one column coding for each
+#'non-target's value in the data frame. If there is more than one non-target,
+#'each column name should begin with a common term (e.g., the "non_target"
+#'term is common to the non-target columns "non_target_1", "non_target_2"
+#'etc.), which should then be passed to the function via the
+#' \code{non_target_var} variable.
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response.
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response.
+#'@param n_bins An integer giving the number of cells / bins used in the plot.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'
+#'@examples
+#'data(example_data)
+#'plot_error(example_data, condition_var = "condition")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom dplyr rename
+#' @importFrom graphics hist
 #' @export
 plot_error_non_targets <- function(data,
                                    unit = "degrees",
