@@ -18,6 +18,7 @@ fit_mixtur(
   non_target_var = NULL,
   set_size_var = NULL,
   condition_var = NULL,
+  fit_method = "nelder_mean",
   return_fit = FALSE
 )
 }

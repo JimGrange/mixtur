@@ -40,10 +40,10 @@
 #'
 #'
 #' @examples
-#' # hello load an example data frame
+#' # load an example data frame
 #' data(bays2009_full)
 #'
-#' # calculate the summary statistics per condition per set size
+#' # calculate the summary statistics per condition and per set size
 #'summary_data <- get_summary_statistics(data = bays2009_full,
 #'                                       unit = "radians",
 #'                                       condition_var = "duration",

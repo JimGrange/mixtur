@@ -63,7 +63,13 @@ non-target values. Requires a data frame that (at least) has non-target value
 data and participant response data.
 }
 \examples{
-data(example_data)
-plot_error(example_data, condition_var = "condition")
+data(bays2009_full)
+plot_error_non_targets(bays2009_full,
+                       unit = "radians",
+                       id_var = "id",
+                       response_var = "response",
+                       non_target_var = "non_target",
+                       set_size_var = "set_size",
+                       condition_var = "duration")
 
 }
