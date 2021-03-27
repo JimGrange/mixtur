@@ -450,20 +450,6 @@ fit_level <- function(data,
                                  non_targets,
                                  return.ll = return_fit)
         }
-
-        if(return_fit == TRUE){
-          best_parms <- c(fit$parameters[1],
-                          1 - fit$parameters[2] - fit$parameters[3],
-                          fit$parameters[2],
-                          fit$parameters[3])
-          fit$parameters <- best_parms
-        } else{
-          best_parms <- c(fit[1],
-                          1 - fit[2] - fit[3],
-                          fit[2],
-                          fit[3])
-          fit <- best_parms
-        }
       }
     }
 
@@ -758,11 +744,16 @@ fit_model_optim <- function(response,
 
         if (est_list$value < log_lik & !is.nan(est_list$value) ) {
           log_lik <- est_list$value
-          parameters <- round(est_list$par, 3)
+          parameters <- c(est_list$par[1],
+                          1 - est_list$par[2] - est_list$par[3],
+                          est_list$par[2],
+                          est_list$par[3])
+          parameters <- round(parameters, 3)
         }
       }
     }
   }
+
 
   if(return.ll == TRUE) {
     return(list(parameters = parameters, LL = log_lik))
