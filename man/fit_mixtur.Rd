@@ -18,7 +18,7 @@ fit_mixtur(
   non_target_var = NULL,
   set_size_var = NULL,
   condition_var = NULL,
-  fit_method = "nelder_mean",
+  fit_method = "EM",
   return_fit = FALSE
 )
 }
@@ -62,6 +62,11 @@ size of each response.}
 
 \item{condition_var}{The quoted column name (if applicable) coding for the
 condition of each response.}
+
+\item{fit_method}{The optimisation method used to fit the models to the
+data. By default, it is set to expectation maximization ("EM"), but it can
+be changed to gradient descent ("GD") which uses the Nelder-Mead method
+from R's optim() function.}
 
 \item{return_fit}{If set to TRUE, the function will return the negative
 log-likelihood of the model fit as well as the number of trials used in the fit

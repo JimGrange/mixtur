@@ -47,6 +47,11 @@
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
 #'
+#' @param fit_method The optimisation method used to fit the models to the
+#' data. By default, it is set to expectation maximization ("EM"), but it can
+#' be changed to gradient descent ("GD") which uses the Nelder-Mead method
+#' from R's optim() function.
+#'
 #' @param return_fit If set to TRUE, the function will return the negative
 #' log-likelihood of the model fit as well as the number of trials used in the fit
 #' (which is important for calculating some model comparison statistics).
@@ -80,7 +85,7 @@ fit_mixtur <- function(data,
                        non_target_var = NULL,
                        set_size_var = NULL,
                        condition_var = NULL,
-                       fit_method = "nelder_mean",
+                       fit_method = "EM",
                        return_fit = FALSE){
 
   # get the non-target column names, if applicable
@@ -358,7 +363,7 @@ fit_level <- function(data,
                       return_fit = FALSE,
                       fit_method = "EM"){
 
-  if(is.null(non_target_var)){
+  if(set_size == 1){
     non_target_var <- NULL
   }
 
@@ -396,7 +401,7 @@ fit_level <- function(data,
                          target,
                          return.ll = return_fit)
       }
-      if(fit_method == "nelder_mead"){
+      if(fit_method == "GD"){
         fit <- fit_model_optim(response,
                                target,
                                return.ll = return_fit)
@@ -417,6 +422,8 @@ fit_level <- function(data,
         non_targets <- as.matrix(df[, non_target_cols])
         colnames(non_targets) <- NULL
         non_targets <- as.matrix(non_targets[, 1:(set_size - 1)])
+      } else {
+        non_targets <- NULL
       }
 
       if(fit_method == "EM"){
@@ -432,7 +439,7 @@ fit_level <- function(data,
         }
       }
 
-      if(fit_method == "nelder_mead"){
+      if(fit_method == "GD"){
         if(is.null(non_target_var)) {
           fit <- fit_model_optim(response,
                                  target,
@@ -443,8 +450,21 @@ fit_level <- function(data,
                                  non_targets,
                                  return.ll = return_fit)
         }
-      }
 
+        if(return_fit == TRUE){
+          best_parms <- c(fit$parameters[1],
+                          1 - fit$parameters[2] - fit$parameters[3],
+                          fit$parameters[2],
+                          fit$parameters[3])
+          fit$parameters <- best_parms
+        } else{
+          best_parms <- c(fit[1],
+                          1 - fit[2] - fit[3],
+                          fit[2],
+                          fit[3])
+          fit <- best_parms
+        }
+      }
     }
 
     # store the parameters
@@ -452,6 +472,7 @@ fit_level <- function(data,
     parms[i, 1] <- id
 
     if(return_fit == TRUE){
+
       parms[i, 2:5] <- round(fit$parameters, 3)
       parms[i, 6] <- round(fit$LL, 3)
       parms[i, 7] <- nrow(df)
@@ -724,15 +745,16 @@ fit_model_optim <- function(response,
       for(k in seq_along(U)) {
 
         start_parms <- c(K[i],
-                        1 - N[j] - U[k],
-                        N[j], U[k])
+                        N[j],
+                        U[k])
 
         est_list <- optim(par = start_parms,
                           fn = likelihood_function_optim,
                           response = response,
                           target = target,
                           non_targets = non_targets,
-                          control = list(parscale = c(1, 0.01, 0.01, 0.01)))
+                          method = "Nelder-Mead")
+
 
         if (est_list$value < log_lik & !is.nan(est_list$value) ) {
           log_lik <- est_list$value
@@ -764,6 +786,13 @@ likelihood_function_optim <- function(response,
                                       min_parms,
                                       max_parms) {
 
+
+  # extract the parameters
+  parms <- c(start_parms[1],
+             1 - start_parms[2] - start_parms[3],
+             start_parms[2],
+             start_parms[3])
+
   if(is.null(non_targets)){
     non_targets <- replicate(NROW(response), 0)
   }
@@ -776,9 +805,9 @@ likelihood_function_optim <- function(response,
   }
 
   # check parameters are valid in terms of min and max values
-  if((!(is.null(start_parms))) &
-     (any(start_parms[1] < 0, start_parms[2:4] < 0,
-          start_parms[2:4] > 1, abs(sum(start_parms[2:4]) - 1) > 10 ^ - 6))) {
+  if((!(is.null(parms))) &
+     (any(parms[1] < 0, parms[2:4] < 0,
+          parms[2:4] > 1, abs(sum(parms[2:4]) - 1) > 10 ^ - 6))) {
     return(.Machine$double.xmax)
   }
 
@@ -795,16 +824,16 @@ likelihood_function_optim <- function(response,
 
   # set default starting parameter if not provided, else assign starting
   # parameters to parameter variables
-  if(is.null(start_parms)) {
+  if(is.null(parms)) {
     K <- 5
     p_t <- 0.5
     p_n <- ifelse(nn > 0, 0.3, 0)
     p_u <- 1 - p_t - p_n
   } else {
-    K <- start_parms[1];
-    p_t <- start_parms[2]
-    p_n <- start_parms[3];
-    p_u <- start_parms[4]
+    K <- parms[1];
+    p_t <- parms[2]
+    p_n <- parms[3];
+    p_u <- parms[4]
   }
 
   # calculate response error from target value
