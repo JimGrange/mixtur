@@ -13,7 +13,8 @@ plot_model_fit(
   target_var = "target",
   set_size_var = NULL,
   condition_var = NULL,
-  n_bins = 18
+  n_bins = 18,
+  n_col = 2
 )
 }
 \arguments{
@@ -43,8 +44,11 @@ size of each response}
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response}
 
-\item{n_bins}{An integer giving the number of cells / bins used in the plot
-of the behavioural data.}
+\item{n_bins}{An integer controlling the number of cells / bins used in the
+plot of the behavioural data.}
+
+\item{n_col}{An integer controlling the number of columns in the resulting
+plot.}
 }
 \description{
 Plot model fit against human error data (target errors)

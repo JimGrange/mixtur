@@ -17,6 +17,7 @@ plot_error_non_targets(
   set_size_var = NULL,
   condition_var = NULL,
   n_bins = 18,
+  n_col = 2,
   return_data = FALSE
 )
 }
@@ -50,7 +51,10 @@ size of each response.}
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response.}
 
-\item{n_bins}{An integer giving the number of cells / bins used in the plot.}
+\item{n_bins}{An integer controlling the number of cells / bins used in the plot.}
+
+\item{n_col}{An integer controlling the number of columns in the resulting
+plot.}
 
 \item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
 the plot should be returned.}

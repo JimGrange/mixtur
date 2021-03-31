@@ -654,7 +654,10 @@ plot_mean_absolute_error <- function(data,
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
-#'@param n_bins An integer giving the number of cells / bins used in the plot.
+#'@param n_bins An integer controlling the number of cells / bins used in the
+#'plot.
+#'@param n_col An integer controlling the number of columns in the resulting
+#'plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'
@@ -677,6 +680,7 @@ plot_error <- function(data,
                        set_size_var = NULL,
                        condition_var = NULL,
                        n_bins = 18,
+                       n_col = 2,
                        return_data = FALSE){
 
 
@@ -847,7 +851,7 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(condition), ncol = 4)
+      facet_wrap(vars(condition), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- condition_var
@@ -871,7 +875,7 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = 4)
+      facet_wrap(vars(set_size), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
@@ -903,7 +907,7 @@ plot_error <- function(data,
       scale_colour_brewer(palette = "Dark2", name = condition_var) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size))
+      facet_wrap(vars(set_size), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
@@ -955,7 +959,9 @@ plot_error <- function(data,
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
-#'@param n_bins An integer giving the number of cells / bins used in the plot.
+#'@param n_bins An integer controlling the number of cells / bins used in the plot.
+#'@param n_col An integer controlling the number of columns in the resulting
+#'plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'
@@ -984,6 +990,7 @@ plot_error_non_targets <- function(data,
                                    set_size_var = NULL,
                                    condition_var = NULL,
                                    n_bins = 18,
+                                   n_col = 2,
                                    return_data = FALSE){
 
 
@@ -1182,7 +1189,7 @@ plot_error_non_targets <- function(data,
                                       max(plot_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(condition), ncol = 2)
+      facet_wrap(vars(condition), ncol = n_col)
 
 
     # rename the final_data frame
@@ -1290,7 +1297,7 @@ plot_error_non_targets <- function(data,
                                       max(plot_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = 2)
+      facet_wrap(vars(set_size), ncol = n_col)
 
 
     # rename the final_data frame
@@ -1419,7 +1426,7 @@ plot_error_non_targets <- function(data,
                                       max(plot_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = 2)
+      facet_wrap(vars(set_size), ncol = n_col)
 
 
     # rename the final_data frame
@@ -1743,8 +1750,10 @@ plot_precision <- function(data,
 #'size of each response
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response
-#'@param n_bins An integer giving the number of cells / bins used in the plot
-#'of the behavioural data.
+#'@param n_bins An integer controlling the number of cells / bins used in the
+#'plot of the behavioural data.
+#'@param n_col An integer controlling the number of columns in the resulting
+#'plot.
 #'
 #' @export
 plot_model_fit <- function(participant_data,
@@ -1755,7 +1764,8 @@ plot_model_fit <- function(participant_data,
                            target_var = "target",
                            set_size_var = NULL,
                            condition_var = NULL,
-                           n_bins = 18){
+                           n_bins = 18,
+                           n_col = 2){
 
 
 
@@ -1888,7 +1898,7 @@ plot_model_fit <- function(participant_data,
                         ymin = mean_error - se_error),
                     width = 0.00) +
       geom_point() +
-      facet_wrap(vars(condition), ncol = 4) +
+      facet_wrap(vars(condition), ncol = n_col) +
       theme_bw() +
       labs(x = "Error (Radians)",
            y = "Probability Density")
@@ -1968,7 +1978,7 @@ plot_model_fit <- function(participant_data,
                         ymin = mean_error - se_error),
                     width = 0.00) +
       geom_point() +
-      facet_wrap(vars(set_size), ncol = 2) +
+      facet_wrap(vars(set_size), ncol = n_col) +
       theme_bw() +
       scale_colour_brewer(palette = "Dark2") +
       labs(x = "Error (Radians)",
@@ -2061,7 +2071,7 @@ plot_model_fit <- function(participant_data,
                         colour = condition),
                     width = 0.00) +
       geom_point(aes(colour = condition)) +
-      facet_wrap(vars(set_size), ncol = 2) +
+      facet_wrap(vars(set_size), ncol = n_col) +
       theme_bw() +
       scale_colour_brewer(palette = "Dark2") +
       labs(x = "Error (Radians)",
@@ -2090,6 +2100,8 @@ plot_model_fit <- function(participant_data,
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
+#'@param n_col An integer controlling the number of columns in the resulting
+#'plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'
@@ -2104,6 +2116,7 @@ plot_parameters <- function(model_fit,
                             id_var = "id",
                             set_size_var = NULL,
                             condition_var = NULL,
+                            n_col = 2,
                             return_data = FALSE){
 
   if(is.null(id_var)){
@@ -2145,7 +2158,7 @@ plot_parameters <- function(model_fit,
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2163,7 +2176,7 @@ plot_parameters <- function(model_fit,
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
 
     }
@@ -2212,7 +2225,7 @@ plot_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
-        facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2233,7 +2246,7 @@ plot_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
-        facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2292,7 +2305,7 @@ plot_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
-        facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2313,7 +2326,7 @@ plot_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
-        facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2375,7 +2388,7 @@ plot_parameters <- function(model_fit,
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = 3, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2403,7 +2416,7 @@ plot_parameters <- function(model_fit,
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = 4, scales = "free") +
+        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 

@@ -9,6 +9,7 @@ plot_parameters(
   id_var = "id",
   set_size_var = NULL,
   condition_var = NULL,
+  n_col = 2,
   return_data = FALSE
 )
 }
@@ -24,6 +25,9 @@ size of each response.}
 
 \item{condition_var}{The column name (if applicable) coding for the
 condition of each response.}
+
+\item{n_col}{An integer controlling the number of columns in the resulting
+plot.}
 
 \item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
 the plot should be returned.}
