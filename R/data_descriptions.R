@@ -91,3 +91,40 @@
 #' The data set is publicly available on the Open Science Framework, with thanks
 #' to Paul Bays: https://osf.io/c2yx5/
 "bays2009_sample"
+
+
+#' Data set from Oberauer & Lin (2017)
+#'
+#' A data set including data from 19 participants in a continuous report
+#' visual short-term memory experiment. The stimuli were coloured patches
+#' within the range 1-360 degrees. The experiment had a set sizes ranging
+#' from 1 to 8.
+#'
+#' @format A data frame with 15,200 rows and 11 variables:
+#' \describe{
+#'   \item{id}{participant identification}
+#'   \item{response}{the participant's recollection of the target
+#'   colour in degrees (1-180)}
+#'   \item{target}{the orientation of the target colour in degrees (1-360)}
+#'   \item{non_target_1}{the orientation of the first non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_2}{the orientation of the first non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_3}{the orientation of the second non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_4}{the orientation of the third non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_5}{the orientation of the fourth non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_6}{the orientation of the fifth non-target in degrees
+#'   (1-360)}
+#'   \item{non_target_7}{the orientation of the sixth non-target in degrees
+#'   (1-360)}
+#' }
+#' @source
+#' The data set is publicly available on the Open Science Framework:
+#' https://osf.io/j24wb/
+#' @references
+#'    Oberauer, K. & Lin, H-Y. (2017). An interference model of visual working
+#'    memory. Psychological Review, 124, 21-59.
+"oberauer_2017"

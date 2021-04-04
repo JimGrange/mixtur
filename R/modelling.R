@@ -527,10 +527,7 @@ fit_model <- function(response,
                                         non_targets = non_targets,
                                         start_parms = c(K[i], 1 - N[j] - U[k],
                                                         N[j], U[k]))
-          # est_list <- JV10_function(X = response, Tg = target,
-          #                           NT = non_targets,
-          #                           B_start = c(K[i], 1 - N[j] - U[k],
-          #                                      N[j], U[k]))
+
         if (est_list$ll > log_lik & !is.nan(est_list$ll) ) {
           log_lik <- est_list$ll
           parameters <- round(est_list$parameters, 3)
@@ -870,7 +867,7 @@ likelihood_function_optim <- function(response,
 #' Conduct formal model comparison of the 2-component and 3-component model.
 #'
 #' This function will fit both the 2- and 3-component models to the data
-#' and provide an assessment of which fits best via Akiake's Information
+#' and provide an assessment of which fits best via Akaike's Information
 #' Criterion (AIC).
 #' @source
 #' The code for the 3-component model has been adapted from Matlab code

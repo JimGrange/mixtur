@@ -81,7 +81,7 @@ better fit for the 3-component model.
 }
 \description{
 This function will fit both the 2- and 3-component models to the data
-and provide an assessment of which fits best via Akiake's Information
+and provide an assessment of which fits best via Akaike's Information
 Criterion (AIC).
 }
 \examples{

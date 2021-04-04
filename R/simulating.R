@@ -1,3 +1,27 @@
+# simulate data from the slots models -------------------------------------
+simulate_slots <- function(n_trials,
+                           model = "slots",
+                           capacity,
+                           K,
+                           set_size = 4){
+
+  # print message to user
+  print("Simulating data. Please wait...")
+
+  # empty data frame ready for simulated responses
+  sim_data <- data.frame(set_size = numeric(n_trials),
+                     error = numeric(n_trials))
+
+
+
+
+  # print message to user
+  print("Simulating data finished.")
+
+}
+
+
+
 
 # simulate data from the mixture models -----------------------------------
 
@@ -13,7 +37,6 @@ simulate_mixtur <- function(n_trials,
                             p_u,
                             set_size = 4,
                             min_angle_distance = 20){
-
 
   # print message to user
   print("Simulating data. Please wait...")
