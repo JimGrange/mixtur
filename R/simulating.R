@@ -85,7 +85,7 @@ simulate_mixtur <- function(n_trials,
                                      K = K,
                                      p_t = p_t,
                                      p_u = p_u,
-                                     p_n = n)
+                                     p_n = p_n)
   }
 
   # print message to user
@@ -136,24 +136,38 @@ get_model_response <- function(trial_data, set_size, K, p_t, p_n, p_u){
 
     #--- generate the model response based on probability
 
-    # select the response centered on target with concentration k
-    if(rand_num[i] <= p_t){
-      model_data$response[i] <- round(target + randomvonmises(1, 0, K), 3)
+    if(set_size == 1){
+
+      # select the response centered on target with concentration k
+      if(rand_num[i] <= p_t){
+        model_data$response[i] <- round(target + randomvonmises(1, 0, K), 3)
+      } else{
+        model_data$response[i] <- round(runif(1, -pi, pi), 3)
+      }
     }
 
-    # select the response based on a random uniform guess
-    if(rand_num[i] > p_t && rand_num[i] <= p_t + p_u){
-      model_data$response[i] <- round(runif(1, -pi, pi), 3)
+    if(set_size > 1){
+      # select the response centered on target with concentration k
+      if(rand_num[i] <= p_t){
+        model_data$response[i] <- round(target + randomvonmises(1, 0, K), 3)
+      }
+
+      # select the response based on a random uniform guess
+      if(rand_num[i] > p_t && rand_num[i] <= p_t + p_u){
+        model_data$response[i] <- round(runif(1, -pi, pi), 3)
+      }
+
+      # select the response centered on one non-target with concentration k
+      # if n_stim > 1
+      if(rand_num[i] > p_t + p_u){
+
+        # select a random distractor
+        trial_nt <- base::sample(distractors, 1)
+        model_data$response[i] <- round(trial_nt + randomvonmises(1, 0, K), 3)
+      }
     }
 
-    # select the response centered on one non-target with concentration k
-    # if n_stim > 1
-    if((rand_num[i] > p_t + p_u) & set_size > 1){
 
-      # select a random distractor
-      trial_nt <- base::sample(distractors, 1)
-      model_data$response[i] <- round(trial_nt + randomvonmises(1, 0, K), 3)
-    }
 
   }
 
