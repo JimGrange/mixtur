@@ -7,8 +7,9 @@
 map_to_circular <- function(data, unit){
 
   if(unit == "degrees"){
-    circ <- (2 * pi * data) / 360
+    circ <- ((2 * pi * data) / 360)
   }
+
 
   if(unit == "degrees_180"){
     circ <- (2 * pi * data) / 180

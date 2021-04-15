@@ -68,7 +68,11 @@ simulate_mixtur <- function(n_trials,
                            memory_distance = min_angle_distance)
 
   # transform the angles to circular space
+  # (& add edge correction due to rounding)
   trial_data <- round(wrap(trial_data / 180 * pi), 3)
+  trial_data[trial_data < -pi] <- -3.141
+  trial_data[trial_data > pi] <- 3.141
+
 
   # get the model response
   if(is.null(p_n)){
@@ -162,12 +166,20 @@ get_model_response <- function(trial_data, set_size, K, p_t, p_n, p_u){
       if(rand_num[i] > p_t + p_u){
 
         # select a random distractor
-        trial_nt <- base::sample(distractors, 1)
-        model_data$response[i] <- round(trial_nt + randomvonmises(1, 0, K), 3)
+        if(length(distractors) > 1){
+          trial_nt <- base::sample(distractors, 1)
+          model_data$response[i] <- round(wrap(randomvonmises(1, trial_nt, K)), 3)
+        } else {
+          trial_nt <- distractors
+          model_data$response[i] <- round(wrap(randomvonmises(1, trial_nt, K)), 3)
+        }
+
       }
     }
 
-
+    # correct edges due to rounding
+    model_data$response[model_data$response < -pi] <- -3.141
+    model_data$response[model_data$response > pi] <- 3.141
 
   }
 
