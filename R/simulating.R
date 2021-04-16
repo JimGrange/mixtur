@@ -70,8 +70,8 @@ simulate_mixtur <- function(n_trials,
   # transform the angles to circular space
   # (& add edge correction due to rounding)
   trial_data <- round(wrap(trial_data / 180 * pi), 3)
-  trial_data[trial_data < -pi] <- -3.141
-  trial_data[trial_data > pi] <- 3.141
+  # trial_data[trial_data < -pi] <- -3.141
+  # trial_data[trial_data > pi] <- 3.141
 
 
   # get the model response
@@ -144,16 +144,17 @@ get_model_response <- function(trial_data, set_size, K, p_t, p_n, p_u){
 
       # select the response centered on target with concentration k
       if(rand_num[i] <= p_t){
-        model_data$response[i] <- round(target + randomvonmises(1, 0, K), 3)
+        model_data$response[i] <- round(randomvonmises(1, target, K), 3)
       } else{
         model_data$response[i] <- round(runif(1, -pi, pi), 3)
       }
     }
 
     if(set_size > 1){
+
       # select the response centered on target with concentration k
       if(rand_num[i] <= p_t){
-        model_data$response[i] <- round(target + randomvonmises(1, 0, K), 3)
+        model_data$response[i] <- round(randomvonmises(1, target, K), 3)
       }
 
       # select the response based on a random uniform guess
@@ -168,19 +169,14 @@ get_model_response <- function(trial_data, set_size, K, p_t, p_n, p_u){
         # select a random distractor
         if(length(distractors) > 1){
           trial_nt <- base::sample(distractors, 1)
-          model_data$response[i] <- round(wrap(randomvonmises(1, trial_nt, K)), 3)
+          model_data$response[i] <- round(randomvonmises(1, trial_nt, K), 3)
         } else {
           trial_nt <- distractors
-          model_data$response[i] <- round(wrap(randomvonmises(1, trial_nt, K)), 3)
+          model_data$response[i] <- round(randomvonmises(1, trial_nt, K), 3)
         }
 
       }
     }
-
-    # correct edges due to rounding
-    model_data$response[model_data$response < -pi] <- -3.141
-    model_data$response[model_data$response > pi] <- 3.141
-
   }
 
   # add id column
