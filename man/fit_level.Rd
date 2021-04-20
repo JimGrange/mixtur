@@ -13,7 +13,7 @@ fit_level(
   non_target_var,
   set_size = 1,
   return_fit = FALSE,
-  fit_method = "EM"
+  fit_method = "GD"
 )
 }
 \description{

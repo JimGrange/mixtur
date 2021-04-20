@@ -48,11 +48,6 @@
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
 #'
-#' @param fit_method The optimisation method used to fit the models to the
-#' data. By default, it is set to expectation maximization ("EM"), but it can
-#' be changed to gradient descent ("GD") which uses the Nelder-Mead method
-#' from R's optim() function.
-#'
 #' @param return_fit If set to TRUE, the function will return the negative
 #' log-likelihood of the model fit as well as the number of trials used in the
 #' fit (which is important for calculating some model comparison statistics).
@@ -86,8 +81,10 @@ fit_mixtur <- function(data,
                        non_target_var = NULL,
                        set_size_var = NULL,
                        condition_var = NULL,
-                       fit_method = "EM",
                        return_fit = FALSE){
+
+  # set the fit method (removed as an option to the user)
+  fit_method = "GD"
 
   # get the non-target column names, if applicable
   if(!is.null(non_target_var)){
@@ -362,7 +359,7 @@ fit_level <- function(data,
                       non_target_var,
                       set_size = 1,
                       return_fit = FALSE,
-                      fit_method = "EM"){
+                      fit_method = "GD"){
 
   if(set_size == 1){
     non_target_var <- NULL
@@ -383,14 +380,12 @@ fit_level <- function(data,
   # loop over every participant
   for(i in seq_along(l)) {
 
-
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
 
     # get the response and the target values
     response <- as.matrix(df[, response_var])
     target <- as.matrix(df[, target_var])
-
 
 
     #--- pass the data to the fit function
