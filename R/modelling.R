@@ -16,10 +16,10 @@
 #' conditions; if the user wishes for this, then the data frame should have
 #' columns coding for this information.
 #'
-#' @param components A numeric value indicating whether the 2-component or
-#' 3-component mixture model should be fitted to the data.
+#' @param model A string indicating the model to be fit to the data. Currently
+#' the options are "2_component", "3_component".
 #'
-#' @param unit A character indicating the unit of measurement in the data frame:
+#' @param unit A string indicating the unit of measurement in the data frame:
 #' "degrees" (measurement is in degrees, from 1 to 360); "degrees_180
 #' (measurement is in degrees, but limited to 1 to 180); or "radians"
 #' (measurement is in radians, from pi to 2 * pi, but could also be already in
@@ -67,7 +67,7 @@
 #'
 #' # fit the 3-component mixture model ignoring condition
 #' fit <- fit_mixtur(data = data,
-#'                   components = 3,
+#'                   model = "3_component",
 #'                   unit = "radians",
 #'                   id_var = "id",
 #'                   response_var = "response",
@@ -78,7 +78,7 @@
 #'
 #' @export
 fit_mixtur <- function(data,
-                       components = 3,
+                       model = "3_component",
                        unit = "degrees",
                        id_var = "id",
                        response_var = "response",
@@ -138,7 +138,7 @@ fit_mixtur <- function(data,
 
     # perform the model fit
     fit <- fit_level(data,
-                     components = components,
+                     model = model,
                      id_var = id_var,
                      response_var = response_var,
                      target_var = target_var,
@@ -173,7 +173,7 @@ fit_mixtur <- function(data,
 
       # fit the model to this condition
       level_fit <- fit_level(level_data,
-                             components = components,
+                             model = model,
                              id_var = id_var,
                              response_var = response_var,
                              target_var = target_var,
@@ -216,7 +216,7 @@ fit_mixtur <- function(data,
       # fit the model to this set size
       if(set_sizes[i] == 1){
         level_fit <- fit_level(level_data,
-                               components = components,
+                               model = model,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
@@ -230,7 +230,7 @@ fit_mixtur <- function(data,
 
       } else{
         level_fit <- fit_level(level_data,
-                               components = components,
+                               model = model,
                                id_var = "id",
                                response_var = "response",
                                target_var = "target",
@@ -280,7 +280,7 @@ fit_mixtur <- function(data,
         # fit the model to this set size & condition
         if(set_sizes[i] == 1){
           level_fit <- fit_level(level_data,
-                                 components = components,
+                                 model = model,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
@@ -294,7 +294,7 @@ fit_mixtur <- function(data,
                    condition = conditions[j])
         } else{
           level_fit <- fit_level(level_data,
-                                 components = components,
+                                 model = model,
                                  id_var = id_var,
                                  response_var = response_var,
                                  target_var = target_var,
@@ -328,7 +328,7 @@ fit_mixtur <- function(data,
 
 
   # remove p_n column if the user was fitting the 2-component model
-  if(components == 2){
+  if(model == "2_component"){
     fit <- fit %>%
       select(-p_n)
   }
@@ -355,7 +355,7 @@ fit_mixtur <- function(data,
 #'
 #' @export
 fit_level <- function(data,
-                      components = 3,
+                      model = "3_component",
                       id_var = "id",
                       response_var = "response",
                       target_var = "target",
@@ -396,7 +396,7 @@ fit_level <- function(data,
     #--- pass the data to the fit function
 
     # if the 2-component model is called, don't pass non-target info to fit
-    if(components == 2){
+    if(model == "2_component"){
 
       if(fit_method == "EM"){
         fit <- fit_model(response,
@@ -413,7 +413,7 @@ fit_level <- function(data,
 
     # if the 3-component model is called, pass non-target info to fit
     # only if set size is greater than one (i.e., there is non-target info)
-    if(components == 3){
+    if(model == "3_component"){
 
       # get the non-target values for this set size if set size is above one
       if(set_size > 1){

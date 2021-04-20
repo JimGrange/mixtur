@@ -10,7 +10,7 @@ written by Paul Bays (https://paulbays.com).
 \usage{
 fit_mixtur(
   data,
-  components = 3,
+  model = "3_component",
   unit = "degrees",
   id_var = "id",
   response_var = "response",
@@ -32,10 +32,10 @@ individual participants, individual set-sizes, and individual additional
 conditions; if the user wishes for this, then the data frame should have
 columns coding for this information.}
 
-\item{components}{A numeric value indicating whether the 2-component or
-3-component mixture model should be fitted to the data.}
+\item{model}{A string indicating the model to be fit to the data. Currently
+the options are "2_component", "3_component".}
 
-\item{unit}{A character indicating the unit of measurement in the data frame:
+\item{unit}{A string indicating the unit of measurement in the data frame:
 "degrees" (measurement is in degrees, from 1 to 360); "degrees_180
 (measurement is in degrees, but limited to 1 to 180); or "radians"
 (measurement is in radians, from pi to 2 * pi, but could also be already in
@@ -84,7 +84,7 @@ data <- bays2009_full
 
 # fit the 3-component mixture model ignoring condition
 fit <- fit_mixtur(data = data,
-                  components = 3,
+                  model = "3_component",
                   unit = "radians",
                   id_var = "id",
                   response_var = "response",

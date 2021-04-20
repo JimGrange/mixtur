@@ -6,7 +6,7 @@
 \usage{
 fit_level(
   data,
-  components = 3,
+  model = "3_component",
   id_var = "id",
   response_var = "response",
   target_var = "target",
