@@ -41,10 +41,11 @@ columns coding for this information.}
 (measurement is in radians, from pi to 2 * pi, but could also be already in
 the range -pi to pi).}
 
-\item{id_var}{The quoted column name coding for participant id. If the data is from
-a single participant (i.e., there is no id column) set to NULL.}
+\item{id_var}{The quoted column name coding for participant id. If the data
+is from a single participant (i.e., there is no id column) set to NULL.}
 
-\item{response_var}{The quoted column name coding for the participants' responses}
+\item{response_var}{The quoted column name coding for the participants'
+responses}
 
 \item{target_var}{The quoted column name coding for the target value.}
 
@@ -57,8 +58,8 @@ term is common to the non-target columns "non_target_1", "non_target_2"
 etc.), which should then be passed to the function via the
 \code{non_target_var} variable.}
 
-\item{set_size_var}{The quoted column name (if applicable) coding for the set
-size of each response.}
+\item{set_size_var}{The quoted column name (if applicable) coding for the
+set size of each response.}
 
 \item{condition_var}{The quoted column name (if applicable) coding for the
 condition of each response.}
@@ -69,8 +70,8 @@ be changed to gradient descent ("GD") which uses the Nelder-Mead method
 from R's optim() function.}
 
 \item{return_fit}{If set to TRUE, the function will return the negative
-log-likelihood of the model fit as well as the number of trials used in the fit
-(which is important for calculating some model comparison statistics).}
+log-likelihood of the model fit as well as the number of trials used in the
+fit (which is important for calculating some model comparison statistics).}
 }
 \description{
 This is the function called by the user to fit either the two- or three-

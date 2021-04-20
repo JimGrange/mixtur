@@ -25,10 +25,11 @@
 #' (measurement is in radians, from pi to 2 * pi, but could also be already in
 #' the range -pi to pi).
 #'
-#' @param id_var The quoted column name coding for participant id. If the data is from
-#' a single participant (i.e., there is no id column) set to NULL.
+#' @param id_var The quoted column name coding for participant id. If the data
+#' is from a single participant (i.e., there is no id column) set to NULL.
 #'
-#' @param response_var The quoted column name coding for the participants' responses
+#' @param response_var The quoted column name coding for the participants'
+#' responses
 #'
 #' @param target_var The quoted column name coding for the target value.
 #'
@@ -41,8 +42,8 @@
 #' etc.), which should then be passed to the function via the
 #' \code{non_target_var} variable.
 #'
-#' @param set_size_var The quoted column name (if applicable) coding for the set
-#' size of each response.
+#' @param set_size_var The quoted column name (if applicable) coding for the
+#' set size of each response.
 #'
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
@@ -53,8 +54,8 @@
 #' from R's optim() function.
 #'
 #' @param return_fit If set to TRUE, the function will return the negative
-#' log-likelihood of the model fit as well as the number of trials used in the fit
-#' (which is important for calculating some model comparison statistics).
+#' log-likelihood of the model fit as well as the number of trials used in the
+#' fit (which is important for calculating some model comparison statistics).
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
@@ -382,6 +383,7 @@ fit_level <- function(data,
   # loop over every participant
   for(i in seq_along(l)) {
 
+
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
 
@@ -522,11 +524,11 @@ fit_model <- function(response,
   for(i in seq_along(K)) {
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
-        est_list <- likelihood_function(response = response,
-                                        target = target,
-                                        non_targets = non_targets,
-                                        start_parms = c(K[i], 1 - N[j] - U[k],
-                                                        N[j], U[k]))
+        est_list <- mixtur_model_pdf(response = response,
+                                     target = target,
+                                     non_targets = non_targets,
+                                     start_parms = c(K[i], 1 - N[j] - U[k],
+                                                     N[j], U[k]))
 
         if (est_list$ll > log_lik & !is.nan(est_list$ll) ) {
           log_lik <- est_list$ll
@@ -551,10 +553,10 @@ fit_model <- function(response,
 #' It is not expected that this function be called by the user.
 #'
 #' @export
-likelihood_function <- function(response,
-                                target,
-                                non_targets,
-                                start_parms = NULL) {
+mixtur_model_pdf <- function(response,
+                             target,
+                             non_targets,
+                             start_parms = NULL) {
 
   if(is.null(non_targets)){
     non_targets <- replicate(NROW(response), 0)
@@ -644,7 +646,7 @@ likelihood_function <- function(response,
     p_n <- sum(rowSums(w_n) / weights) / n
     p_u <- sum(w_g / weights) / n
 
-    # improve parameter values
+    # improve parameter values via expectation maximisation
     rw <- c((w_t / weights), (w_n / repmat(weights, nn)))
     S <- c(sin(error), sin(non_target_error))
     C <- c(cos(error), cos(non_target_error))
@@ -732,11 +734,12 @@ fit_model_optim <- function(response,
                         U[k])
 
         est_list <- optim(par = start_parms,
-                          fn = likelihood_function_optim,
+                          fn = mixtur_model_pdf_optim,
                           response = response,
                           target = target,
                           non_targets = non_targets,
-                          method = "Nelder-Mead")
+                          method = "Nelder-Mead",
+                          control = list(parscale = c(1, 0.1, 0.1)))
 
 
         if (est_list$value < log_lik & !is.nan(est_list$value) ) {
@@ -767,12 +770,12 @@ fit_model_optim <- function(response,
 #' It is not expected that this function be called by the user.
 #'
 #' @export
-likelihood_function_optim <- function(response,
-                                      target,
-                                      non_targets,
-                                      start_parms = NULL,
-                                      min_parms,
-                                      max_parms) {
+mixtur_model_pdf_optim <- function(response,
+                                   target,
+                                   non_targets,
+                                   start_parms = NULL,
+                                   min_parms,
+                                   max_parms) {
 
 
   # extract the parameters
