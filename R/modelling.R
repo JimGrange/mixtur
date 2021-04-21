@@ -323,13 +323,6 @@ fit_mixtur <- function(data,
   # print message to user
   print("Model fit finished.")
 
-
-  # remove p_n column if the user was fitting the 2-component model
-  if(model == "2_component"){
-    fit <- fit %>%
-      select(-p_n)
-  }
-
   return(fit)
 
 }
@@ -352,14 +345,14 @@ fit_mixtur <- function(data,
 #'
 #' @export
 fit_level <- function(data,
-                      model = "3_component",
+                      model,
                       id_var = "id",
                       response_var = "response",
                       target_var = "target",
                       non_target_var,
                       set_size = 1,
                       return_fit = FALSE,
-                      fit_method = "GD"){
+                      fit_method){
 
   if(set_size == 1){
     non_target_var <- NULL
@@ -373,8 +366,13 @@ fit_level <- function(data,
   l <- split(data, id)
 
   # initiate data frame to store parameters
-  parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
-                      p_u = FALSE, LL = FALSE, n = FALSE)
+  # TODO: Change these to accommodate slots models
+
+  if(model == "2_component" || model == "3_component"){
+    parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
+                        p_u = FALSE, LL = FALSE, n = FALSE)
+  }
+
 
 
   # loop over every participant
@@ -390,13 +388,13 @@ fit_level <- function(data,
 
     #--- pass the data to the fit function
 
-    # if the 2-component model is called, don't pass non-target info to fit
+    #-- fit the 2-component model
     if(model == "2_component"){
 
       if(fit_method == "EM"){
-        fit <- fit_model(response,
-                         target,
-                         return.ll = return_fit)
+        fit <- fit_components_em(response,
+                                 target,
+                                 return.ll = return_fit)
       }
       if(fit_method == "GD"){
         fit <- fit_model_optim(response,
@@ -406,6 +404,7 @@ fit_level <- function(data,
 
     }
 
+    #-- fit the 3-component model
     # if the 3-component model is called, pass non-target info to fit
     # only if set size is greater than one (i.e., there is non-target info)
     if(model == "3_component"){
@@ -425,14 +424,14 @@ fit_level <- function(data,
 
       if(fit_method == "EM"){
         if(is.null(non_target_var)) {
-          fit <- fit_model(response,
-                           target,
-                           return.ll = return_fit)
+          fit <- fit_components_em(response,
+                                   target,
+                                   return.ll = return_fit)
         } else {
-          fit <- fit_model(response,
-                           target,
-                           non_targets,
-                           return.ll = return_fit)
+          fit <- fit_components_em(response,
+                                   target,
+                                   non_targets,
+                                   return.ll = return_fit)
         }
       }
 
@@ -450,20 +449,40 @@ fit_level <- function(data,
       }
     }
 
+
+    #-- fit the slots model
+    # TODO
+
+    #-- fit the slots plus averaging model
+    # TODO
+
+
     # store the parameters
-    id <- as.character(df[1, id_var])
-    parms[i, 1] <- id
+    # TODO: Ensure parameter return below is suitable for slots models
+    if(model == "2_component" || model == "3_component"){
 
-    if(return_fit == TRUE){
+      id <- as.character(df[1, id_var])
+      parms[i, 1] <- id
 
-      parms[i, 2:5] <- round(fit$parameters, 3)
-      parms[i, 6] <- round(fit$LL, 3)
-      parms[i, 7] <- nrow(df)
-    } else{
-      parms[i, 2:5] <- round(fit, 3)
+      if(return_fit == TRUE){
+
+        parms[i, 2:5] <- round(fit$parameters, 3)
+        parms[i, 6] <- round(fit$LL, 3)
+        parms[i, 7] <- nrow(df)
+      } else{
+        parms[i, 2:5] <- round(fit, 3)
+      }
+
+      if(model == "2_component"){
+        parms <- parms %>% select(-p_n)
+      }
     }
 
+
+
   }
+
+
 
   if(return_fit == TRUE){
     return(parms)
@@ -477,18 +496,19 @@ fit_level <- function(data,
 
 
 
-# fit model ---------------------------------------------------------------
-#' Fit the mixture model.
+
+# fit components model via EM ---------------------------------------------
+#' Fit the components model via expectation maximisation.
 #'
 #' This is the function that is called by the wrapper function
 #' \code{fit_level}. It is not expected that this function be called by the
 #' user.
 #'
 #' @export
-fit_model <- function(response,
-                      target,
-                      non_targets = replicate(NROW(response), 0),
-                      return.ll = TRUE) {
+fit_components_em <- function(response,
+                              target,
+                              non_targets = replicate(NROW(response), 0),
+                              return.ll = TRUE) {
 
   # check the data is in correct shape
   if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |

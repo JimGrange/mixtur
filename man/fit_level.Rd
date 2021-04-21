@@ -6,14 +6,14 @@
 \usage{
 fit_level(
   data,
-  model = "3_component",
+  model,
   id_var = "id",
   response_var = "response",
   target_var = "target",
   non_target_var,
   set_size = 1,
   return_fit = FALSE,
-  fit_method = "GD"
+  fit_method
 )
 }
 \description{
