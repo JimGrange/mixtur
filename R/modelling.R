@@ -84,7 +84,7 @@ fit_mixtur <- function(data,
                        return_fit = FALSE){
 
   # set the fit method (removed as an option to the user)
-  fit_method = "GD"
+  fit_method <- "GD"
 
   # get the non-target column names, if applicable
   if(!is.null(non_target_var)){
@@ -367,16 +367,16 @@ fit_level <- function(data,
 
   # initiate data frame to store parameters
   # TODO: Change these to accommodate slots models
-
   if(model == "2_component" || model == "3_component"){
     parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
                         p_u = FALSE, LL = FALSE, n = FALSE)
   }
 
 
-
   # loop over every participant
   for(i in seq_along(l)) {
+
+
 
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
@@ -397,9 +397,9 @@ fit_level <- function(data,
                                  return.ll = return_fit)
       }
       if(fit_method == "GD"){
-        fit <- fit_model_optim(response,
-                               target,
-                               return.ll = return_fit)
+        fit <- fit_components_gd(response,
+                                 target,
+                                 return.ll = return_fit)
       }
 
     }
@@ -437,14 +437,14 @@ fit_level <- function(data,
 
       if(fit_method == "GD"){
         if(is.null(non_target_var)) {
-          fit <- fit_model_optim(response,
-                                 target,
-                                 return.ll = return_fit)
+          fit <- fit_components_gd(response,
+                                   target,
+                                   return.ll = return_fit)
         } else {
-          fit <- fit_model_optim(response,
-                                 target,
-                                 non_targets,
-                                 return.ll = return_fit)
+          fit <- fit_components_gd(response,
+                                   target,
+                                   non_targets,
+                                   return.ll = return_fit)
         }
       }
     }
@@ -459,7 +459,22 @@ fit_level <- function(data,
 
     # store the parameters
     # TODO: Ensure parameter return below is suitable for slots models
-    if(model == "2_component" || model == "3_component"){
+    if(model == "2_component"){
+
+      id <- as.character(df[1, id_var])
+      parms[i, 1] <- id
+
+      if(return_fit == TRUE){
+        parms[i, 2:5] <- round(fit$parameters, 3)
+        parms[i, 6] <- round(fit$LL, 3)
+        parms[i, 7] <- nrow(df)
+      } else{
+        parms[i, 2:5] <- round(fit, 3)
+      }
+    }
+
+
+    if(model == "3_component"){
 
       id <- as.character(df[1, id_var])
       parms[i, 1] <- id
@@ -472,16 +487,14 @@ fit_level <- function(data,
       } else{
         parms[i, 2:5] <- round(fit, 3)
       }
-
-      if(model == "2_component"){
-        parms <- parms %>% select(-p_n)
-      }
     }
-
-
 
   }
 
+  # remove p_n column from 2-component fits
+  if(model == "2_component"){
+    parms <- parms %>% select(-p_n)
+  }
 
 
   if(return_fit == TRUE){
@@ -493,6 +506,27 @@ fit_level <- function(data,
 
 
 }
+
+
+
+# fit slots model ---------------------------------------------------------
+#' fit the slots model via gradient descent.
+#'
+#' This is the function that is called by the wrapper function
+#' \code{fit_level}. It is not expected that this function be called by the
+#' user.
+#' @export
+fit_slots_gd <- function(response,
+                         target,
+                         return.ll = TRUE){
+
+  # check the data is in correct shape
+  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target)) {
+    stop("fit_model error: Input not correctly dimensioned", call. = FALSE)
+  }
+
+}
+
 
 
 
@@ -539,11 +573,12 @@ fit_components_em <- function(response,
   for(i in seq_along(K)) {
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
-        est_list <- mixtur_model_pdf(response = response,
-                                     target = target,
-                                     non_targets = non_targets,
-                                     start_parms = c(K[i], 1 - N[j] - U[k],
-                                                     N[j], U[k]))
+        est_list <- components_model_pdf_em(response = response,
+                                            target = target,
+                                            non_targets = non_targets,
+                                            start_parms = c(K[i],
+                                                            1 - N[j] - U[k],
+                                                            N[j], U[k]))
 
         if (est_list$ll > log_lik & !is.nan(est_list$ll) ) {
           log_lik <- est_list$ll
@@ -562,16 +597,18 @@ fit_components_em <- function(response,
 
 
 
-# likelihood function -----------------------------------------------------
-#' Calculate the likelihood function of the mixture model.
+
+# components model likelihood function em  --------------------------------
+#' Calculate the likelihood function of the components model fitting via
+#' expectation maximisation.
 #'
 #' It is not expected that this function be called by the user.
 #'
 #' @export
-mixtur_model_pdf <- function(response,
-                             target,
-                             non_targets,
-                             start_parms = NULL) {
+components_model_pdf_em <- function(response,
+                                    target,
+                                    non_targets,
+                                    start_parms = NULL) {
 
   if(is.null(non_targets)){
     non_targets <- replicate(NROW(response), 0)
@@ -701,18 +738,19 @@ mixtur_model_pdf <- function(response,
 
 
 
-# fit model optim ----------------------------------------------------------
-#' Fit the mixture model using nelder-mead routine via optim function.
+# fit components model gd -----------------------------------------------
+#' Fit the components model using gradient descent (nelder-mead routine via
+#' optim function).
 #'
 #' This is the function that is called by the wrapper function
 #' \code{fit_level}. It is not expected that this function be called by the
 #' user.
 #'
 #' @export
-fit_model_optim <- function(response,
-                            target,
-                            non_targets = replicate(NROW(response), 0),
-                            return.ll = TRUE) {
+fit_components_gd <- function(response,
+                              target,
+                              non_targets = replicate(NROW(response), 0),
+                              return.ll = TRUE) {
 
   # check the data is in correct shape
   if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
@@ -749,7 +787,7 @@ fit_model_optim <- function(response,
                         U[k])
 
         est_list <- optim(par = start_parms,
-                          fn = mixtur_model_pdf_optim,
+                          fn = components_model_pdf_gd,
                           response = response,
                           target = target,
                           non_targets = non_targets,
@@ -779,18 +817,18 @@ fit_model_optim <- function(response,
 
 
 
-# likelihood function -----------------------------------------------------
+# components model likelihood function gd  ---------------------------------
 #' Calculate the likelihood function of the mixture model.
 #'
 #' It is not expected that this function be called by the user.
 #'
 #' @export
-mixtur_model_pdf_optim <- function(response,
-                                   target,
-                                   non_targets,
-                                   start_parms = NULL,
-                                   min_parms,
-                                   max_parms) {
+components_model_pdf_gd <- function(response,
+                                    target,
+                                    non_targets,
+                                    start_parms = NULL,
+                                    min_parms,
+                                    max_parms) {
 
 
   # extract the parameters
