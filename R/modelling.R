@@ -17,7 +17,7 @@
 #' columns coding for this information.
 #'
 #' @param model A string indicating the model to be fit to the data. Currently
-#' the options are "2_component", "3_component".
+#' the options are "2_component", and "3_component".
 #'
 #' @param unit A string indicating the unit of measurement in the data frame:
 #' "degrees" (measurement is in degrees, from 1 to 360); "degrees_180
@@ -123,6 +123,37 @@ fit_mixtur <- function(data,
   print("Model fit running. Please wait...")
 
 
+  #---- fitting the slots model
+  if(model == "slots"){
+
+    # return an error message if set size is not manipulated
+    if(is.null(set_size_var)){
+      stop("slots models require a set size variable", call. = FALSE)
+    }
+
+    # no condition manipulation
+
+    # perform the model fit
+    fit <- fit_level_slots(data,
+                           model = model,
+                           id_var = id_var,
+                           response_var = response_var,
+                           target_var = target_var,
+                           set_size_var = set_size_var,
+                           return_fit = return_fit,
+                           fit_method = fit_method)
+
+    # there is a condition manipulation
+
+  }
+
+
+  #---- fitting the slots + averaging model
+
+
+
+  #---- fitting the components models
+
   # no set size or condition manipulation
   if(is.null(set_size_var) && is.null(condition_var)){
 
@@ -134,15 +165,15 @@ fit_mixtur <- function(data,
     }
 
     # perform the model fit
-    fit <- fit_level(data,
-                     model = model,
-                     id_var = id_var,
-                     response_var = response_var,
-                     target_var = target_var,
-                     non_target_var = non_target_var,
-                     set_size = level_set_size,
-                     return_fit = return_fit,
-                     fit_method = fit_method)
+    fit <- fit_level_components(data,
+                                model = model,
+                                id_var = id_var,
+                                response_var = response_var,
+                                target_var = target_var,
+                                non_target_var = non_target_var,
+                                set_size = level_set_size,
+                                return_fit = return_fit,
+                                fit_method = fit_method)
   }
 
 
@@ -169,15 +200,15 @@ fit_mixtur <- function(data,
       }
 
       # fit the model to this condition
-      level_fit <- fit_level(level_data,
-                             model = model,
-                             id_var = id_var,
-                             response_var = response_var,
-                             target_var = target_var,
-                             non_target_var = non_target_var,
-                             set_size = level_set_size,
-                             return_fit = return_fit,
-                             fit_method = fit_method)
+      level_fit <- fit_level_components(level_data,
+                                        model = model,
+                                        id_var = id_var,
+                                        response_var = response_var,
+                                        target_var = target_var,
+                                        non_target_var = non_target_var,
+                                        set_size = level_set_size,
+                                        return_fit = return_fit,
+                                        fit_method = fit_method)
 
       level_fit <- level_fit %>%
         mutate(condition = conditions[i])
@@ -212,29 +243,29 @@ fit_mixtur <- function(data,
 
       # fit the model to this set size
       if(set_sizes[i] == 1){
-        level_fit <- fit_level(level_data,
-                               model = model,
-                               id_var = "id",
-                               response_var = "response",
-                               target_var = "target",
-                               non_target_var = NULL,
-                               set_size = 1,
-                               return_fit = return_fit,
-                               fit_method = fit_method)
+        level_fit <- fit_level_components(level_data,
+                                          model = model,
+                                          id_var = "id",
+                                          response_var = "response",
+                                          target_var = "target",
+                                          non_target_var = NULL,
+                                          set_size = 1,
+                                          return_fit = return_fit,
+                                          fit_method = fit_method)
 
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
 
       } else{
-        level_fit <- fit_level(level_data,
-                               model = model,
-                               id_var = "id",
-                               response_var = "response",
-                               target_var = "target",
-                               non_target_var = non_target_var,
-                               set_size = set_sizes[i],
-                               return_fit = return_fit,
-                               fit_method = fit_method)
+        level_fit <- fit_level_components(level_data,
+                                          model = model,
+                                          id_var = "id",
+                                          response_var = "response",
+                                          target_var = "target",
+                                          non_target_var = non_target_var,
+                                          set_size = set_sizes[i],
+                                          return_fit = return_fit,
+                                          fit_method = fit_method)
 
         level_fit <- level_fit %>%
           mutate(set_size = set_sizes[i])
@@ -276,29 +307,29 @@ fit_mixtur <- function(data,
 
         # fit the model to this set size & condition
         if(set_sizes[i] == 1){
-          level_fit <- fit_level(level_data,
-                                 model = model,
-                                 id_var = id_var,
-                                 response_var = response_var,
-                                 target_var = target_var,
-                                 non_target_var = NULL,
-                                 set_size = 1,
-                                 return_fit = return_fit,
-                                 fit_method = fit_method)
+          level_fit <- fit_level_components(level_data,
+                                            model = model,
+                                            id_var = id_var,
+                                            response_var = response_var,
+                                            target_var = target_var,
+                                            non_target_var = NULL,
+                                            set_size = 1,
+                                            return_fit = return_fit,
+                                            fit_method = fit_method)
 
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
                    condition = conditions[j])
         } else{
-          level_fit <- fit_level(level_data,
-                                 model = model,
-                                 id_var = id_var,
-                                 response_var = response_var,
-                                 target_var = target_var,
-                                 non_target_var = non_target_var,
-                                 set_size = set_sizes[i],
-                                 return_fit = return_fit,
-                                 fit_method = fit_method)
+          level_fit <- fit_level_components(level_data,
+                                            model = model,
+                                            id_var = id_var,
+                                            response_var = response_var,
+                                            target_var = target_var,
+                                            non_target_var = non_target_var,
+                                            set_size = set_sizes[i],
+                                            return_fit = return_fit,
+                                            fit_method = fit_method)
 
           level_fit <- level_fit %>%
             mutate(set_size = set_sizes[i],
@@ -333,8 +364,8 @@ fit_mixtur <- function(data,
 
 
 
-# fit model to a single level ---------------------------------------------
-#' Fit model to a single level.
+# fit components model to a single level ----------------------------------
+#' Fit components model to a single level.
 #'
 #' This wrapper function is called by the \code{fit_mixtur} function to fit the
 #' models to a single level from the data frame. It is not expected that this
@@ -344,15 +375,15 @@ fit_mixtur <- function(data,
 #' @importFrom dplyr pull
 #'
 #' @export
-fit_level <- function(data,
-                      model,
-                      id_var = "id",
-                      response_var = "response",
-                      target_var = "target",
-                      non_target_var,
-                      set_size = 1,
-                      return_fit = FALSE,
-                      fit_method){
+fit_level_components <- function(data,
+                                 model,
+                                 id_var = "id",
+                                 response_var = "response",
+                                 target_var = "target",
+                                 non_target_var,
+                                 set_size = 1,
+                                 return_fit = FALSE,
+                                 fit_method){
 
   if(set_size == 1){
     non_target_var <- NULL
@@ -525,65 +556,38 @@ fit_slots_gd <- function(response,
     stop("fit_model error: Input not correctly dimensioned", call. = FALSE)
   }
 
-}
-
-
-
-
-
-# fit components model via EM ---------------------------------------------
-#' Fit the components model via expectation maximisation.
-#'
-#' This is the function that is called by the wrapper function
-#' \code{fit_level}. It is not expected that this function be called by the
-#' user.
-#'
-#' @export
-fit_components_em <- function(response,
-                              target,
-                              non_targets = replicate(NROW(response), 0),
-                              return.ll = TRUE) {
-
-  # check the data is in correct shape
-  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
-     (any(non_targets != 0) & NROW(non_targets) != NROW(response) |
-      NROW(non_targets) != NROW(target))) {
-    stop("fit_model error: Input not correctly dimensioned", call. = FALSE)
-  }
 
   # number of trials
   n <- NROW(response)
 
-  # number of non-targets
-  nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
-
   # set starting parameters
-  K <- c(1, 10, 100)
-  N <- c(0.01, 0.1, 0.4)
-  U <- c(0.01, 0.1, 0.4)
+  k <- c(1, 4, 8)
+  kappa <- c(1, 10, 100)
 
-  if(nn == 0){
-    N <- 0
-    }
 
   # initialise log likelihood
   log_lik = -Inf
 
   # iterate over all starting parameters and conduct model fit
-  for(i in seq_along(K)) {
-    for(j in seq_along(N)) {
-      for(k in seq_along(U)) {
-        est_list <- components_model_pdf_em(response = response,
-                                            target = target,
-                                            non_targets = non_targets,
-                                            start_parms = c(K[i],
-                                                            1 - N[j] - U[k],
-                                                            N[j], U[k]))
+  for(i in seq_along(k)){
+    for(j in seq_along(kappa)){
 
-        if (est_list$ll > log_lik & !is.nan(est_list$ll) ) {
-          log_lik <- est_list$ll
-          parameters <- round(est_list$parameters, 3)
-        }
+      start_parms <- c(k[i],
+                       kappa[j])
+
+      est_list <- optim(par = start_parms,
+                        fn = slots_model_pdf_gd,
+                        response = response,
+                        target = target,
+                        method = "Nelder-Mead",
+                        control = list(parscale = c(1, 5)))
+
+
+      if(est_list$value < log_lik & !is.nan(est_list$value)) {
+        log_lik <- est_list$value
+        parameters <- c(est_list$par[1],
+                        est_list$par[2])
+        parameters <- round(parameters, 3)
       }
     }
   }
@@ -593,147 +597,8 @@ fit_components_em <- function(response,
   } else {
     return(parameters)
   }
-}
-
-
-
-
-# components model likelihood function em  --------------------------------
-#' Calculate the likelihood function of the components model fitting via
-#' expectation maximisation.
-#'
-#' It is not expected that this function be called by the user.
-#'
-#' @export
-components_model_pdf_em <- function(response,
-                                    target,
-                                    non_targets,
-                                    start_parms = NULL) {
-
-  if(is.null(non_targets)){
-    non_targets <- replicate(NROW(response), 0)
-  }
-
-  # check the data is in correct shape
-  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
-     (any(non_targets != 0) & NROW(non_targets) != NROW(response) |
-      NROW(non_targets) != NROW(target))) {
-    stop("likelihood error: Input not correctly dimensioned", call. = FALSE)
-  }
-
-  # check parameters are valid
-  if((!(is.null(start_parms))) &
-     (any(start_parms[1] < 0, start_parms[2:4] < 0,
-          start_parms[2:4] > 1, abs(sum(start_parms[2:4]) - 1) > 10 ^ - 6))) {
-    stop("likelihood error: Invalid model parameters", call. = FALSE)
-  }
-
-  # set maximum iterations & LL acceptable
-  max_iter <- 10^4
-  max_dLL <- 10^-4
-
-  # get the number of trials
-  n <- NROW(response)
-
-  # get the number of non-targets present
-  nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
-
-  # set default starting parameter if not provided, else assign starting
-  # parameters to parameter variables
-  if(is.null(start_parms)) {
-    K <- 5
-    p_t <- 0.5
-    p_n <- ifelse(nn > 0, 0.3, 0)
-    p_u <- 1 - p_t - p_n
-  } else {
-    K <- start_parms[1];
-    p_t <- start_parms[2]
-    p_n <- start_parms[3];
-    p_u <- start_parms[4]
-  }
-
-  # calculate response error from target value
-  error <- wrap(response - target)
-
-  # if present, calculate response error from non-targets
-  if(nn > 0){
-    non_target_error <- wrap(repmat(response, nn) - non_targets)
-  } else {
-    non_target_error <- repmat(response, nn)
-  }
-
-  # initialise likelihood and fit routine values
-  LL <- 0
-  dLL <- 1
-  iter <- 0
-
-  # iterate to minimise log likelihood
-  while(TRUE) {
-    iter <- iter + 1
-
-    # get the weight contributions of target and guess responses to performance
-    w_t <- p_t * vonmisespdf(error, 0, K)
-    w_g <- p_u * replicate(n, 1) / (2 * pi)
-
-    # if present, get the weight contribution of non-target responses
-    # to performance
-    if(nn == 0){
-      w_n <- matrix(nrow = NROW(non_target_error),
-                    ncol = NCOL(non_target_error))
-    } else {
-      w_n <- p_n/nn * vonmisespdf(non_target_error, 0, K)
-    }
-
-    # calculate log likelihood of model
-    weights <- rowSums(cbind(w_t, w_g, w_n))
-    dLL <- LL - sum(log(weights))
-    LL <- sum(log(weights))
-
-    if(abs(dLL) < max_dLL | iter > max_iter | is.nan(dLL)) {
-      break
-    }
-
-    # calculate p_t, p_n, and p_u
-    p_t <- sum(w_t / weights) / n
-    p_n <- sum(rowSums(w_n) / weights) / n
-    p_u <- sum(w_g / weights) / n
-
-    # improve parameter values via expectation maximisation
-    rw <- c((w_t / weights), (w_n / repmat(weights, nn)))
-    S <- c(sin(error), sin(non_target_error))
-    C <- c(cos(error), cos(non_target_error))
-    r <- c(sum(sum(S * rw)), sum(sum(C * rw)))
-
-    if(sum(sum(rw, na.rm = TRUE)) == 0) {
-      K <- 0
-    } else {
-      R <- sqrt(sum(r ^ 2)) / sum(sum(rw))
-      K <- A1inv(R)
-    }
-
-    if(n <= 15) {
-      if(K < 2) {
-        K <- max(K - 2 / (n * K), 0)
-      } else {
-        K <- K * (n - 1) ^ 3 / (n ^ 3 + n)
-      }
-    }
-  }
-
-  # return parameter values & log likelihood
-  if(iter > max_iter) {
-    warning('likelihood function:MaxIter','Maximum iteration limit exceeded.', call. = FALSE)
-    return_parms <- c(NaN, NaN, NaN, NaN)
-    LL <- NaN
-  } else {
-    return_parms <- data.frame(K = K, p_t = p_t, p_n = p_n, p_u = p_u)
-  }
-
-  return(list(parameters = return_parms,
-              ll = LL))
 
 }
-
 
 
 
@@ -913,6 +778,216 @@ components_model_pdf_gd <- function(response,
 
   return(-LL)
 }
+
+
+
+
+
+
+
+# fit components model via EM ---------------------------------------------
+#' Fit the components model via expectation maximisation.
+#'
+#' This is the function that is called by the wrapper function
+#' \code{fit_level}. It is not expected that this function be called by the
+#' user.
+#'
+#' @export
+fit_components_em <- function(response,
+                              target,
+                              non_targets = replicate(NROW(response), 0),
+                              return.ll = TRUE) {
+
+  # check the data is in correct shape
+  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
+     (any(non_targets != 0) & NROW(non_targets) != NROW(response) |
+      NROW(non_targets) != NROW(target))) {
+    stop("fit_model error: Input not correctly dimensioned", call. = FALSE)
+  }
+
+  # number of trials
+  n <- NROW(response)
+
+  # number of non-targets
+  nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
+
+  # set starting parameters
+  K <- c(1, 10, 100)
+  N <- c(0.01, 0.1, 0.4)
+  U <- c(0.01, 0.1, 0.4)
+
+  if(nn == 0){
+    N <- 0
+  }
+
+  # initialise log likelihood
+  log_lik = -Inf
+
+  # iterate over all starting parameters and conduct model fit
+  for(i in seq_along(K)) {
+    for(j in seq_along(N)) {
+      for(k in seq_along(U)) {
+        est_list <- components_model_pdf_em(response = response,
+                                            target = target,
+                                            non_targets = non_targets,
+                                            start_parms = c(K[i],
+                                                            1 - N[j] - U[k],
+                                                            N[j], U[k]))
+
+        if (est_list$ll > log_lik & !is.nan(est_list$ll) ) {
+          log_lik <- est_list$ll
+          parameters <- round(est_list$parameters, 3)
+        }
+      }
+    }
+  }
+
+  if(return.ll == TRUE) {
+    return(list(parameters = parameters, LL = log_lik))
+  } else {
+    return(parameters)
+  }
+}
+
+
+
+
+# components model likelihood function em  --------------------------------
+#' Calculate the likelihood function of the components model fitting via
+#' expectation maximisation.
+#'
+#' It is not expected that this function be called by the user.
+#'
+#' @export
+components_model_pdf_em <- function(response,
+                                    target,
+                                    non_targets,
+                                    start_parms = NULL) {
+
+  if(is.null(non_targets)){
+    non_targets <- replicate(NROW(response), 0)
+  }
+
+  # check the data is in correct shape
+  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
+     (any(non_targets != 0) & NROW(non_targets) != NROW(response) |
+      NROW(non_targets) != NROW(target))) {
+    stop("likelihood error: Input not correctly dimensioned", call. = FALSE)
+  }
+
+  # check parameters are valid
+  if((!(is.null(start_parms))) &
+     (any(start_parms[1] < 0, start_parms[2:4] < 0,
+          start_parms[2:4] > 1, abs(sum(start_parms[2:4]) - 1) > 10 ^ - 6))) {
+    stop("likelihood error: Invalid model parameters", call. = FALSE)
+  }
+
+  # set maximum iterations & LL acceptable
+  max_iter <- 10^4
+  max_dLL <- 10^-4
+
+  # get the number of trials
+  n <- NROW(response)
+
+  # get the number of non-targets present
+  nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
+
+  # set default starting parameter if not provided, else assign starting
+  # parameters to parameter variables
+  if(is.null(start_parms)) {
+    K <- 5
+    p_t <- 0.5
+    p_n <- ifelse(nn > 0, 0.3, 0)
+    p_u <- 1 - p_t - p_n
+  } else {
+    K <- start_parms[1];
+    p_t <- start_parms[2]
+    p_n <- start_parms[3];
+    p_u <- start_parms[4]
+  }
+
+  # calculate response error from target value
+  error <- wrap(response - target)
+
+  # if present, calculate response error from non-targets
+  if(nn > 0){
+    non_target_error <- wrap(repmat(response, nn) - non_targets)
+  } else {
+    non_target_error <- repmat(response, nn)
+  }
+
+  # initialise likelihood and fit routine values
+  LL <- 0
+  dLL <- 1
+  iter <- 0
+
+  # iterate to minimise log likelihood
+  while(TRUE) {
+    iter <- iter + 1
+
+    # get the weight contributions of target and guess responses to performance
+    w_t <- p_t * vonmisespdf(error, 0, K)
+    w_g <- p_u * replicate(n, 1) / (2 * pi)
+
+    # if present, get the weight contribution of non-target responses
+    # to performance
+    if(nn == 0){
+      w_n <- matrix(nrow = NROW(non_target_error),
+                    ncol = NCOL(non_target_error))
+    } else {
+      w_n <- p_n/nn * vonmisespdf(non_target_error, 0, K)
+    }
+
+    # calculate log likelihood of model
+    weights <- rowSums(cbind(w_t, w_g, w_n))
+    dLL <- LL - sum(log(weights))
+    LL <- sum(log(weights))
+
+    if(abs(dLL) < max_dLL | iter > max_iter | is.nan(dLL)) {
+      break
+    }
+
+    # calculate p_t, p_n, and p_u
+    p_t <- sum(w_t / weights) / n
+    p_n <- sum(rowSums(w_n) / weights) / n
+    p_u <- sum(w_g / weights) / n
+
+    # improve parameter values via expectation maximisation
+    rw <- c((w_t / weights), (w_n / repmat(weights, nn)))
+    S <- c(sin(error), sin(non_target_error))
+    C <- c(cos(error), cos(non_target_error))
+    r <- c(sum(sum(S * rw)), sum(sum(C * rw)))
+
+    if(sum(sum(rw, na.rm = TRUE)) == 0) {
+      K <- 0
+    } else {
+      R <- sqrt(sum(r ^ 2)) / sum(sum(rw))
+      K <- A1inv(R)
+    }
+
+    if(n <= 15) {
+      if(K < 2) {
+        K <- max(K - 2 / (n * K), 0)
+      } else {
+        K <- K * (n - 1) ^ 3 / (n ^ 3 + n)
+      }
+    }
+  }
+
+  # return parameter values & log likelihood
+  if(iter > max_iter) {
+    warning('likelihood function:MaxIter','Maximum iteration limit exceeded.', call. = FALSE)
+    return_parms <- c(NaN, NaN, NaN, NaN)
+    LL <- NaN
+  } else {
+    return_parms <- data.frame(K = K, p_t = p_t, p_n = p_n, p_u = p_u)
+  }
+
+  return(list(parameters = return_parms,
+              ll = LL))
+
+}
+
 
 
 
