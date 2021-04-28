@@ -4,10 +4,10 @@
 \alias{fit_slots_gd}
 \title{fit the slots model via gradient descent.}
 \usage{
-fit_slots_gd(response, target, return.ll = TRUE)
+fit_slots_gd(slot_data, return.ll = TRUE)
 }
 \description{
 This is the function that is called by the wrapper function
-\code{fit_level}. It is not expected that this function be called by the
-user.
+\code{fit_level_slots}. It is not expected that this function be called by
+the user.
 }

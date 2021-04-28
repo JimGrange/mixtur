@@ -126,71 +126,81 @@ fit_mixtur <- function(data,
   #---- fitting the slots model
   if(model == "slots"){
 
-    # return an error message if set size is not manipulated
+    # return an error message if there is not a set size column
     if(is.null(set_size_var)){
       stop("slots models require a set size variable", call. = FALSE)
     }
 
     # no condition manipulation
+    if(is.null(condition_var)){
+      # perform the model fit
+      fit <- fit_level_slots(data,
+                             model = model,
+                             id_var = id_var,
+                             response_var = response_var,
+                             target_var = target_var,
+                             set_size_var = set_size_var,
+                             return_fit = return_fit,
+                             fit_method = fit_method)
+    }
 
-    # perform the model fit
-    fit <- fit_level_slots(data,
-                           model = model,
-                           id_var = id_var,
-                           response_var = response_var,
-                           target_var = target_var,
-                           set_size_var = set_size_var,
-                           return_fit = return_fit,
-                           fit_method = fit_method)
 
     # there is a condition manipulation
+    if(!is.null(condition_var)){
+
+      # get the list of conditions
+      data$condition <- data[[condition_var]]
+      conditions <- unique(data[, "condition"])
+
+      # loop over each condition
+      for(i in 1:length(conditions)){
+
+
+        # get the current level's data
+        level_data <- data %>%
+          filter(condition == conditions[i])
+
+        # fit the model to this condition
+        level_fit <- fit_level_slots(level_data,
+                                     model = model,
+                                     id_var = id_var,
+                                     response_var = response_var,
+                                     target_var = target_var,
+                                     set_size_var = set_size_var,
+                                     return_fit = return_fit,
+                                     fit_method = fit_method)
+
+        # add the condition level to the parameter data frame
+        level_fit <- level_fit %>%
+          mutate(condition = conditions[i])
+
+        # stitch data together
+        if(i == 1){
+          fit <- level_fit
+        } else {
+          fit <- rbind(fit, level_fit)
+        }
+
+      }
+
+    }
+
+
 
   }
 
 
   #---- fitting the slots + averaging model
+  if(model == "slots_averaging"){
 
-
-
-  #---- fitting the components models
-
-  # no set size or condition manipulation
-  if(is.null(set_size_var) && is.null(condition_var)){
-
-    # get the set size of the level
-    if(!is.null(non_target_var)){
-      level_set_size <- length(non_target_cols) + 1
-    } else {
-      level_set_size <- 1
-    }
-
-    # perform the model fit
-    fit <- fit_level_components(data,
-                                model = model,
-                                id_var = id_var,
-                                response_var = response_var,
-                                target_var = target_var,
-                                non_target_var = non_target_var,
-                                set_size = level_set_size,
-                                return_fit = return_fit,
-                                fit_method = fit_method)
   }
 
 
+  #---- fitting the components models
+  if(model == "2_component" || model == "3_component"){
 
-  # no set size manipulation but there is a condition manipulation
-  if(is.null(set_size_var) && !is.null(condition_var)){
-
-    # get the list of conditions
-    data$condition <- data[[condition_var]]
-    conditions <- unique(data[, "condition"])
-
-    # loop over each condition
-    for(i in 1:length(conditions)){
-
-      # get the current level's data
-      level_data <- data %>%
-        filter(condition == conditions[i])
+    # no set size or condition manipulation
+    if(is.null(set_size_var) && is.null(condition_var)){
 
       # get the set size of the level
       if(!is.null(non_target_var)){
@@ -199,157 +209,196 @@ fit_mixtur <- function(data,
         level_set_size <- 1
       }
 
-      # fit the model to this condition
-      level_fit <- fit_level_components(level_data,
-                                        model = model,
-                                        id_var = id_var,
-                                        response_var = response_var,
-                                        target_var = target_var,
-                                        non_target_var = non_target_var,
-                                        set_size = level_set_size,
-                                        return_fit = return_fit,
-                                        fit_method = fit_method)
-
-      level_fit <- level_fit %>%
-        mutate(condition = conditions[i])
-
-      # stitch data together
-      if(i == 1){
-        fit <- level_fit
-      } else {
-        fit <- rbind(fit, level_fit)
-      }
+      # perform the model fit
+      fit <- fit_level_components(data,
+                                  model = model,
+                                  id_var = id_var,
+                                  response_var = response_var,
+                                  target_var = target_var,
+                                  non_target_var = non_target_var,
+                                  set_size = level_set_size,
+                                  return_fit = return_fit,
+                                  fit_method = fit_method)
     }
 
-    # rename columns
-    fit <- fit %>%
-      rename(!!condition_var:=condition)
-  }
 
 
-  # set size manipulation, but no condition manipulation
-  if(!is.null(set_size_var) && is.null(condition_var)){
+    # no set size manipulation but there is a condition manipulation
+    if(is.null(set_size_var) && !is.null(condition_var)){
 
-    # get the list of set_sizes
-    data$set_size <- data[[set_size_var]]
-    set_sizes <- unique(data[[set_size_var]])
+      # get the list of conditions
+      data$condition <- data[[condition_var]]
+      conditions <- unique(data[, "condition"])
 
-    # loop over each set size
-    for(i in 1:length(set_sizes)){
-
-      # get the current set size's data
-      level_data <- data %>%
-        filter(set_size == set_sizes[i])
-
-      # fit the model to this set size
-      if(set_sizes[i] == 1){
-        level_fit <- fit_level_components(level_data,
-                                          model = model,
-                                          id_var = "id",
-                                          response_var = "response",
-                                          target_var = "target",
-                                          non_target_var = NULL,
-                                          set_size = 1,
-                                          return_fit = return_fit,
-                                          fit_method = fit_method)
-
-        level_fit <- level_fit %>%
-          mutate(set_size = set_sizes[i])
-
-      } else{
-        level_fit <- fit_level_components(level_data,
-                                          model = model,
-                                          id_var = "id",
-                                          response_var = "response",
-                                          target_var = "target",
-                                          non_target_var = non_target_var,
-                                          set_size = set_sizes[i],
-                                          return_fit = return_fit,
-                                          fit_method = fit_method)
-
-        level_fit <- level_fit %>%
-          mutate(set_size = set_sizes[i])
-      }
-
-      # stitch data together
-      if(i == 1){
-        fit <- level_fit
-      } else {
-        fit <- rbind(fit, level_fit)
-      }
-    }
-
-    # rename columns
-    fit <- fit %>%
-      rename(!!set_size_var:=set_size)
-  }
-
-
-  # both set size & condition manipulation
-  if(!is.null(set_size_var) && !is.null(condition_var)){
-
-    # get the list of set sizes
-    data$set_size <- data[[set_size_var]]
-    set_sizes <- unique(data[[set_size_var]])
-
-    # get the list of conditions
-    data$condition <- data[[condition_var]]
-    conditions <- unique(data[, "condition"])
-
-    # loop over each set size & condition
-    for(i in 1:length(set_sizes)){
-      for(j in 1:length(conditions)){
+      # loop over each condition
+      for(i in 1:length(conditions)){
 
         # get the current level's data
         level_data <- data %>%
-          filter(set_size == set_sizes[i]) %>%
-          filter(condition == conditions[j])
+          filter(condition == conditions[i])
 
-        # fit the model to this set size & condition
+        # get the set size of the level
+        if(!is.null(non_target_var)){
+          level_set_size <- length(non_target_cols) + 1
+        } else {
+          level_set_size <- 1
+        }
+
+        # fit the model to this condition
+        level_fit <- fit_level_components(level_data,
+                                          model = model,
+                                          id_var = id_var,
+                                          response_var = response_var,
+                                          target_var = target_var,
+                                          non_target_var = non_target_var,
+                                          set_size = level_set_size,
+                                          return_fit = return_fit,
+                                          fit_method = fit_method)
+
+        level_fit <- level_fit %>%
+          mutate(condition = conditions[i])
+
+        # stitch data together
+        if(i == 1){
+          fit <- level_fit
+        } else {
+          fit <- rbind(fit, level_fit)
+        }
+      }
+
+      # rename columns
+      fit <- fit %>%
+        rename(!!condition_var:=condition)
+    }
+
+
+    # set size manipulation, but no condition manipulation
+    if(!is.null(set_size_var) && is.null(condition_var)){
+
+      # get the list of set_sizes
+      data$set_size <- data[[set_size_var]]
+      set_sizes <- unique(data[[set_size_var]])
+
+      # loop over each set size
+      for(i in 1:length(set_sizes)){
+
+        # get the current set size's data
+        level_data <- data %>%
+          filter(set_size == set_sizes[i])
+
+        # fit the model to this set size
         if(set_sizes[i] == 1){
           level_fit <- fit_level_components(level_data,
                                             model = model,
-                                            id_var = id_var,
-                                            response_var = response_var,
-                                            target_var = target_var,
+                                            id_var = "id",
+                                            response_var = "response",
+                                            target_var = "target",
                                             non_target_var = NULL,
                                             set_size = 1,
                                             return_fit = return_fit,
                                             fit_method = fit_method)
 
           level_fit <- level_fit %>%
-            mutate(set_size = set_sizes[i],
-                   condition = conditions[j])
+            mutate(set_size = set_sizes[i])
+
         } else{
           level_fit <- fit_level_components(level_data,
                                             model = model,
-                                            id_var = id_var,
-                                            response_var = response_var,
-                                            target_var = target_var,
+                                            id_var = "id",
+                                            response_var = "response",
+                                            target_var = "target",
                                             non_target_var = non_target_var,
                                             set_size = set_sizes[i],
                                             return_fit = return_fit,
                                             fit_method = fit_method)
 
           level_fit <- level_fit %>%
-            mutate(set_size = set_sizes[i],
-                   condition = conditions[j])
+            mutate(set_size = set_sizes[i])
         }
 
         # stitch data together
-        if(i == 1 && j == 1){
+        if(i == 1){
           fit <- level_fit
         } else {
           fit <- rbind(fit, level_fit)
         }
       }
+
+      # rename columns
+      fit <- fit %>%
+        rename(!!set_size_var:=set_size)
     }
 
-    # rename columns
-    fit <- fit %>%
-      rename(!!condition_var:=condition) %>%
-      rename(!!set_size_var:=set_size)
+
+    # both set size & condition manipulation
+    if(!is.null(set_size_var) && !is.null(condition_var)){
+
+      # get the list of set sizes
+      data$set_size <- data[[set_size_var]]
+      set_sizes <- unique(data[[set_size_var]])
+
+      # get the list of conditions
+      data$condition <- data[[condition_var]]
+      conditions <- unique(data[, "condition"])
+
+      # loop over each set size & condition
+      for(i in 1:length(set_sizes)){
+        for(j in 1:length(conditions)){
+
+          # get the current level's data
+          level_data <- data %>%
+            filter(set_size == set_sizes[i]) %>%
+            filter(condition == conditions[j])
+
+          # fit the model to this set size & condition
+          if(set_sizes[i] == 1){
+            level_fit <- fit_level_components(level_data,
+                                              model = model,
+                                              id_var = id_var,
+                                              response_var = response_var,
+                                              target_var = target_var,
+                                              non_target_var = NULL,
+                                              set_size = 1,
+                                              return_fit = return_fit,
+                                              fit_method = fit_method)
+
+            level_fit <- level_fit %>%
+              mutate(set_size = set_sizes[i],
+                     condition = conditions[j])
+          } else{
+            level_fit <- fit_level_components(level_data,
+                                              model = model,
+                                              id_var = id_var,
+                                              response_var = response_var,
+                                              target_var = target_var,
+                                              non_target_var = non_target_var,
+                                              set_size = set_sizes[i],
+                                              return_fit = return_fit,
+                                              fit_method = fit_method)
+
+            level_fit <- level_fit %>%
+              mutate(set_size = set_sizes[i],
+                     condition = conditions[j])
+          }
+
+          # stitch data together
+          if(i == 1 && j == 1){
+            fit <- level_fit
+          } else {
+            fit <- rbind(fit, level_fit)
+          }
+        }
+      }
+
+      # rename columns
+      fit <- fit %>%
+        rename(!!condition_var:=condition) %>%
+        rename(!!set_size_var:=set_size)
+    }
+
   }
+
+
 
   # print message to user
   print("Model fit finished.")
@@ -359,7 +408,194 @@ fit_mixtur <- function(data,
 }
 
 
+# fit slots model to a single level ---------------------------------------
+#' Fit slots model to a single level. This fits both the slots model and the
+#' slots plus averaging model.
+#'
+#' This wrapper function is called by the \code{fit_mixtur} function to fit the
+#' models to a single level from the data frame. It is not expected that this
+#' function be called by the user.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr pull
+#' @importFrom dplyr rename
+#'
+#' @export
+fit_level_slots <- function(data,
+                            model,
+                            id_var,
+                            response_var,
+                            target_var,
+                            set_size_var,
+                            return_fit,
+                            fit_method){
 
+  # get the participant ids
+  id <- data %>%
+    pull(id_var)
+
+  # move each participant data to separate items in list
+  l <- split(data, id)
+
+  # initiate data frame to store parameters
+  parms <- data.frame(id = FALSE, k = FALSE, kappa = FALSE,
+                      LL = FALSE, n = FALSE)
+
+  # loop over every participant
+  for(i in seq_along(l)){
+
+    # get the current participant's data
+    df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
+
+    # get the relevant values
+    slot_data <- df %>%
+      select(response_var, target_var, set_size_var) %>%
+      rename(response = response_var,
+             target = target_var,
+             set_size = set_size_var)
+
+
+    #---- pass the data to the fit function
+
+    # fit the slots model
+    if(model == "slots"){
+      fit <- fit_slots_gd(slot_data,
+                          return.ll = return_fit)
+    }
+
+
+    # fit the slots plus averaging model
+    if(model == "slots_averaging"){
+
+    }
+
+    # store the parameters
+    id <- as.character(df[1, id_var])
+    parms[i, 1] <- id
+
+    if(return_fit == TRUE){
+      parms[i, 2:3] <- round(fit$parameters, 3)
+      parms[i, 4] <- round(fit$LL, 3)
+      parms[i, 5] <- nrow(df)
+    } else{
+      parms[i, 2:3] <- round(fit, 3)
+    }
+
+  }
+
+  if(return_fit == TRUE){
+    return(parms)
+  } else {
+    parms <- parms %>% select(-LL, -n)
+    return(parms)
+  }
+
+}
+
+
+# fit slots model ---------------------------------------------------------
+#' fit the slots model via gradient descent.
+#'
+#' This is the function that is called by the wrapper function
+#' \code{fit_level_slots}. It is not expected that this function be called by
+#' the user.
+#' @export
+fit_slots_gd <- function(slot_data,
+                         return.ll = TRUE){
+
+
+
+  # number of trials
+  n <- NROW(slot_data)
+
+  # set starting parameters
+  k <- c(1, 4, 8)
+  kappa <- c(1, 10, 100)
+
+  # set minimum & maximum parameter values
+  min_parms <- c(0, 0)
+  max_parms <- c(30, 30)
+
+
+  # initialise log likelihood
+  log_lik = Inf
+
+  # iterate over all starting parameters and conduct model fit
+  for(i in seq_along(k)){
+    for(j in seq_along(kappa)){
+
+      start_parms <- c(k[i],
+                       kappa[j])
+
+      est_list <- optim(par = start_parms,
+                        fn = slots_model_pdf_gd,
+                        data = slot_data,
+                        min_parms = min_parms,
+                        max_parms = max_parms,
+                        method = "Nelder-Mead",
+                        control = list(parscale = c(1, 5)))
+
+
+      if(est_list$value < log_lik & !is.nan(est_list$value)) {
+        log_lik <- est_list$value
+        parameters <- c(est_list$par[1],
+                        est_list$par[2])
+        parameters <- round(parameters, 3)
+      }
+    }
+  }
+
+  if(return.ll == TRUE) {
+    return(list(parameters = parameters, LL = log_lik))
+  } else {
+    return(parameters)
+  }
+
+}
+
+
+
+# slots model likelihood function -----------------------------------------
+#' Calculate the likelihood function of the slots model fitting via
+#' gradient descent (nelder-mead routine via optim function).
+#'
+#' It is not expected that this function be called by the user.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr case_when
+#' @export
+slots_model_pdf_gd <- function(data,
+                               parms,
+                               min_parms,
+                               max_parms){
+
+  # check bounds on parameter values
+  if ((min(parms - min_parms) < 0) | (min(max_parms - parms) < 0)){
+    return(.Machine$double.xmax)
+  }
+
+  # extract parameters
+  k <- parms[1]
+  kappa <- parms[2]
+
+  # calculate response error
+  data <- data %>%
+    mutate(error = wrap(response - target))
+
+  # calculate negative log likelihood
+  d <- data %>%
+    mutate(p_memory = k / set_size,
+           p_error_memory = vonmisespdf(error, 0, kappa),
+           p_guess = 1 - k / set_size,
+           p_error_guess =  1 / (2 * pi)) %>%
+    mutate(p_error = case_when(k < set_size ~ (p_memory * p_error_memory) +
+                                 ((1 - p_memory) * p_error_guess),
+                               TRUE ~ p_error_memory))
+
+  ll <- -sum(log(d$p_error))
+  return(ll)
+}
 
 
 
@@ -540,65 +776,7 @@ fit_level_components <- function(data,
 
 
 
-# fit slots model ---------------------------------------------------------
-#' fit the slots model via gradient descent.
-#'
-#' This is the function that is called by the wrapper function
-#' \code{fit_level}. It is not expected that this function be called by the
-#' user.
-#' @export
-fit_slots_gd <- function(response,
-                         target,
-                         return.ll = TRUE){
 
-  # check the data is in correct shape
-  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target)) {
-    stop("fit_model error: Input not correctly dimensioned", call. = FALSE)
-  }
-
-
-  # number of trials
-  n <- NROW(response)
-
-  # set starting parameters
-  k <- c(1, 4, 8)
-  kappa <- c(1, 10, 100)
-
-
-  # initialise log likelihood
-  log_lik = -Inf
-
-  # iterate over all starting parameters and conduct model fit
-  for(i in seq_along(k)){
-    for(j in seq_along(kappa)){
-
-      start_parms <- c(k[i],
-                       kappa[j])
-
-      est_list <- optim(par = start_parms,
-                        fn = slots_model_pdf_gd,
-                        response = response,
-                        target = target,
-                        method = "Nelder-Mead",
-                        control = list(parscale = c(1, 5)))
-
-
-      if(est_list$value < log_lik & !is.nan(est_list$value)) {
-        log_lik <- est_list$value
-        parameters <- c(est_list$par[1],
-                        est_list$par[2])
-        parameters <- round(parameters, 3)
-      }
-    }
-  }
-
-  if(return.ll == TRUE) {
-    return(list(parameters = parameters, LL = log_lik))
-  } else {
-    return(parameters)
-  }
-
-}
 
 
 
