@@ -3,9 +3,8 @@
 #' @export
 get_angles <- function(n_trials, set_size = 4, memory_distance = 20){
 
-  if((set_size != 1) & (set_size != 2) & (set_size !=3) &
-     (set_size != 4) & (set_size != 6) & (set_size != 8)){
-    return("ERROR: Only use 1, 2, 4, 6, or 8 stimuli!")
+  if(set_size > 8){
+    return("ERROR: Only use set sizes from 1 to 8")
   }
 
   # data frame to store trial information in
@@ -30,6 +29,14 @@ get_angles <- function(n_trials, set_size = 4, memory_distance = 20){
                          non_target_3 = FALSE)
   }
 
+  if(set_size == 5){
+    angles <- data.frame(target = FALSE,
+                         non_target_1 = FALSE,
+                         non_target_2 = FALSE,
+                         non_target_3 = FALSE,
+                         non_target_4 = FALSE)
+  }
+
   if(set_size == 6){
     angles <- data.frame(target = FALSE,
                          non_target_1 = FALSE,
@@ -37,6 +44,16 @@ get_angles <- function(n_trials, set_size = 4, memory_distance = 20){
                          non_target_3 = FALSE,
                          non_target_4 = FALSE,
                          non_target_5 = FALSE)
+  }
+
+  if(set_size == 7){
+    angles <- data.frame(target = FALSE,
+                         non_target_1 = FALSE,
+                         non_target_2 = FALSE,
+                         non_target_3 = FALSE,
+                         non_target_4 = FALSE,
+                         non_target_5 = FALSE,
+                         non_target_6 = FALSE)
   }
 
   if(set_size == 8){

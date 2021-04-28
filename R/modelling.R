@@ -509,7 +509,7 @@ fit_slots_gd <- function(slot_data,
   n <- NROW(slot_data)
 
   # set starting parameters
-  k <- c(1, 4, 8)
+  k <- c(1, 2, 3, 4)
   kappa <- c(1, 10, 100)
 
   # set minimum & maximum parameter values
@@ -537,10 +537,12 @@ fit_slots_gd <- function(slot_data,
 
 
       if(est_list$value < log_lik & !is.nan(est_list$value)) {
+
         log_lik <- est_list$value
         parameters <- c(est_list$par[1],
                         est_list$par[2])
         parameters <- round(parameters, 3)
+
       }
     }
   }
@@ -581,7 +583,7 @@ slots_model_pdf_gd <- function(data,
 
   # calculate response error
   data <- data %>%
-    mutate(error = wrap(response - target))
+    mutate(error = wrap(target - response))
 
   # calculate negative log likelihood
   d <- data %>%

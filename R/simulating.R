@@ -1,22 +1,83 @@
 # simulate data from the slots models -------------------------------------
+#' simulate the slots model. This is the function to be called by the user
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @export
 simulate_slots <- function(n_trials,
                            model = "slots",
                            capacity,
-                           K,
-                           set_size = 4){
+                           k,
+                           set_sizes = c(1, 2, 4, 8)){
 
   # print message to user
   print("Simulating data. Please wait...")
 
-  # empty data frame ready for simulated responses
-  sim_data <- data.frame(set_size = numeric(n_trials),
-                     error = numeric(n_trials))
+  # data frame ready for simulated responses
+  sim_data <- data.frame(id = 1,
+                         set_size = numeric(n_trials),
+                         target = numeric(n_trials),
+                         response = numeric(n_trials))
+
+  # add the target values
+  sim_data$target <- round(runif(n_trials, -pi, pi), 3)
+
+  # add the set sizes
+  if(length(set_sizes) > 1){
+    sim_data$set_size <- sample(set_sizes, n_trials, replace = TRUE)
+  } else {
+    sim_data$set_size <- rep(set_sizes, times = n_trials)
+  }
+
+  #---- simulate the individual responses
+
+  # generate random numbers to aid the mixture simulation
+  # (it's quicker to generate these all at once rather than trial-by-trial)
+  rand_num <- runif(n_trials, 0, 1)
+
+  for(i in 1:n_trials){
+
+    # if capacity is greater than set size, respond to target value
+    if(capacity >= sim_data$set_size[i]){
+
+      sim_data$response[i] <- round(randomvonmises(1,
+                                                   sim_data$target[i],
+                                                   k), 3)
+
+    }
+
+    # if capacity is lower than set size, respond via a mixture of
+    # target responses and uniform guessing
+    if(capacity < sim_data$set_size[i]){
+
+      # probability of responding to target value
+      # (capacity divided by sample size)
+      p_target <- capacity / sim_data$set_size[i]
 
 
+      if(rand_num[i] <= p_target){
+        sim_data$response[i] <- round(randomvonmises(1, sim_data$target[i], k), 3)
+      } else{
+        sim_data$response[i] <- round(runif(1, -pi, pi), 3)
+      }
 
+      # # target response
+      # target_response <- p_target * randomvonmises(1, sim_data$target[i], k)
+      #
+      # # uniform response
+      # non_target_response <- (1 - p_target) * (1 / (2 * pi))
+      #
+      # # store response
+      # sim_data$response[i] <- round((target_response + non_target_response), 3)
+
+
+    }
+
+  }
 
   # print message to user
   print("Simulating data finished.")
+
+  return(sim_data)
 
 }
 
@@ -68,10 +129,8 @@ simulate_mixtur <- function(n_trials,
                            memory_distance = min_angle_distance)
 
   # transform the angles to circular space
-  # (& add edge correction due to rounding)
   trial_data <- round(wrap(trial_data / 180 * pi), 3)
-  # trial_data[trial_data < -pi] <- -3.141
-  # trial_data[trial_data > pi] <- 3.141
+
 
 
   # get the model response
@@ -82,6 +141,9 @@ simulate_mixtur <- function(n_trials,
                                      p_t = p_t,
                                      p_u = p_u,
                                      p_n = 0)
+
+    model_data <- model_data %>%
+      select(id, target, response)
 
   } else {
     model_data <- get_model_response(trial_data,
