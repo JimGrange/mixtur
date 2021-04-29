@@ -142,6 +142,7 @@ fit_mixtur <- function(data,
 
     # no condition manipulation
     if(is.null(condition_var)){
+
       # perform the model fit
       fit <- fit_level_slots(data,
                              model = model,
@@ -151,6 +152,11 @@ fit_mixtur <- function(data,
                              set_size_var = set_size_var,
                              return_fit = return_fit,
                              fit_method = fit_method)
+
+      # # rename columns
+      # fit <- fit %>%
+      #   rename(!!set_size_var:=set_size)
+
     }
 
 
@@ -191,6 +197,10 @@ fit_mixtur <- function(data,
         }
 
       }
+
+      # rename columns
+      fit <- fit %>%
+        rename(!!condition_var:=condition)
 
     }
 

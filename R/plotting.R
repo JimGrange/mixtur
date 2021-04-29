@@ -1733,9 +1733,6 @@ plot_model_fit <- function(participant_data,
 
   }
 
-
-
-
   return(plot)
 }
 
