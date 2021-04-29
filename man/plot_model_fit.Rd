@@ -7,6 +7,7 @@
 plot_model_fit(
   participant_data,
   model_fit,
+  model,
   unit = "degrees",
   id_var = "id",
   response_var = "response",
@@ -25,6 +26,9 @@ applicable, the set size of each response ('set_size_var'), and the condition
 of each response ('condition_var').}
 
 \item{model_fit}{The model fit object to be plotted against participant data.}
+
+\item{model}{A string indicating the model that was fit to the data. Currently
+the options are "2_component", "3_component", "slots", and "slots_averaging".}
 
 \item{unit}{The unit of measurement in the data frame: "degrees"
 (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in

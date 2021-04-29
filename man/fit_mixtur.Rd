@@ -32,7 +32,7 @@ conditions; if the user wishes for this, then the data frame should have
 columns coding for this information.}
 
 \item{model}{A string indicating the model to be fit to the data. Currently
-the options are "2_component", and "3_component".}
+the options are "2_component", "3_component", "slots", and "slots_averaging".}
 
 \item{unit}{A string indicating the unit of measurement in the data frame:
 "degrees" (measurement is in degrees, from 1 to 360); "degrees_180

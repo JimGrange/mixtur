@@ -17,7 +17,7 @@
 #' columns coding for this information.
 #'
 #' @param model A string indicating the model to be fit to the data. Currently
-#' the options are "2_component", and "3_component".
+#' the options are "2_component", "3_component", "slots", and "slots_averaging".
 #'
 #' @param unit A string indicating the unit of measurement in the data frame:
 #' "degrees" (measurement is in degrees, from 1 to 360); "degrees_180
@@ -515,7 +515,7 @@ fit_slots_gd <- function(model,
   log_lik = Inf
 
   # iterate over all starting parameters and conduct model fit
-  for(i in seq_along(k)){
+  for(i in seq_along(K)){
     for(j in seq_along(kappa)){
 
       start_parms <- c(K[i],
