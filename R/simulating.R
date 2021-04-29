@@ -34,37 +34,97 @@ simulate_slots <- function(n_trials,
   # (it's quicker to generate these all at once rather than trial-by-trial)
   rand_num <- runif(n_trials, 0, 1)
 
-  for(i in 1:n_trials){
+  #--- slots model
+  if(model == "slots"){
+    for(i in 1:n_trials){
 
-    # if capacity is greater than set size, respond to target value
-    if(K >= sim_data$set_size[i]){
-
-      sim_data$response[i] <- round(randomvonmises(1,
-                                                   sim_data$target[i],
-                                                   kappa), 3)
-
-    }
-
-    # if capacity is lower than set size, respond via a mixture of
-    # target responses and uniform guessing
-    if(K < sim_data$set_size[i]){
-
-      # probability of responding to target value
-      # (capacity divided by sample size)
-      p_target <- K / sim_data$set_size[i]
-
-
-      if(rand_num[i] <= p_target){
+      # if capacity is greater than set size, respond to target value
+      if(K >= sim_data$set_size[i]){
         sim_data$response[i] <- round(randomvonmises(1,
                                                      sim_data$target[i],
                                                      kappa), 3)
-      } else{
-        sim_data$response[i] <- round(runif(1, -pi, pi), 3)
+      }
+
+      # if capacity is lower than set size, respond via a mixture of
+      # target responses and uniform guessing
+      if(K < sim_data$set_size[i]){
+
+        # probability of responding to target value
+        # (capacity divided by sample size)
+        p_target <- K / sim_data$set_size[i]
+
+        if(rand_num[i] <= p_target){
+          sim_data$response[i] <- round(randomvonmises(1,
+                                                       sim_data$target[i],
+                                                       kappa), 3)
+        } else{
+          sim_data$response[i] <- round(runif(1, -pi, pi), 3)
+        }
       }
 
     }
 
   }
+
+  #--- slots plus averaging model
+  if(model == "slots_averaging"){
+
+    for(i in 1:n_trials){
+
+      # if capacity is greater than the set size...
+      if(K >= sim_data$set_size[i]){
+
+        # calculate the probability of encoding target with multiple
+        # quanta/slots
+        p_high <- K %% sim_data$set_size[i] / sim_data$set_size[i]
+
+        # if the target is encoded with multiple quanta/slots...
+        if(rand_num[i] <= p_high){
+
+          # work out how many quanta/slots it will receive...
+          kappa_high <- kappa * (floor(K / sim_data$set_size[i]) + 1)
+
+          # simulate the encoding with that many quanta/slots...
+          sim_data$response[i] <- randomvonmises(1,
+                                                 sim_data$target[i],
+                                                 kappa_high)
+
+        } else{
+
+          # if this is not the case, encode with kappa_low
+          kappa_low <- kappa * floor(K / sim_data$set_size[i])
+          sim_data$response[i] <- randomvonmises(1,
+                                                 sim_data$target[i],
+                                                 kappa_low)
+
+        }
+
+      } else{
+
+        # if capacity is smaller than set size...
+
+        # work out the probability of guessing
+        p_guess <- 1 - (K / sim_data$set_size[i])
+
+        # if we are guessing....
+        if(rand_num[i] <= p_guess){
+
+          # select a random radian from -pi to pi
+          sim_data$response[i] <- runif(1, -pi, pi)
+        } else {
+
+          # otherwise, encode with kappa of one quanta
+          sim_data$response[i] <- randomvonmises(1, sim_data$target[i], kappa)
+        }
+
+      }
+
+      sim_data$response[i] <- round(sim_data$response[i], 3)
+
+    }
+  }
+
+
 
   # print message to user
   print("Simulating data finished.")
