@@ -4,13 +4,7 @@
 \alias{simulate_slots}
 \title{simulate the slots model. This is the function to be called by the user}
 \usage{
-simulate_slots(
-  n_trials,
-  model = "slots",
-  capacity,
-  k,
-  set_sizes = c(1, 2, 4, 8)
-)
+simulate_slots(n_trials, model = "slots", K, kappa, set_sizes = c(1, 2, 4, 8))
 }
 \description{
 simulate the slots model. This is the function to be called by the user

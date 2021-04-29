@@ -5,8 +5,8 @@
 #' @export
 simulate_slots <- function(n_trials,
                            model = "slots",
-                           capacity,
-                           k,
+                           K,
+                           kappa,
                            set_sizes = c(1, 2, 4, 8)){
 
   # print message to user
@@ -37,38 +37,30 @@ simulate_slots <- function(n_trials,
   for(i in 1:n_trials){
 
     # if capacity is greater than set size, respond to target value
-    if(capacity >= sim_data$set_size[i]){
+    if(K >= sim_data$set_size[i]){
 
       sim_data$response[i] <- round(randomvonmises(1,
                                                    sim_data$target[i],
-                                                   k), 3)
+                                                   kappa), 3)
 
     }
 
     # if capacity is lower than set size, respond via a mixture of
     # target responses and uniform guessing
-    if(capacity < sim_data$set_size[i]){
+    if(K < sim_data$set_size[i]){
 
       # probability of responding to target value
       # (capacity divided by sample size)
-      p_target <- capacity / sim_data$set_size[i]
+      p_target <- K / sim_data$set_size[i]
 
 
       if(rand_num[i] <= p_target){
-        sim_data$response[i] <- round(randomvonmises(1, sim_data$target[i], k), 3)
+        sim_data$response[i] <- round(randomvonmises(1,
+                                                     sim_data$target[i],
+                                                     kappa), 3)
       } else{
         sim_data$response[i] <- round(runif(1, -pi, pi), 3)
       }
-
-      # # target response
-      # target_response <- p_target * randomvonmises(1, sim_data$target[i], k)
-      #
-      # # uniform response
-      # non_target_response <- (1 - p_target) * (1 / (2 * pi))
-      #
-      # # store response
-      # sim_data$response[i] <- round((target_response + non_target_response), 3)
-
 
     }
 
@@ -85,7 +77,6 @@ simulate_slots <- function(n_trials,
 
 
 # simulate data from the mixture models -----------------------------------
-
 
 #' simulate the mixture model. This is the function to be called by the user
 #' @importFrom dplyr %>%

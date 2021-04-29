@@ -86,6 +86,15 @@ fit_mixtur <- function(data,
   # set the fit method (removed as an option to the user)
   fit_method <- "GD"
 
+  # error message if unsupported model called
+  if(model != "2_component" &&
+     model != "3_component" &&
+     model != "slots" &&
+     model != "slots_averaging"){
+    stop("Unidentified model called. Check the 'model' argument in
+         fit_mixtur", call. = FALSE)
+  }
+
   # get the non-target column names, if applicable
   if(!is.null(non_target_var)){
     non_target_cols <- data %>%
@@ -123,12 +132,12 @@ fit_mixtur <- function(data,
   print("Model fit running. Please wait...")
 
 
-  #---- fitting the slots model
-  if(model == "slots"){
+  #---- fitting the slots models
+  if(model == "slots" || model == "slots_averaging"){
 
     # return an error message if there is not a set size column
     if(is.null(set_size_var)){
-      stop("slots models require a set size variable", call. = FALSE)
+      stop("Slots model requires a set size variable.", call. = FALSE)
     }
 
     # no condition manipulation
@@ -188,13 +197,6 @@ fit_mixtur <- function(data,
 
 
   }
-
-
-  #---- fitting the slots + averaging model
-  if(model == "slots_averaging"){
-
-  }
-
 
   #---- fitting the components models
   if(model == "2_component" || model == "3_component"){
@@ -438,7 +440,7 @@ fit_level_slots <- function(data,
   l <- split(data, id)
 
   # initiate data frame to store parameters
-  parms <- data.frame(id = FALSE, k = FALSE, kappa = FALSE,
+  parms <- data.frame(id = FALSE, K = FALSE, kappa = FALSE,
                       LL = FALSE, n = FALSE)
 
   # loop over every participant
@@ -455,19 +457,10 @@ fit_level_slots <- function(data,
              set_size = set_size_var)
 
 
-    #---- pass the data to the fit function
-
-    # fit the slots model
-    if(model == "slots"){
-      fit <- fit_slots_gd(slot_data,
-                          return.ll = return_fit)
-    }
-
-
-    # fit the slots plus averaging model
-    if(model == "slots_averaging"){
-
-    }
+    #pass the data to the fit function
+    fit <- fit_slots_gd(model = model,
+                        slot_data,
+                        return.ll = return_fit)
 
     # store the parameters
     id <- as.character(df[1, id_var])
@@ -500,7 +493,8 @@ fit_level_slots <- function(data,
 #' \code{fit_level_slots}. It is not expected that this function be called by
 #' the user.
 #' @export
-fit_slots_gd <- function(slot_data,
+fit_slots_gd <- function(model,
+                         slot_data,
                          return.ll = TRUE){
 
 
@@ -509,7 +503,7 @@ fit_slots_gd <- function(slot_data,
   n <- NROW(slot_data)
 
   # set starting parameters
-  k <- c(1, 2, 3, 4)
+  K <- c(1, 2, 3, 4)
   kappa <- c(1, 10, 100)
 
   # set minimum & maximum parameter values
@@ -524,16 +518,29 @@ fit_slots_gd <- function(slot_data,
   for(i in seq_along(k)){
     for(j in seq_along(kappa)){
 
-      start_parms <- c(k[i],
+      start_parms <- c(K[i],
                        kappa[j])
 
-      est_list <- optim(par = start_parms,
-                        fn = slots_model_pdf_gd,
-                        data = slot_data,
-                        min_parms = min_parms,
-                        max_parms = max_parms,
-                        method = "Nelder-Mead",
-                        control = list(parscale = c(1, 5)))
+      if(model == "slots"){
+        est_list <- optim(par = start_parms,
+                          fn = slots_model_pdf_gd,
+                          data = slot_data,
+                          min_parms = min_parms,
+                          max_parms = max_parms,
+                          method = "Nelder-Mead",
+                          control = list(parscale = c(1, 5)))
+      }
+
+      if(model == "slots_averaging"){
+        est_list <- optim(par = start_parms,
+                          fn = slots_model_averaging_pdf_gd,
+                          data = slot_data,
+                          min_parms = min_parms,
+                          max_parms = max_parms,
+                          method = "Nelder-Mead",
+                          control = list(parscale = c(1, 5)))
+      }
+
 
 
       if(est_list$value < log_lik & !is.nan(est_list$value)) {
@@ -555,6 +562,55 @@ fit_slots_gd <- function(slot_data,
 
 }
 
+
+# slots plus averaging likelihood function --------------------------------
+#' Calculate the likelihood function of the slots plus averaging model fitting
+#' via gradient descent (nelder-mead routine via optim function).
+#'
+#' It is not expected that this function be called by the user.
+#'
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr case_when
+#' @export
+slots_model_averaging_pdf_gd <- function(data,
+                                         parms,
+                                         min_parms,
+                                         max_parms){
+
+  # check bounds on parameter values
+  if ((min(parms - min_parms) < 0) | (min(max_parms - parms) < 0)){
+    return(.Machine$double.xmax)
+  }
+
+  # extract parameters
+  K <- parms[1]
+  kappa <- parms[2]
+
+  # calculate response error
+  data <- data %>%
+    mutate(error = wrap(target - response))
+
+  # calculate negative log-likelihood
+  data <- data %>%
+    mutate(p_high = K %% set_size / set_size,
+           kappa_high = kappa * (floor(K / set_size) + 1),
+           kappa_low = kappa * floor(K / set_size),
+           p_error_high = vonmisespdf(error, 0, kappa_high),
+           p_error_low = vonmisespdf(error, 0, kappa_low),
+           p_guess = 1 - K / set_size,
+           p_error_guess = (p_guess * 1 / (2 * pi)) +
+             ((1 - p_guess) * vonmisespdf(error, 0, kappa))) %>%
+    mutate(p_error = case_when(set_size <= K ~ (p_high * p_error_high) +
+                                 ((1 - p_high) * p_error_low),
+                               TRUE ~ p_error_guess))
+
+
+  ll <- -sum(log(data$p_error))
+
+  return(ll)
+
+}
 
 
 # slots model likelihood function -----------------------------------------
@@ -578,7 +634,7 @@ slots_model_pdf_gd <- function(data,
   }
 
   # extract parameters
-  k <- parms[1]
+  K <- parms[1]
   kappa <- parms[2]
 
   # calculate response error
@@ -587,11 +643,11 @@ slots_model_pdf_gd <- function(data,
 
   # calculate negative log likelihood
   d <- data %>%
-    mutate(p_memory = k / set_size,
+    mutate(p_memory = K / set_size,
            p_error_memory = vonmisespdf(error, 0, kappa),
-           p_guess = 1 - k / set_size,
+           p_guess = 1 - K / set_size,
            p_error_guess =  1 / (2 * pi)) %>%
-    mutate(p_error = case_when(k < set_size ~ (p_memory * p_error_memory) +
+    mutate(p_error = case_when(K < set_size ~ (p_memory * p_error_memory) +
                                  ((1 - p_memory) * p_error_guess),
                                TRUE ~ p_error_memory))
 

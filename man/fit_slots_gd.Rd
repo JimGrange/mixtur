@@ -4,7 +4,7 @@
 \alias{fit_slots_gd}
 \title{fit the slots model via gradient descent.}
 \usage{
-fit_slots_gd(slot_data, return.ll = TRUE)
+fit_slots_gd(model, slot_data, return.ll = TRUE)
 }
 \description{
 This is the function that is called by the wrapper function
