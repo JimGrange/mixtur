@@ -1261,6 +1261,11 @@ plot_model_fit <- function(participant_data,
   #---- slots model plot
   if(model == "slots"){
 
+    # no set size manipulation
+    if(is.null(set_size_var)){
+      stop("Slots models require a set size variable", call. = FALSE)
+    }
+
     # get the error data for the participant data
     human_error <- plot_error(participant_data,
                               id_var = id_var,
@@ -1281,34 +1286,42 @@ plot_model_fit <- function(participant_data,
       mean_K <- mean(model_fit$K)
       mean_kappa <- mean(model_fit$kappa)
 
-      # get the model predictions
-      set_sizes <- sort(unique(participant_data[[set_size_var]]))
+      #--- get the model predictions
 
-      for(i in 1:length(set_sizes)){
+      # multiple set-sizes
+      if(!is.null(set_size_var)){
+        set_sizes <- sort(unique(participant_data[[set_size_var]]))
 
-        level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                              y = 0)
+        for(i in 1:length(set_sizes)){
 
-        if(mean_K < set_sizes[i]){
+          level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
+                                y = 0)
+
+          if(mean_K < set_sizes[i]){
+            level_preds <- level_preds %>%
+              mutate(y = ((mean_K / set_sizes[i]) *
+                            vonmisespdf(x, 0, mean_kappa)) +
+                       ((1 - (mean_K / set_sizes[i])) *
+                          dunif(x, min = -pi, max = pi)))
+
+          } else {
+            level_preds <- level_preds %>%
+              mutate(y = vonmisespdf(x, 0, mean_kappa))
+          }
+
           level_preds <- level_preds %>%
-            mutate(y = ((mean_K / set_sizes[i]) * vonmisespdf(x, 0, mean_kappa)) +
-                     ((1 - (mean_K / set_sizes[i])) * dunif(x, min = -pi, max = pi)))
+            mutate(set_size = set_sizes[i])
 
-        } else {
-          level_preds <- level_preds %>%
-            mutate(y = vonmisespdf(x, 0, mean_kappa))
+          if(i == 1){
+            model_preds <- level_preds
+          } else {
+            model_preds <- rbind(model_preds, level_preds)
+          }
+
         }
-
-        level_preds <- level_preds %>%
-          mutate(set_size = set_sizes[i])
-
-        if(i == 1){
-          model_preds <- level_preds
-        } else {
-          model_preds <- rbind(model_preds, level_preds)
-        }
-
       }
+
+
 
       #--- plot the human data & model predictions
       plot <- ggplot(human_error, aes(x = x,
@@ -1337,6 +1350,7 @@ plot_model_fit <- function(participant_data,
 
       human_error$condition <- human_error[[condition_var]]
       model_fit$condition <- model_fit[[condition_var]]
+
 
       # get the mean K and kappa parameters from the model fit
       mean_K <- model_fit %>%
@@ -1416,12 +1430,186 @@ plot_model_fit <- function(participant_data,
 
   }
 
+  #---- slots plus averaging model plot
+  if(model == "slots_averaging"){
+
+
+    # get the error data for the participant data
+    human_error <- plot_error(participant_data,
+                              id_var = id_var,
+                              unit = unit,
+                              response_var = response_var,
+                              target_var = target_var,
+                              set_size_var = set_size_var,
+                              condition_var = condition_var,
+                              n_bins = n_bins,
+                              return_data = TRUE)
+
+    human_error <- human_error$data
+
+    #---- no condition manipulation
+    if(is.null(condition_var)){
+
+      # get the mean K and kappa parameters from the model fit
+      mean_K <- mean(model_fit$K)
+      mean_kappa <- mean(model_fit$kappa)
+
+      # get the model predictions
+      set_sizes <- sort(unique(participant_data[[set_size_var]]))
+
+      for(i in 1:length(set_sizes)){
+
+        level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
+                              y = 0)
+
+        # work out density contributions
+        p_high <- mean_K %% set_sizes[i] / set_sizes[i]
+        kappa_high <- mean_kappa * (floor(mean_K / set_sizes[i]) + 1)
+        kappa_low <- mean_kappa * floor(mean_K / set_sizes[i])
+        p_guess <- 1 - mean_K / set_sizes[i]
+
+        p_error_high <- vonmisespdf(level_preds$x, 0, kappa_high)
+        p_error_low <- vonmisespdf(level_preds$x, 0, kappa_low)
+        p_error_guess <- (p_guess * 1 / (2 * pi)) +
+          ((1 - p_guess) * vonmisespdf(level_preds$x, 0, mean_kappa))
+
+        if(set_sizes[i] <= mean_K){
+          level_preds$y <- (p_high * p_error_high) +
+            ((1 - p_high) * p_error_low)
+        } else {
+          level_preds$y <- p_error_guess
+        }
+
+        level_preds <- level_preds %>%
+          mutate(set_size = set_sizes[i])
+
+        if(i == 1){
+          model_preds <- level_preds
+        } else {
+          model_preds <- rbind(model_preds, level_preds)
+        }
+
+      }
+
+      #--- plot the human data & model predictions
+      plot <- ggplot(human_error, aes(x = x,
+                                      y = mean_error)) +
+        geom_line(data = model_preds,
+                  aes(x = x, y = y),
+                  alpha = 0.8,
+                  col = "#D95F02",
+                  lwd = 1.3) +
+        geom_errorbar(aes(ymax = mean_error + se_error,
+                          ymin = mean_error - se_error),
+                      width = 0.00) +
+        geom_point() +
+        facet_wrap(vars(set_size), ncol = n_col) +
+        theme_bw() +
+        scale_colour_brewer(palette = "Dark2") +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+
+    }
+
+
+    #--- condition manipulation
+    if(!is.null(condition_var)){
+
+      human_error$condition <- human_error[[condition_var]]
+      model_fit$condition <- model_fit[[condition_var]]
+
+      # get the mean K and kappa parameters from the model fit
+      mean_K <- model_fit %>%
+        group_by(condition) %>%
+        summarise(mean_K = mean(K))
+
+      mean_kappa <- model_fit %>%
+        group_by(condition) %>%
+        summarise(mean_kappa = mean(kappa))
+
+      # get the model predictions
+      conditions <- unique(human_error$condition)
+      set_sizes <- sort(unique(participant_data[[set_size_var]]))
+
+      for(i in 1:length(conditions)){
+        for(j in 1:length(set_sizes)){
+
+          level_K <- mean_K %>%
+            filter(condition == conditions[i]) %>%
+            pull()
+
+          level_kappa <- mean_kappa %>%
+            filter(condition == conditions[i]) %>%
+            pull()
+
+          level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
+                                y = 0)
+
+          # work out density contributions
+          p_high <- level_K %% set_sizes[j] / set_sizes[j]
+          kappa_high <- level_kappa * (floor(level_K / set_sizes[j]) + 1)
+          kappa_low <- level_kappa * floor(level_K / set_sizes[j])
+          p_guess <- 1 - level_K / set_sizes[j]
+
+          p_error_high <- vonmisespdf(level_preds$x, 0, kappa_high)
+          p_error_low <- vonmisespdf(level_preds$x, 0, kappa_low)
+          p_error_guess <- (p_guess * 1 / (2 * pi)) +
+            ((1 - p_guess) * vonmisespdf(level_preds$x, 0, level_kappa))
+
+          if(set_sizes[j] <= level_K){
+            level_preds$y <- (p_high * p_error_high) +
+              ((1 - p_high) * p_error_low)
+          } else {
+            level_preds$y <- p_error_guess
+          }
+
+          level_preds <- level_preds %>%
+            mutate(condition = conditions[i],
+                   set_size = set_sizes[j])
+
+          if(i == 1 && j == 1){
+            model_preds <- level_preds
+          } else {
+            model_preds <- rbind(model_preds, level_preds)
+          }
+
+        }
+      }
+
+      #--- plot the human data & model predictions
+      human_error$condition <- as.factor(human_error[[condition_var]])
+      model_preds$condition <- as.factor(model_preds$condition)
+
+      plot <- ggplot(human_error, aes(x = x,
+                                      y = mean_error,
+                                      group = condition)) +
+        geom_line(data = model_preds,
+                  aes(x = x,
+                      y = y,
+                      colour = condition),
+                  alpha = 0.8,
+                  lwd = 1) +
+        geom_errorbar(aes(ymax = mean_error + se_error,
+                          ymin = mean_error - se_error,
+                          colour = condition),
+                      width = 0.00) +
+        geom_point(aes(colour = condition)) +
+        facet_wrap(vars(set_size), ncol = n_col) +
+        theme_bw() +
+        scale_colour_brewer(palette = "Dark2") +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+
+    }
+
+
+  }
 
   #---- components model plot
   if(model == "2_component" || model == "3_component"){
 
     # check how many components in the model fit object
-    if(is.null(participant_data$p_n)){
+    if(is.null(model_fit$p_n)){
       components <- 2
     } else {
       components <- 3
@@ -1446,7 +1634,7 @@ plot_model_fit <- function(participant_data,
       # get the mean K, p_t, and p_u parameters from the model fit
       # 2-component and 3-component model make same predictions for
       # target error
-      mean_k <- mean(model_fit$K)
+      mean_k <- mean(model_fit$kappa)
       mean_p_t <- mean(model_fit$p_t)
 
       if(components == 3){
@@ -1490,7 +1678,7 @@ plot_model_fit <- function(participant_data,
       # target error
       mean_k <- model_fit %>%
         group_by(condition) %>%
-        summarise(mean_k = mean(K))
+        summarise(mean_k = mean(kappa))
       mean_p_t <- model_fit %>%
         group_by(condition) %>%
         summarise(mean_p_t = mean(p_t))
@@ -1568,7 +1756,7 @@ plot_model_fit <- function(participant_data,
       # target error
       mean_k <- model_fit %>%
         group_by(set_size) %>%
-        summarise(mean_k = mean(K))
+        summarise(mean_k = mean(kappa))
       mean_p_t <- model_fit %>%
         group_by(set_size) %>%
         summarise(mean_p_t = mean(p_t))
@@ -1650,7 +1838,7 @@ plot_model_fit <- function(participant_data,
       # target error
       mean_k <- model_fit %>%
         group_by(set_size, condition) %>%
-        summarise(mean_k = mean(K))
+        summarise(mean_k = mean(kappa))
       mean_p_t <- model_fit %>%
         group_by(set_size, condition) %>%
         summarise(mean_p_t = mean(p_t))

@@ -2,10 +2,12 @@
 % Please edit documentation in R/simulating.R
 \name{simulate_mixtur}
 \alias{simulate_mixtur}
-\title{Generate simulated data from mixture models}
+\title{Generate simulated data from mixture models
+TODO: Documentation!!}
 \usage{
 simulate_mixtur(n_trials, model, kappa, p_u, p_n, K, set_size)
 }
 \description{
 Generate simulated data from mixture models
+TODO: Documentation!!
 }

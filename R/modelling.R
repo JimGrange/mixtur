@@ -701,9 +701,8 @@ fit_level_components <- function(data,
   l <- split(data, id)
 
   # initiate data frame to store parameters
-  # TODO: Change these to accommodate slots models
   if(model == "2_component" || model == "3_component"){
-    parms <- data.frame(id = FALSE, K = FALSE, p_t = FALSE, p_n = FALSE,
+    parms <- data.frame(id = FALSE, kappa = FALSE, p_t = FALSE, p_n = FALSE,
                         p_u = FALSE, LL = FALSE, n = FALSE)
   }
 
@@ -862,7 +861,7 @@ fit_components_gd <- function(response,
   nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
 
   # set starting parameters
-  K <- c(1, 10, 100)
+  kappa <- c(1, 10, 100)
   N <- c(0.01, 0.1, 0.4)
   U <- c(0.01, 0.1, 0.4)
 
@@ -874,11 +873,11 @@ fit_components_gd <- function(response,
   log_lik = Inf
 
   # iterate over all starting parameters and conduct model fit
-  for(i in seq_along(K)) {
+  for(i in seq_along(kappa)) {
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
 
-        start_parms <- c(K[i],
+        start_parms <- c(kappa[i],
                         N[j],
                         U[k])
 
@@ -965,12 +964,12 @@ components_model_pdf_gd <- function(response,
   # set default starting parameter if not provided, else assign starting
   # parameters to parameter variables
   if(is.null(parms)) {
-    K <- 5
+    kappa <- 5
     p_t <- 0.5
     p_n <- ifelse(nn > 0, 0.3, 0)
     p_u <- 1 - p_t - p_n
   } else {
-    K <- parms[1];
+    kappa <- parms[1];
     p_t <- parms[2]
     p_n <- parms[3];
     p_u <- parms[4]
@@ -991,7 +990,7 @@ components_model_pdf_gd <- function(response,
   dLL <- 1
 
   # get the weight contributions of target and guess responses to performance
-  w_t <- p_t * vonmisespdf(error, 0, K)
+  w_t <- p_t * vonmisespdf(error, 0, kappa)
   w_g <- p_u * replicate(n, 1) / (2 * pi)
 
   # if present, get the weight contribution of non-target responses
@@ -1000,7 +999,7 @@ components_model_pdf_gd <- function(response,
     w_n <- matrix(nrow = NROW(non_target_error),
                   ncol = NCOL(non_target_error))
   } else {
-    w_n <- p_n/nn * vonmisespdf(non_target_error, 0, K)
+    w_n <- p_n/nn * vonmisespdf(non_target_error, 0, kappa)
   }
 
   # calculate log likelihood of model
@@ -1043,7 +1042,7 @@ fit_components_em <- function(response,
   nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
 
   # set starting parameters
-  K <- c(1, 10, 100)
+  kappa <- c(1, 10, 100)
   N <- c(0.01, 0.1, 0.4)
   U <- c(0.01, 0.1, 0.4)
 
@@ -1055,13 +1054,13 @@ fit_components_em <- function(response,
   log_lik = -Inf
 
   # iterate over all starting parameters and conduct model fit
-  for(i in seq_along(K)) {
+  for(i in seq_along(kappa)) {
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
         est_list <- components_model_pdf_em(response = response,
                                             target = target,
                                             non_targets = non_targets,
-                                            start_parms = c(K[i],
+                                            start_parms = c(kappa[i],
                                                             1 - N[j] - U[k],
                                                             N[j], U[k]))
 
@@ -1126,12 +1125,12 @@ components_model_pdf_em <- function(response,
   # set default starting parameter if not provided, else assign starting
   # parameters to parameter variables
   if(is.null(start_parms)) {
-    K <- 5
+    kappa <- 5
     p_t <- 0.5
     p_n <- ifelse(nn > 0, 0.3, 0)
     p_u <- 1 - p_t - p_n
   } else {
-    K <- start_parms[1];
+    kappa <- start_parms[1];
     p_t <- start_parms[2]
     p_n <- start_parms[3];
     p_u <- start_parms[4]
@@ -1157,7 +1156,7 @@ components_model_pdf_em <- function(response,
     iter <- iter + 1
 
     # get the weight contributions of target and guess responses to performance
-    w_t <- p_t * vonmisespdf(error, 0, K)
+    w_t <- p_t * vonmisespdf(error, 0, kappa)
     w_g <- p_u * replicate(n, 1) / (2 * pi)
 
     # if present, get the weight contribution of non-target responses
@@ -1166,7 +1165,7 @@ components_model_pdf_em <- function(response,
       w_n <- matrix(nrow = NROW(non_target_error),
                     ncol = NCOL(non_target_error))
     } else {
-      w_n <- p_n/nn * vonmisespdf(non_target_error, 0, K)
+      w_n <- p_n/nn * vonmisespdf(non_target_error, 0, kappa)
     }
 
     # calculate log likelihood of model
@@ -1190,17 +1189,17 @@ components_model_pdf_em <- function(response,
     r <- c(sum(sum(S * rw)), sum(sum(C * rw)))
 
     if(sum(sum(rw, na.rm = TRUE)) == 0) {
-      K <- 0
+      kappa <- 0
     } else {
       R <- sqrt(sum(r ^ 2)) / sum(sum(rw))
-      K <- A1inv(R)
+      kappa <- A1inv(R)
     }
 
     if(n <= 15) {
-      if(K < 2) {
-        K <- max(K - 2 / (n * K), 0)
+      if(kappa < 2) {
+        kappa <- max(kappa - 2 / (n * kappa), 0)
       } else {
-        K <- K * (n - 1) ^ 3 / (n ^ 3 + n)
+        kappa <- kappa * (n - 1) ^ 3 / (n ^ 3 + n)
       }
     }
   }
@@ -1212,7 +1211,7 @@ components_model_pdf_em <- function(response,
     return_parms <- c(NaN, NaN, NaN, NaN)
     LL <- NaN
   } else {
-    return_parms <- data.frame(K = K, p_t = p_t, p_n = p_n, p_u = p_u)
+    return_parms <- data.frame(kappa = kappa, p_t = p_t, p_n = p_n, p_u = p_u)
   }
 
   return(list(parameters = return_parms,
