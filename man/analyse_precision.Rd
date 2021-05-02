@@ -52,8 +52,6 @@ analysis. Note that the function does not actually conduct the analysis.
 \details{
 Precision is defined as the reciprocal of the circular standard deviation of
 the response error corrected for guessing.
-
-This note is a TODO for later.
 }
 \examples{
 # load an example data frame

@@ -10,7 +10,6 @@ map_to_circular <- function(data, unit){
     circ <- ((2 * pi * data) / 360)
   }
 
-
   if(unit == "degrees_180"){
     circ <- (2 * pi * data) / 180
   }
@@ -59,7 +58,6 @@ radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 wrap <- function(data, bound = pi) {
   result <- ((data + bound) %% (bound * 2)) - bound
   return(result)
@@ -72,7 +70,6 @@ wrap <- function(data, bound = pi) {
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 cmean <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -90,7 +87,6 @@ cmean <- function(x) {
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 cstd <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -169,7 +165,6 @@ vonmisespdf <- function(x, mu, k) {
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com). See also
 #' http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
-#' @export
 logspace <- function(a, b, n){
   exp(log(10) * seq(a, b, length.out = n))
 }
@@ -181,7 +176,6 @@ logspace <- function(a, b, n){
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 trapz <- function(x, y) {
   idx <- 2:length(x)
   return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
@@ -195,7 +189,6 @@ trapz <- function(x, y) {
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com) which itself was adapted from
 #' http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
-#' @export
 repmat = function(x, nn){
 
   mx <- NROW(x)
@@ -215,7 +208,6 @@ repmat = function(x, nn){
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 A1inv <- function(r) {
 
   if(0 <= r & r < 0.53) {
@@ -280,7 +272,6 @@ sd2k <- function(s){
 
 
 # calculate akiake's information criterion --------------------------------
-#' @export
 aic <- function(ll, parms){
   value <- (-2 * ll) + (2 * parms)
   value <- round(value, 3)
@@ -289,7 +280,6 @@ aic <- function(ll, parms){
 
 
 # akiake's information criterion, corrected for n -------------------------
-#' @export
 aic_c <- function(ll, parms, n){
   value <- (-2 * ll) + ((2 * parms) * (n / (n - parms - 1)))
   value <- round(value, 3)
@@ -298,7 +288,6 @@ aic_c <- function(ll, parms, n){
 
 
 # calculate bayesian information criterion --------------------------------
-#' @export
 bic <- function(ll, parms, n){
   value <- (-2 * ll) + (parms * log(n))
   value <- round(value, 3)

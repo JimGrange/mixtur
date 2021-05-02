@@ -192,7 +192,6 @@ return(final_data)
 #' Precision is defined as the reciprocal of the circular standard deviation of
 #' the response error corrected for guessing.
 #'
-#' This note is a TODO for later.
 #'
 #' @param data A data frame with columns containing: participant identifier
 #' (declared via variable 'id_var'); the participants' response per trial ('response_var'); the
@@ -231,7 +230,6 @@ return(final_data)
 #'                                     condition_var = "duration",
 #'                                     set_size_var = "set_size")
 #'
-#' @export
 analyse_precision <- function(data,
                               unit = "degrees",
                               id_var = "id",
@@ -356,7 +354,6 @@ analyse_precision <- function(data,
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
-#' @export
 get_precision_single <- function(error, target = 0) {
 
   if(any(abs(error) > pi) | any(abs(target) > pi)) {
@@ -385,22 +382,18 @@ get_precision_single <- function(error, target = 0) {
 
 # get mean absolute error -------------------------------------------------
 #' Obtain mean absolute error
-#' @export
 get_mean_absolute_error <- function(error){
 
  error <- abs(error)
-
  mae <- cmean(error)
 
  return(mae)
-
 }
 
 
 
 # get resultant vector length ---------------------------------------------
 #' Obtain resultant vector length
-#' @export
 get_resultant_vector_length <- function(error){
 
   # get x and y of response vectors

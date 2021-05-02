@@ -133,7 +133,6 @@ plot_summary_statistic <- function(data,
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
-#' @export
 plot_resultant_vector_length <- function(data,
                                          unit = "degrees",
                                          id_var = "id",
@@ -400,7 +399,6 @@ plot_resultant_vector_length <- function(data,
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
-#' @export
 plot_mean_absolute_error <- function(data,
                                      unit = "degrees",
                                      id_var = "id",
@@ -623,8 +621,6 @@ plot_mean_absolute_error <- function(data,
   } else {
     return(plot)
   }
-
-
 }
 
 
@@ -963,7 +959,6 @@ plot_error <- function(data,
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
-#' @export
 plot_precision <- function(data,
                            unit = "degrees",
                            id_var = "id",
@@ -1201,7 +1196,6 @@ plot_precision <- function(data,
   } else {
     return(plot)
   }
-
 }
 
 
@@ -1235,6 +1229,7 @@ plot_precision <- function(data,
 #'@param n_col An integer controlling the number of columns in the resulting
 #'plot.
 #'
+#' @importFrom tidyr tibble
 #' @export
 plot_model_fit <- function(participant_data,
                            model_fit,
@@ -1321,8 +1316,6 @@ plot_model_fit <- function(participant_data,
         }
       }
 
-
-
       #--- plot the human data & model predictions
       plot <- ggplot(human_error, aes(x = x,
                                       y = mean_error)) +
@@ -1341,8 +1334,6 @@ plot_model_fit <- function(participant_data,
         labs(x = "Error (Radians)",
              y = "Probability Density")
     }
-
-
 
 
     #--- condition manipulation
@@ -1953,12 +1944,12 @@ plot_model_fit <- function(participant_data,
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
 #' @export
-plot_parameters <- function(model_fit,
-                            id_var = "id",
-                            set_size_var = NULL,
-                            condition_var = NULL,
-                            n_col = 2,
-                            return_data = FALSE){
+plot_model_parameters <- function(model_fit,
+                                  id_var = "id",
+                                  set_size_var = NULL,
+                                  condition_var = NULL,
+                                  n_col = 2,
+                                  return_data = FALSE){
 
   if(is.null(id_var)){
     return("Error: Only use this function for multiple participants.")

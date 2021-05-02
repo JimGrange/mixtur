@@ -60,7 +60,6 @@ simulate_mixtur <- function(n_trials,
 #' @importFrom dplyr select
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr sample_n
-#' @export
 simulate_slots <- function(n_trials,
                            model = "slots",
                            K,
@@ -246,7 +245,6 @@ simulate_slots <- function(n_trials,
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr contains
 #' @importFrom dplyr sample_n
-#' @export
 simulate_components <- function(n_trials,
                                 kappa,
                                 p_u,
@@ -398,7 +396,6 @@ simulate_components <- function(n_trials,
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr slice
-#' @export
 get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
 
   # add relevant column to the trial data frame
@@ -490,7 +487,6 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr near
-#' @export
 fixed_angle_simulate_mixtur <- function(n_trials,
                                         kappa,
                                         p_t,

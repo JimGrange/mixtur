@@ -1,6 +1,5 @@
 # get a matrix of target & non-target angles ------------------------------
 # Get a matrix of target and non-target angles
-#' @export
 get_angles <- function(n_trials, set_size = 4, memory_distance = 20){
 
   if(set_size > 8){

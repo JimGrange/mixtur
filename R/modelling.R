@@ -431,8 +431,6 @@ fit_mixtur <- function(data,
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
 #' @importFrom dplyr rename
-#'
-#' @export
 fit_level_slots <- function(data,
                             model,
                             id_var,
@@ -502,7 +500,6 @@ fit_level_slots <- function(data,
 #' This is the function that is called by the wrapper function
 #' \code{fit_level_slots}. It is not expected that this function be called by
 #' the user.
-#' @export
 fit_slots_gd <- function(model,
                          slot_data,
                          return.ll = TRUE){
@@ -582,7 +579,6 @@ fit_slots_gd <- function(model,
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
-#' @export
 slots_model_averaging_pdf_gd <- function(data,
                                          parms,
                                          min_parms,
@@ -632,7 +628,6 @@ slots_model_averaging_pdf_gd <- function(data,
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
-#' @export
 slots_model_pdf_gd <- function(data,
                                parms,
                                min_parms,
@@ -677,8 +672,6 @@ slots_model_pdf_gd <- function(data,
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
-#'
-#' @export
 fit_level_components <- function(data,
                                  model,
                                  id_var = "id",
@@ -840,8 +833,6 @@ fit_level_components <- function(data,
 #' This is the function that is called by the wrapper function
 #' \code{fit_level}. It is not expected that this function be called by the
 #' user.
-#'
-#' @export
 fit_components_gd <- function(response,
                               target,
                               non_targets = replicate(NROW(response), 0),
@@ -916,8 +907,6 @@ fit_components_gd <- function(response,
 #' Calculate the likelihood function of the mixture model.
 #'
 #' It is not expected that this function be called by the user.
-#'
-#' @export
 components_model_pdf_gd <- function(response,
                                     target,
                                     non_targets,
@@ -1010,19 +999,12 @@ components_model_pdf_gd <- function(response,
 }
 
 
-
-
-
-
-
 # fit components model via EM ---------------------------------------------
 #' Fit the components model via expectation maximisation.
 #'
 #' This is the function that is called by the wrapper function
 #' \code{fit_level}. It is not expected that this function be called by the
 #' user.
-#'
-#' @export
 fit_components_em <- function(response,
                               target,
                               non_targets = replicate(NROW(response), 0),
@@ -1087,8 +1069,6 @@ fit_components_em <- function(response,
 #' expectation maximisation.
 #'
 #' It is not expected that this function be called by the user.
-#'
-#' @export
 components_model_pdf_em <- function(response,
                                     target,
                                     non_targets,
