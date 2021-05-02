@@ -52,12 +52,12 @@ radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 
 
 # wrapping radians onto circular space ------------------------------------------
-#' Map values onto circular space
-#' This function maps the input radians onto the circular space -pi to pi.
-#' @param data The data (in radians) to be mapped
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# Map values onto circular space
+# This function maps the input radians onto the circular space -pi to pi.
+# @param data The data (in radians) to be mapped
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 wrap <- function(data, bound = pi) {
   result <- ((data + bound) %% (bound * 2)) - bound
   return(result)
@@ -66,10 +66,10 @@ wrap <- function(data, bound = pi) {
 
 
 # calculate circular mean -------------------------------------------------
-#' Calculate the circular equivalent of the mean
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# Calculate the circular equivalent of the mean
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 cmean <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -83,10 +83,10 @@ cmean <- function(x) {
 
 
 # calculate the circular SD -----------------------------------------------
-#' Calculate the circular equivalent of standard deviation
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# Calculate the circular equivalent of standard deviation
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 cstd <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -110,6 +110,7 @@ cstd <- function(x) {
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
+#' @importFrom stats runif
 #' @export
 randomvonmises <- function(n, mu, k) {
 
@@ -159,12 +160,12 @@ vonmisespdf <- function(x, mu, k) {
 
 
 # obtain logarithmically spaced vectors -----------------------------------
-#' Obtain logarithmically spaced vectors
-#' logspace function for logarithmically spaced vectors
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com). See also
-#' http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
+# Obtain logarithmically spaced vectors
+# logspace function for logarithmically spaced vectors
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com). See also
+# http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
 logspace <- function(a, b, n){
   exp(log(10) * seq(a, b, length.out = n))
 }
@@ -172,10 +173,10 @@ logspace <- function(a, b, n){
 
 
 # trapz function ----------------------------------------------------------
-#' trapz function from the caTools package by Jarek Tuszynski
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# trapz function from the caTools package by Jarek Tuszynski
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 trapz <- function(x, y) {
   idx <- 2:length(x)
   return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
@@ -184,11 +185,11 @@ trapz <- function(x, y) {
 
 
 # Matlab's repmat function ------------------------------------------------
-#' Recreate Matlab's repmat function
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com) which itself was adapted from
-#' http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
+# Recreate Matlab's repmat function
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com) which itself was adapted from
+# http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
 repmat = function(x, nn){
 
   mx <- NROW(x)
@@ -204,10 +205,10 @@ repmat = function(x, nn){
 
 
 # inverse of A1 function --------------------------------------------------
-#' Inverse of A1 function.
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# Inverse of A1 function.
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 A1inv <- function(r) {
 
   if(0 <= r & r < 0.53) {

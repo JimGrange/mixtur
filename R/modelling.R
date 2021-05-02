@@ -53,7 +53,7 @@
 #' fit (which is important for calculating some model comparison statistics).
 #'
 #' @importFrom dplyr %>%
-#' @importFrom dplyr select
+#' @importFrom dplyr select filter
 #'
 #' @examples
 #'
@@ -421,13 +421,13 @@ fit_mixtur <- function(data,
 
 
 # fit slots model to a single level ---------------------------------------
-#' Fit slots model to a single level. This fits both the slots model and the
-#' slots plus averaging model.
-#'
-#' This wrapper function is called by the \code{fit_mixtur} function to fit the
-#' models to a single level from the data frame. It is not expected that this
-#' function be called by the user.
-#'
+# Fit slots model to a single level. This fits both the slots model and the
+# slots plus averaging model.
+#
+# This wrapper function is called by the \code{fit_mixtur} function to fit the
+# models to a single level from the data frame. It is not expected that this
+# function be called by the user.
+#
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
 #' @importFrom dplyr rename
@@ -495,11 +495,12 @@ fit_level_slots <- function(data,
 
 
 # fit slots model ---------------------------------------------------------
-#' fit the slots model via gradient descent.
-#'
-#' This is the function that is called by the wrapper function
-#' \code{fit_level_slots}. It is not expected that this function be called by
-#' the user.
+# fit the slots model via gradient descent.
+#
+# This is the function that is called by the wrapper function
+# \code{fit_level_slots}. It is not expected that this function be called by
+# the user.
+#' @importFrom stats optim
 fit_slots_gd <- function(model,
                          slot_data,
                          return.ll = TRUE){
@@ -571,11 +572,10 @@ fit_slots_gd <- function(model,
 
 
 # slots plus averaging likelihood function --------------------------------
-#' Calculate the likelihood function of the slots plus averaging model fitting
-#' via gradient descent (nelder-mead routine via optim function).
-#'
-#' It is not expected that this function be called by the user.
-#'
+# Calculate the likelihood function of the slots plus averaging model fitting
+# via gradient descent (nelder-mead routine via optim function).
+#
+# It is not expected that this function be called by the user.
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -620,14 +620,15 @@ slots_model_averaging_pdf_gd <- function(data,
 
 
 # slots model likelihood function -----------------------------------------
-#' Calculate the likelihood function of the slots model fitting via
-#' gradient descent (nelder-mead routine via optim function).
-#'
-#' It is not expected that this function be called by the user.
-#'
+# Calculate the likelihood function of the slots model fitting via
+# gradient descent (nelder-mead routine via optim function).
+#
+# It is not expected that this function be called by the user.
+#
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
+#' @importFrom rlang .data
 slots_model_pdf_gd <- function(data,
                                parms,
                                min_parms,
@@ -644,15 +645,15 @@ slots_model_pdf_gd <- function(data,
 
   # calculate response error
   data <- data %>%
-    mutate(error = wrap(target - response))
+    mutate(error = wrap(.data$target - .data$response))
 
   # calculate negative log likelihood
   d <- data %>%
-    mutate(p_memory = K / set_size,
-           p_error_memory = vonmisespdf(error, 0, kappa),
-           p_guess = 1 - K / set_size,
+    mutate(p_memory = K / .data$set_size,
+           p_error_memory = vonmisespdf(.data$error, 0, kappa),
+           p_guess = 1 - K / .data$set_size,
            p_error_guess =  1 / (2 * pi)) %>%
-    mutate(p_error = case_when(K < set_size ~ (p_memory * p_error_memory) +
+    mutate(p_error = case_when(K < .data$set_size ~ (p_memory * p_error_memory) +
                                  ((1 - p_memory) * p_error_guess),
                                TRUE ~ p_error_memory))
 
@@ -664,12 +665,12 @@ slots_model_pdf_gd <- function(data,
 
 
 # fit components model to a single level ----------------------------------
-#' Fit components model to a single level.
-#'
-#' This wrapper function is called by the \code{fit_mixtur} function to fit the
-#' models to a single level from the data frame. It is not expected that this
-#' function be called by the user.
-#'
+# Fit components model to a single level.
+#
+# This wrapper function is called by the \code{fit_mixtur} function to fit the
+# models to a single level from the data frame. It is not expected that this
+# function be called by the user.
+#
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
 fit_level_components <- function(data,
@@ -827,12 +828,13 @@ fit_level_components <- function(data,
 
 
 # fit components model gd -----------------------------------------------
-#' Fit the components model using gradient descent (nelder-mead routine via
-#' optim function).
-#'
-#' This is the function that is called by the wrapper function
-#' \code{fit_level}. It is not expected that this function be called by the
-#' user.
+# Fit the components model using gradient descent (nelder-mead routine via
+# optim function).
+
+# This is the function that is called by the wrapper function
+# \code{fit_level}. It is not expected that this function be called by the
+# user.
+#' @importFrom stats optim
 fit_components_gd <- function(response,
                               target,
                               non_targets = replicate(NROW(response), 0),
@@ -904,9 +906,9 @@ fit_components_gd <- function(response,
 
 
 # components model likelihood function gd  ---------------------------------
-#' Calculate the likelihood function of the mixture model.
-#'
-#' It is not expected that this function be called by the user.
+# Calculate the likelihood function of the mixture model.
+#
+# It is not expected that this function be called by the user.
 components_model_pdf_gd <- function(response,
                                     target,
                                     non_targets,
@@ -1000,11 +1002,11 @@ components_model_pdf_gd <- function(response,
 
 
 # fit components model via EM ---------------------------------------------
-#' Fit the components model via expectation maximisation.
-#'
-#' This is the function that is called by the wrapper function
-#' \code{fit_level}. It is not expected that this function be called by the
-#' user.
+# Fit the components model via expectation maximisation.
+#
+# This is the function that is called by the wrapper function
+# \code{fit_level}. It is not expected that this function be called by the
+# user.
 fit_components_em <- function(response,
                               target,
                               non_targets = replicate(NROW(response), 0),
@@ -1065,10 +1067,10 @@ fit_components_em <- function(response,
 
 
 # components model likelihood function em  --------------------------------
-#' Calculate the likelihood function of the components model fitting via
-#' expectation maximisation.
-#'
-#' It is not expected that this function be called by the user.
+# Calculate the likelihood function of the components model fitting via
+# expectation maximisation.
+#
+# It is not expected that this function be called by the user.
 components_model_pdf_em <- function(response,
                                     target,
                                     non_targets,
@@ -1272,7 +1274,7 @@ components_model_pdf_em <- function(response,
 #'
 #'@importFrom dplyr %>%
 #'@importFrom dplyr rename
-#'@importFrom dplyr mutate
+#'@importFrom dplyr mutate filter
 #'
 #' @export
 model_comparison <- function(data,

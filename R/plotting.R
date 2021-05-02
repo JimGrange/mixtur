@@ -97,42 +97,39 @@ plot_summary_statistic <- function(data,
 
 # plot resultant vector length --------------------------------------------
 
-#' Plot resultant vector length of behavioural data
-#'
-#' Function to plot the resultant vector length of response error in
-#' behavioural data. Requires a data frame that (at least) has target value
-#' data and participant response data.
-#'
-#'@param data A data frame with columns containing: participant identifier
-#'('id_var'); the participants' response per trial ('response_var'); the
-#'target value ('target_var'); and, if applicable, the set size of each
-#'response ('set_size_var'), and the condition of each response
-#'('condition_var').
-#'@param unit The unit of measurement in the data frame: "degrees"
-#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+# Plot resultant vector length of behavioural data
+#
+# Function to plot the resultant vector length of response error in
+# behavioural data. Requires a data frame that (at least) has target value
+# data and participant response data.
+#
+#@param data A data frame with columns containing: participant identifier
+#('id_var'); the participants' response per trial ('response_var'); the
+#target value ('target_var'); and, if applicable, the set size of each
+#response ('set_size_var'), and the condition of each response
+#('condition_var').
+#@param unit The unit of measurement in the data frame: "degrees"
+#(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 #'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
 #'from pi to 2 * pi, but could also be already in -pi to pi).
-#'@param id_var The column name coding for participant id. If the data is from
+#@param id_var The column name coding for participant id. If the data is from
 #'a single participant (i.e., there is no id column) set to "NULL".
-#'@param response_var The column name coding for the participants' responses.
-#'@param target_var The column name coding for the target value.
-#'@param set_size_var The column name (if applicable) coding for the set
+#@param response_var The column name coding for the participants' responses.
+#@param target_var The column name coding for the target value.
+#@param set_size_var The column name (if applicable) coding for the set
 #'size of each response.
-#'@param condition_var The column name (if applicable) coding for the
+#@param condition_var The column name (if applicable) coding for the
 #'condition of each response.
-#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
-#'
-#'@examples
-#'data(example_data)
-#'plot_resultant_vector_length(example_data, condition_var = "condition")
-#'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
+#' position_dodge
 plot_resultant_vector_length <- function(data,
                                          unit = "degrees",
                                          id_var = "id",
@@ -363,42 +360,44 @@ plot_resultant_vector_length <- function(data,
 
 # plot mean absolute error ------------------------------------------------
 
-#' Plot mean absolute error of behavioural data
-#'
-#'Function to plot the mean absolute error of response error in behavioural
-#'data. Requires a data frame that (at least) has target value data and
-#'participant response data.
-#'
-#'@param data A data frame with columns containing: participant identifier
-#'('id_var'); the participants' response per trial ('response_var'); the
-#'target value ('target_var'); and, if applicable, the set size of each
-#'response ('set_size_var'), and the condition of each response
-#'('condition_var').
-#'@param unit The unit of measurement in the data frame: "degrees"
-#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
-#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-#'from pi to 2 * pi, but could also be already in -pi to pi).
-#'@param id_var The column name coding for participant id. If the data is from
-#'a single participant (i.e., there is no id column) set to "NULL".
-#'@param response_var The column name coding for the participants' responses.
-#'@param target_var The column name coding for the target value.
-#'@param set_size_var The column name (if applicable) coding for the set
-#'size of each response.
-#'@param condition_var The column name (if applicable) coding for the
-#'condition of each response.
-#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
-#'the plot should be returned.
-#'
-#'@examples
-#'data(example_data)
-#'plot_mean_absolute_error(example_data, condition_var = "condition")
-#'
+# Plot mean absolute error of behavioural data
+#
+#Function to plot the mean absolute error of response error in behavioural
+#data. Requires a data frame that (at least) has target value data and
+#participant response data.
+#
+#@param data A data frame with columns containing: participant identifier
+#('id_var'); the participants' response per trial ('response_var'); the
+#target value ('target_var'); and, if applicable, the set size of each
+#response ('set_size_var'), and the condition of each response
+#('condition_var').
+#@param unit The unit of measurement in the data frame: "degrees"
+#(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#from pi to 2 * pi, but could also be already in -pi to pi).
+#@param id_var The column name coding for participant id. If the data is from
+#a single participant (i.e., there is no id column) set to "NULL".
+#@param response_var The column name coding for the participants' responses.
+#@param target_var The column name coding for the target value.
+#@param set_size_var The column name (if applicable) coding for the set
+#size of each response.
+#@param condition_var The column name (if applicable) coding for the
+#condition of each response.
+#@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#the plot should be returned.
+#
+#@examples
+#data(example_data)
+#plot_mean_absolute_error(example_data, condition_var = "condition")
+#
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
+#' position_dodge
 plot_mean_absolute_error <- function(data,
                                      unit = "degrees",
                                      id_var = "id",
@@ -667,6 +666,8 @@ plot_mean_absolute_error <- function(data,
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point scale_x_continuous scale_y_continuous
+#' theme_bw facet_wrap position_dodge
 #' @export
 plot_error <- function(data,
                        unit = "degrees",
@@ -924,41 +925,38 @@ plot_error <- function(data,
 
 
 # plot behavioural precision ----------------------------------------------
-#' Plot precision of behavioural data
-#'
-#'Function to plot the response precision of behavioural data. Requires a data
-#'frame that (at least) has target value data and participant response data.
-#'
-#'@param data A data frame with columns containing: participant identifier
-#'('id_var'); the participants' response per trial ('response_var'); the
-#'target value ('target_var'); and, if applicable, the set size of each
-#'response ('set_size_var'), and the condition of each response
-#'('condition_var').
-#'@param unit The unit of measurement in the data frame: "degrees"
-#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
-#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-#'from pi to 2 * pi, but could also be already in -pi to pi).
-#'@param id_var The column name coding for participant id. If the data is from
-#'a single participant (i.e., there is no id column) set to "NULL".
-#'@param response_var The column name coding for the participants' responses
-#'@param target_var The column name coding for the target value
-#'@param set_size_var The column name (if applicable) coding for the set
-#'size of each response
-#'@param condition_var The column name (if applicable) coding for the
-#'condition of each response
-#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
-#'the plot should be returned.
-#'
-#'@examples
-#'library(tidyverse)
-#'data(example_data)
-#'plot_error(example_data, condition_var = "condition")
-#'
+# Plot precision of behavioural data
+#
+#Function to plot the response precision of behavioural data. Requires a data
+#frame that (at least) has target value data and participant response data.
+#
+#@param data A data frame with columns containing: participant identifier
+#('id_var'); the participants' response per trial ('response_var'); the
+#target value ('target_var'); and, if applicable, the set size of each
+#response ('set_size_var'), and the condition of each response
+#('condition_var').
+#@param unit The unit of measurement in the data frame: "degrees"
+#(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#from pi to 2 * pi, but could also be already in -pi to pi).
+#@param id_var The column name coding for participant id. If the data is from
+#a single participant (i.e., there is no id column) set to "NULL".
+#@param response_var The column name coding for the participants' responses
+#@param target_var The column name coding for the target value
+#@param set_size_var The column name (if applicable) coding for the set
+#size of each response
+#@param condition_var The column name (if applicable) coding for the
+#condition of each response
+#@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#the plot should be returned.
+#
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
+#'
 plot_precision <- function(data,
                            unit = "degrees",
                            id_var = "id",
@@ -1230,6 +1228,10 @@ plot_precision <- function(data,
 #'plot.
 #'
 #' @importFrom tidyr tibble
+#' @importFrom dplyr %>% mutate
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point scale_x_continuous scale_y_continuous
+#' theme_bw facet_wrap vars geom_line scale_colour_brewer
+#' @importFrom stats dunif
 #' @export
 plot_model_fit <- function(participant_data,
                            model_fit,
@@ -1942,7 +1944,10 @@ plot_model_fit <- function(participant_data,
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
+#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr all_of
 #' @importFrom graphics hist
+#' @importFrom ggplot2 position_dodge
 #' @export
 plot_model_parameters <- function(model_fit,
                                   id_var = "id",

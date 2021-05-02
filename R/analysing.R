@@ -184,52 +184,40 @@ return(final_data)
 
 
 # analyse behavioural precision ----------------------------------------------
-#' Obtain measures of precision
-#'
-#' Returns participant-level data for precision estimates ready for inferential
-#' analysis. Note that the function does not actually conduct the analysis.
-#'
-#' Precision is defined as the reciprocal of the circular standard deviation of
-#' the response error corrected for guessing.
-#'
-#'
-#' @param data A data frame with columns containing: participant identifier
-#' (declared via variable 'id_var'); the participants' response per trial ('response_var'); the
-#' target value ('target_var'); and, if applicable, the set size of each
-#' response ('set_size_var'), and the condition of each response
-#' ('condition_var').
-#' @param unit The unit of measurement in the data frame: "degrees"
-#' (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
-#' degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-#' from pi to 2 * pi, but could also be already in -pi to pi).
-#' @param id_var The quoted column name coding for participant id. If the data is from
-#' a single participant (i.e., there is no id column) set to NULL.
-#' @param response_var The quoted column name coding for the participants' responses
-#' @param target_var The quoted column name coding for the target value.
-#' @param set_size_var The quoted column name (if applicable) coding for the set
-#' size of each response.
-#' @param condition_var The quoted column name (if applicable) coding for the
-#' condition of each response.
-#' @return \code{precision} The reciprocal of the circular standard deviation of
-#' the response error, with correction for guessing.
-#' @return \code{bias} The bias of the precision estimate.
+# Obtain measures of precision
+#
+# Returns participant-level data for precision estimates ready for inferential
+# analysis. Note that the function does not actually conduct the analysis.
+#
+# Precision is defined as the reciprocal of the circular standard deviation of
+# the response error corrected for guessing.
+#
+#
+# @param data A data frame with columns containing: participant identifier
+# (declared via variable 'id_var'); the participants' response per trial ('response_var'); the
+# target value ('target_var'); and, if applicable, the set size of each
+# response ('set_size_var'), and the condition of each response
+# ('condition_var').
+# @param unit The unit of measurement in the data frame: "degrees"
+# (measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+# degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+# from pi to 2 * pi, but could also be already in -pi to pi).
+# @param id_var The quoted column name coding for participant id. If the data is from
+# a single participant (i.e., there is no id column) set to NULL.
+# @param response_var The quoted column name coding for the participants' responses
+# @param target_var The quoted column name coding for the target value.
+# @param set_size_var The quoted column name (if applicable) coding for the set
+# size of each response.
+# @param condition_var The quoted column name (if applicable) coding for the
+# condition of each response.
+# @return \code{precision} The reciprocal of the circular standard deviation of
+# the response error, with correction for guessing.
+# @return \code{bias} The bias of the precision estimate.
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
-#'
-#'
-#' @examples
-#' # load an example data frame
-#' data(bays2009_full)
-#'
-#' # calculate the precision per condition per set size
-#' precision_data <- analyse_precision(data = bays2009_full,
-#'                                     unit = "radians",
-#'                                     condition_var = "duration",
-#'                                     set_size_var = "set_size")
-#'
 analyse_precision <- function(data,
                               unit = "degrees",
                               id_var = "id",
@@ -349,11 +337,11 @@ analyse_precision <- function(data,
 
 
 # get precision of single condition ---------------------------------------
-#' Obtain the precision of a single condition
+# Obtain the precision of a single condition
 #' @importFrom tidyr tibble
-#' @source
-#' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+# @source
+# The code has been adapted from Matlab code written by Paul Bays
+# (https://paulbays.com).
 get_precision_single <- function(error, target = 0) {
 
   if(any(abs(error) > pi) | any(abs(target) > pi)) {
@@ -381,7 +369,7 @@ get_precision_single <- function(error, target = 0) {
 
 
 # get mean absolute error -------------------------------------------------
-#' Obtain mean absolute error
+# Obtain mean absolute error
 get_mean_absolute_error <- function(error){
 
  error <- abs(error)
@@ -393,7 +381,7 @@ get_mean_absolute_error <- function(error){
 
 
 # get resultant vector length ---------------------------------------------
-#' Obtain resultant vector length
+# Obtain resultant vector length
 get_resultant_vector_length <- function(error){
 
   # get x and y of response vectors

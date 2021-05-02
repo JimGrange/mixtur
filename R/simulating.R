@@ -55,7 +55,7 @@ simulate_mixtur <- function(n_trials,
 }
 
 # simulate data from the slots models -------------------------------------
-#' simulate the slots model. This function not to be called by the user
+# simulate the slots model. This function not to be called by the user
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr bind_rows
@@ -238,7 +238,7 @@ simulate_slots <- function(n_trials,
 
 
 # simulate data from the component models -----------------------------------
-#' simulate the mixture model. This function not to be called by the user
+# simulate the mixture model. This function not to be called by the user
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr near
@@ -289,7 +289,7 @@ simulate_components <- function(n_trials,
   }
 
   # check number of parameters match number of set sizes to simulate
-  if(length(K) != length(set_size) && length(p_u) != length(set_size)){
+  if(length(kappa) != length(set_size) && length(p_u) != length(set_size)){
     stop("The number of model parameters do not match number of set sizes
          requested",
          call. = FALSE)
@@ -391,11 +391,12 @@ simulate_components <- function(n_trials,
 
 
 # get the mixtur model's responses ----------------------------------------
-#' get the mixtur model's responses
+# get the mixtur model's responses
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr slice
+#' @importFrom dplyr relocate
 get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
 
   # add relevant column to the trial data frame
@@ -482,8 +483,8 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
 
 # simulate data from the mixture models with fixed angle separation---------------
 
-#' simulate the mixture model with fixed angle separation.
-#' This is NOT the function to be called by the user
+# simulate the mixture model with fixed angle separation.
+# This is NOT the function to be called by the user
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr near
