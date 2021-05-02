@@ -255,16 +255,7 @@ simulate_components <- function(n_trials,
   # print message to user
   print("Simulating data. Please wait...")
 
-  # # if 3-component model called but no non-target values provided,
-  # # produce an error
-  # if(!is.null(p_n)){
-  #   if(min(set_size) <= 1){
-  #     stop("error: the 3-component model requires a set size larger than 1",
-  #          call. = FALSE)
-  #   }
-  # }
-
-  # check that p_u (or p_u + p_n) do not exceed 1
+    # check that p_u (or p_u + p_n) do not exceed 1
   if(is.null(p_n)){
     if(max(p_u) > 1){
       stop("All p_u parameters must be less than 1",
@@ -364,17 +355,17 @@ simulate_components <- function(n_trials,
 
   if(max(set_size) > 1){
     sim_data <- sim_data %>%
-      select(id,
+      select(.data$id,
              set_size,
-             target,
-             response,
+             .data$target,
+             .data$response,
              contains("non_target"))
   } else{
     sim_data <- sim_data %>%
-      select(id,
+      select(.data$id,
              set_size,
-             target,
-             response)
+             .data$target,
+             .data$response)
   }
 
   # randomise the trial order
@@ -397,17 +388,18 @@ simulate_components <- function(n_trials,
 #' @importFrom dplyr select
 #' @importFrom dplyr slice
 #' @importFrom dplyr relocate
+#' @importFrom rlang .data
 get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
 
   # add relevant column to the trial data frame
   if(set_size == 1){
     model_data <- trial_data %>%
       mutate(response = 0) %>%
-      select(target, response)
+      select(.data$target, .data$response)
   } else{
     model_data <- trial_data %>%
       mutate(response = 0) %>%
-      select(target, response, contains("non_target"))
+      select(.data$target, .data$response, contains("non_target"))
   }
 
   # generate random numbers to aid the mixture simulation
@@ -424,7 +416,7 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
       distractors <- trial_data[i, ] %>%
         select(contains("non_target")) %>%
         slice() %>%
-        unlist(., use.names = FALSE)
+        unlist(.data, use.names = FALSE)
     }
 
     #--- generate the model response based on probability
@@ -473,7 +465,7 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
   # add id column
   model_data <- model_data %>%
     mutate(id = 1) %>%
-    relocate(id)
+    relocate(.data$id)
 
   return(model_data)
 
@@ -525,20 +517,20 @@ fixed_angle_simulate_mixtur <- function(n_trials,
 
   # get the model response
   if(is.null(p_n)){
-    model_data <- get_model_response(trial_data,
-                                     set_size = set_size,
-                                     kappa = kappa,
-                                     p_t = p_t,
-                                     p_u = p_u,
-                                     p_n = 0)
+    model_data <- get_component_response(trial_data,
+                                         set_size = set_size,
+                                         kappa = kappa,
+                                         p_t = p_t,
+                                         p_u = p_u,
+                                         p_n = 0)
 
   } else {
-    model_data <- get_model_response(trial_data,
-                                     set_size = set_size,
-                                     kappa = kappa,
-                                     p_t = p_t,
-                                     p_u = p_u,
-                                     p_n = n)
+    model_data <- get_component_response(trial_data,
+                                         set_size = set_size,
+                                         kappa = kappa,
+                                         p_t = p_t,
+                                         p_u = p_u,
+                                         p_n = p_n)
   }
 
   # print message to user

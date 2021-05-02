@@ -668,6 +668,7 @@ plot_mean_absolute_error <- function(data,
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point scale_x_continuous scale_y_continuous
 #' theme_bw facet_wrap position_dodge
+#' @importFrom rlang .data
 #' @export
 plot_error <- function(data,
                        unit = "degrees",
@@ -720,19 +721,19 @@ plot_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$id) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
 
@@ -744,20 +745,20 @@ plot_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(condition, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$id, .data$condition) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
-        group_by(condition) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(condition, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$condition) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
 
@@ -768,20 +769,20 @@ plot_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, set_size) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(set_size, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$id, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
-        group_by(set_size) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(set_size, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
 
@@ -793,20 +794,20 @@ plot_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition, set_size) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(set_size, condition, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
-        group_by(condition, set_size) %>%
-        summarise(y = hist(error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(error, breaks = break_points, plot = FALSE)$mids) %>%
-        group_by(set_size, condition, x) %>%
-        summarise(mean_error = mean(y),
-                  se_error = (sd(y) / sqrt(length(y))))
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
 
@@ -816,10 +817,10 @@ plot_error <- function(data,
   # no set size or condition manipulation
   if(is.null(set_size_var) && is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = x,
-                                   y = mean_error)) +
-      geom_errorbar(aes(ymax = mean_error + se_error,
-                        ymin = mean_error - se_error),
+    plot <- ggplot(final_data, aes(x = .data$x,
+                                   y = .data$mean_error)) +
+      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                        ymin = .data$mean_error - .data$se_error),
                     width = 0.00) +
       geom_point() +
       theme_bw() +
@@ -835,10 +836,10 @@ plot_error <- function(data,
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = x,
-                                   y = mean_error)) +
-      geom_errorbar(aes(ymax = mean_error + se_error,
-                        ymin = mean_error - se_error),
+    plot <- ggplot(final_data, aes(x = .data$x,
+                                   y = .data$mean_error)) +
+      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                        ymin = .data$mean_error - .data$se_error),
                     width = 0.00) +
       geom_point() +
       theme_bw() +
@@ -859,10 +860,10 @@ plot_error <- function(data,
   # set size manipulation, but no condition manipulation
   if(!is.null(set_size_var) && is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = x,
-                                   y = mean_error)) +
-      geom_errorbar(aes(ymax = mean_error + se_error,
-                        ymin = mean_error - se_error),
+    plot <- ggplot(final_data, aes(x = .data$x,
+                                   y = .data$mean_error)) +
+      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                        ymin = .data$mean_error - .data$se_error),
                     width = 0.00) +
       geom_point() +
       theme_bw() +
@@ -886,15 +887,15 @@ plot_error <- function(data,
     # add position jitter to avoid over-plotting
     pd <- position_dodge(0.1)
 
-    plot <- ggplot(final_data, aes(x = x,
-                                   y = mean_error,
-                                   group = condition)) +
-      geom_errorbar(aes(ymax = mean_error + se_error,
-                        ymin = mean_error - se_error,
-                        colour = condition),
+    plot <- ggplot(final_data, aes(x = .data$x,
+                                   y = .data$mean_error,
+                                   group = .data$condition)) +
+      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                        ymin = .data$mean_error - .data$se_error,
+                        colour = .data$condition),
                     width = 0.00,
                     position = pd) +
-      geom_point(aes(colour = condition),
+      geom_point(aes(colour = .data$condition),
                  position = pd) +
       theme_bw() +
       scale_x_continuous(limits = c(-pi, pi)) +

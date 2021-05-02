@@ -54,6 +54,7 @@
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select filter
+#' @importFrom rlang :=
 #'
 #' @examples
 #'
@@ -176,7 +177,7 @@ fit_mixtur <- function(data,
 
         # get the current level's data
         level_data <- data %>%
-          filter(condition == conditions[i])
+          filter(.data$condition == conditions[i])
 
         # fit the model to this condition
         level_fit <- fit_level_slots(level_data,
@@ -203,7 +204,7 @@ fit_mixtur <- function(data,
 
       # rename columns
       fit <- fit %>%
-        rename(!!condition_var:=condition)
+        rename(!!condition_var:=.data$condition)
 
     }
   }
@@ -247,7 +248,7 @@ fit_mixtur <- function(data,
 
         # get the current level's data
         level_data <- data %>%
-          filter(condition == conditions[i])
+          filter(.data$condition == conditions[i])
 
         # get the set size of the level
         if(!is.null(non_target_var)){
@@ -280,7 +281,7 @@ fit_mixtur <- function(data,
 
       # rename columns
       fit <- fit %>%
-        rename(!!condition_var:=condition)
+        rename(!!condition_var:=.data$condition)
     }
 
 
@@ -296,7 +297,7 @@ fit_mixtur <- function(data,
 
         # get the current set size's data
         level_data <- data %>%
-          filter(set_size == set_sizes[i])
+          filter(.data$set_size == set_sizes[i])
 
         # fit the model to this set size
         if(set_sizes[i] == 1){
@@ -338,7 +339,7 @@ fit_mixtur <- function(data,
 
       # rename columns
       fit <- fit %>%
-        rename(!!set_size_var:=set_size)
+        rename(!!set_size_var:=.data$set_size)
     }
 
 
@@ -359,8 +360,8 @@ fit_mixtur <- function(data,
 
           # get the current level's data
           level_data <- data %>%
-            filter(set_size == set_sizes[i]) %>%
-            filter(condition == conditions[j])
+            filter(.data$set_size == set_sizes[i]) %>%
+            filter(.data$condition == conditions[j])
 
           # fit the model to this set size & condition
           if(set_sizes[i] == 1){
@@ -404,8 +405,8 @@ fit_mixtur <- function(data,
 
       # rename columns
       fit <- fit %>%
-        rename(!!condition_var:=condition) %>%
-        rename(!!set_size_var:=set_size)
+        rename(!!condition_var:=.data$condition) %>%
+        rename(!!set_size_var:=.data$set_size)
     }
 
   }
@@ -431,6 +432,7 @@ fit_mixtur <- function(data,
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
 #' @importFrom dplyr rename
+#' @importFrom rlang .data
 fit_level_slots <- function(data,
                             model,
                             id_var,
@@ -487,7 +489,7 @@ fit_level_slots <- function(data,
   if(return_fit == TRUE){
     return(parms)
   } else {
-    parms <- parms %>% select(-LL, -n)
+    parms <- parms %>% select(-.data$LL, -.data$n)
     return(parms)
   }
 
@@ -673,6 +675,8 @@ slots_model_pdf_gd <- function(data,
 #
 #' @importFrom dplyr %>%
 #' @importFrom dplyr pull
+#' @importFrom dplyr starts_with
+#' @importFrom rlang .data
 fit_level_components <- function(data,
                                  model,
                                  id_var = "id",
@@ -703,8 +707,6 @@ fit_level_components <- function(data,
 
   # loop over every participant
   for(i in seq_along(l)) {
-
-
 
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
@@ -812,14 +814,14 @@ fit_level_components <- function(data,
 
   # remove p_n column from 2-component fits
   if(model == "2_component"){
-    parms <- parms %>% select(-p_n)
+    parms <- parms %>% select(-.data$p_n)
   }
 
 
   if(return_fit == TRUE){
     return(parms)
   } else {
-    parms <- parms %>% select(-LL, -n)
+    parms <- parms %>% select(-.data$LL, -.data$n)
     return(parms)
   }
 

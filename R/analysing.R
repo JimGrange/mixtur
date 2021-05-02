@@ -37,6 +37,7 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
+#' @importFrom rlang .data
 #'
 #'
 #' @examples
@@ -92,17 +93,21 @@ get_summary_statistics <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id) %>%
+        summarise(mean_absolute_error =
+                    get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        summarise(mean_absolute_error =
+                    get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -114,18 +119,21 @@ get_summary_statistics <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$condition) %>%
+        summarise(mean_absolute_error =
+                    get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(condition) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$condition) %>%
+        summarise(mean_absolute_error = get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -137,18 +145,20 @@ get_summary_statistics <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, set_size) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$set_size) %>%
+        summarise(mean_absolute_error = get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(set_size) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$set_size) %>%
+        summarise(mean_absolute_error = get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -161,18 +171,20 @@ get_summary_statistics <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition, set_size) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(mean_absolute_error = get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(condition, set_size) %>%
-        summarise(mean_absolute_error = get_mean_absolute_error(error),
-                  resultant_vector_length = get_resultant_vector_length(error),
-                  precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(mean_absolute_error = get_mean_absolute_error(.data$error),
+                  resultant_vector_length =
+                    get_resultant_vector_length(.data$error),
+                  precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
 
     }
   }
@@ -218,6 +230,7 @@ return(final_data)
 #' @importFrom dplyr summarise
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
+#' @importFrom rlang .data
 analyse_precision <- function(data,
                               unit = "degrees",
                               id_var = "id",
@@ -260,13 +273,13 @@ analyse_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -278,14 +291,14 @@ analyse_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$condition) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(condition) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$condition) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -297,14 +310,14 @@ analyse_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     }
 
   }
@@ -317,14 +330,14 @@ analyse_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
     } else{
       final_data <- data %>%
-        group_by(condition, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2])
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2])
 
     }
   }
