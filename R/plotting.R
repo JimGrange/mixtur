@@ -176,15 +176,15 @@ plot_resultant_vector_length <- function(data,
       final_data <- data %>%
         group_by(id) %>%
         summarise(individual_value = get_resultant_vector_length(error)) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
         summarise(individual_value = get_resultant_vector_length(error)) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -199,17 +199,17 @@ plot_resultant_vector_length <- function(data,
         group_by(id, condition) %>%
         summarise(individual_value = get_resultant_vector_length(error)) %>%
         group_by(condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
         group_by(condition) %>%
         summarise(individual_value = get_resultant_vector_length(error)) %>%
-        group_by(condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$condition) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -398,6 +398,7 @@ plot_resultant_vector_length <- function(data,
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
 #' position_dodge
+#' @importFrom rlang .data
 plot_mean_absolute_error <- function(data,
                                      unit = "degrees",
                                      id_var = "id",
@@ -442,17 +443,17 @@ plot_mean_absolute_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$id) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -464,20 +465,20 @@ plot_mean_absolute_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$id, .data$condition) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$condition) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
-        group_by(condition) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$condition) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$condition) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -489,20 +490,20 @@ plot_mean_absolute_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, set_size) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(set_size) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$id, .data$set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$set_size) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
-        group_by(set_size) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(set_size) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$set_size) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -515,20 +516,20 @@ plot_mean_absolute_error <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition, set_size) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     } else{
       final_data <- data %>%
-        group_by(condition, set_size) %>%
-        summarise(individual_value = get_mean_absolute_error(error)) %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_value = mean(individual_value),
-                  se_value = sd(individual_value) /
-                    sqrt(length(individual_value)))
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(individual_value = get_mean_absolute_error(.data$error)) %>%
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_value = mean(.data$individual_value),
+                  se_value = sd(.data$individual_value) /
+                    sqrt(length(.data$individual_value)))
     }
   }
 
@@ -544,10 +545,10 @@ plot_mean_absolute_error <- function(data,
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = condition,
-                                   y = mean_value)) +
-      geom_errorbar(aes(ymax = mean_value + se_value,
-                        ymin = mean_value - se_value),
+    plot <- ggplot(final_data, aes(x = .data$condition,
+                                   y = .data$mean_value)) +
+      geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                        ymin = .data$mean_value - .data$se_value),
                     width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
@@ -566,10 +567,10 @@ plot_mean_absolute_error <- function(data,
     # ensure set size is numeric
     final_data$set_size <- as.numeric(as.character(final_data$set_size))
 
-    plot <- ggplot(final_data, aes(x = set_size,
-                                   y = mean_value)) +
-      geom_errorbar(aes(ymax = mean_value + se_value,
-                        ymin = mean_value - se_value),
+    plot <- ggplot(final_data, aes(x = .data$set_size,
+                                   y = .data$mean_value)) +
+      geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                        ymin = .data$mean_value - .data$se_value),
                     width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
@@ -591,15 +592,15 @@ plot_mean_absolute_error <- function(data,
     # add some jitter to the plotting position
     pd = position_dodge(0.2)
 
-    plot <- ggplot(final_data, aes(x = set_size,
-                                   y = mean_value,
-                                   group = condition)) +
-      geom_errorbar(aes(ymax = mean_value + se_value,
-                        ymin = mean_value - se_value,
-                        colour = condition),
+    plot <- ggplot(final_data, aes(x = .data$set_size,
+                                   y = .data$mean_value,
+                                   group = .data$condition)) +
+      geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                        ymin = .data$mean_value - .data$se_value,
+                        colour = .data$condition),
                     width = 0.00,
                     position = pd) +
-      geom_point(aes(colour = condition),
+      geom_point(aes(colour = .data$condition),
                  position = pd,
                  size = 2.5) +
       theme_bw() +
