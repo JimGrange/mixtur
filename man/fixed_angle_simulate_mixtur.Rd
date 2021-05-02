@@ -7,7 +7,7 @@ This is NOT the function to be called by the user}
 \usage{
 fixed_angle_simulate_mixtur(
   n_trials,
-  K,
+  kappa,
   p_t,
   p_n,
   p_u,

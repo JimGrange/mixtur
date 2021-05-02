@@ -2,17 +2,10 @@
 % Please edit documentation in R/simulating.R
 \name{simulate_mixtur}
 \alias{simulate_mixtur}
-\title{simulate the mixture model. This is the function to be called by the user}
+\title{Generate simulated data from mixture models}
 \usage{
-simulate_mixtur(
-  n_trials,
-  K,
-  p_n = NULL,
-  p_u,
-  set_size = 4,
-  min_angle_distance = 20
-)
+simulate_mixtur(n_trials, model, kappa, p_u, p_n, K, set_size)
 }
 \description{
-simulate the mixture model. This is the function to be called by the user
+Generate simulated data from mixture models
 }

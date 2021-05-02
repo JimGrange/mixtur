@@ -102,6 +102,13 @@ fit_mixtur <- function(data,
       colnames()
   }
 
+  # if 3-component model is called but non-target columns not provided,
+  # tell the user to provide them
+  if(model == "3_component" && is.null(non_target_var)){
+    stop("The 3-component model requires non-target values", call. = FALSE)
+  }
+
+
   # change degrees to radians
   if(unit == "degrees"){
     data[[response_var]] <- data[[response_var]] / 180 * pi
@@ -153,10 +160,6 @@ fit_mixtur <- function(data,
                              return_fit = return_fit,
                              fit_method = fit_method)
 
-      # # rename columns
-      # fit <- fit %>%
-      #   rename(!!set_size_var:=set_size)
-
     }
 
 
@@ -203,9 +206,6 @@ fit_mixtur <- function(data,
         rename(!!condition_var:=condition)
 
     }
-
-
-
   }
 
   #---- fitting the components models
@@ -784,16 +784,7 @@ fit_level_components <- function(data,
       }
     }
 
-
-    #-- fit the slots model
-    # TODO
-
-    #-- fit the slots plus averaging model
-    # TODO
-
-
     # store the parameters
-    # TODO: Ensure parameter return below is suitable for slots models
     if(model == "2_component"){
 
       id <- as.character(df[1, id_var])
@@ -839,13 +830,7 @@ fit_level_components <- function(data,
     return(parms)
   }
 
-
 }
-
-
-
-
-
 
 
 
@@ -1222,7 +1207,8 @@ components_model_pdf_em <- function(response,
 
   # return parameter values & log likelihood
   if(iter > max_iter) {
-    warning('likelihood function:MaxIter','Maximum iteration limit exceeded.', call. = FALSE)
+    warning('likelihood function:MaxIter','Maximum iteration limit exceeded.',
+            call. = FALSE)
     return_parms <- c(NaN, NaN, NaN, NaN)
     LL <- NaN
   } else {
@@ -1233,8 +1219,6 @@ components_model_pdf_em <- function(response,
               ll = LL))
 
 }
-
-
 
 
 

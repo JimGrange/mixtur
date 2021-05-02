@@ -2,10 +2,17 @@
 % Please edit documentation in R/simulating.R
 \name{simulate_slots}
 \alias{simulate_slots}
-\title{simulate the slots model. This is the function to be called by the user}
+\title{simulate the slots model. This function not to be called by the user}
 \usage{
-simulate_slots(n_trials, model = "slots", K, kappa, set_sizes = c(1, 2, 4, 8))
+simulate_slots(
+  n_trials,
+  model = "slots",
+  K,
+  kappa,
+  set_size = c(1, 2, 4, 8),
+  min_angle_distance = 20
+)
 }
 \description{
-simulate the slots model. This is the function to be called by the user
+simulate the slots model. This function not to be called by the user
 }
