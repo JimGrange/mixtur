@@ -60,6 +60,7 @@ simulate_mixtur <- function(n_trials,
 #' @importFrom dplyr select
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr sample_n
+#' @importFrom rlang .data
 simulate_slots <- function(n_trials,
                            model = "slots",
                            K,
@@ -208,18 +209,18 @@ simulate_slots <- function(n_trials,
   if(max(set_size) > 1){
     sim_data <- sim_data %>%
       mutate(id = 1) %>%
-      select(id,
-             set_size,
-             target,
-             response,
+      select(.data$id,
+             .data$set_size,
+             .data$target,
+             .data$response,
              contains("non_target"))
   } else{
     sim_data <- sim_data %>%
       mutate(id = 1) %>%
-      select(id,
-             set_size,
-             target,
-             response)
+      select(.data$id,
+             .data$set_size,
+             .data$target,
+             .data$response)
   }
 
   # randomise the trial order

@@ -42,7 +42,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #' Transform radians into degrees
 #'
 #' A function to transform radians into degrees
-#' @param deg Radian value to transform into degrees
+#' @param rad Radian value to transform into degrees
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
@@ -226,9 +226,9 @@ A1inv <- function(r) {
 
 
 # standard deviation of k -------------------------------------------------
-#' Standard deviation of Von Mises K parameter
+#' Standard deviation of von Mises kappa parameter
 #' Returns the standard deviation of a wrapped normal distribution
-#' corresponding to a Von Mises concentration parameter of K
+#' corresponding to a von Mises concentration parameter of kappa
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
@@ -250,16 +250,16 @@ k2sd <- function(k){
 
 
 # standard deviation to k -------------------------------------------------
-#' Translate from standard deviation to Von Mises K parameter
-#' Returns the Von Mises concentration parameter K corresponding
-#' to a standard deviation S of a wrapped normal distributions
+#' Translate from standard deviation to von Mises kappa parameter
+#' Returns the von Mises concentration parameter kappa corresponding
+#' to a standard deviation sd of a wrapped normal distribution
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
 #' @export
-sd2k <- function(s){
+sd2k <- function(sd){
 
-  r <- exp(-s ^ 2 / 2)
+  r <- exp(-sd ^ 2 / 2)
 
   k <- 1 / (r ^ 3 - 4 * r ^ 2 + 3 * r)
 

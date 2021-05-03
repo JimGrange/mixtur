@@ -2,9 +2,9 @@
 % Please edit documentation in R/utilities.R
 \name{k2sd}
 \alias{k2sd}
-\title{Standard deviation of Von Mises K parameter
+\title{Standard deviation of von Mises kappa parameter
 Returns the standard deviation of a wrapped normal distribution
-corresponding to a Von Mises concentration parameter of K}
+corresponding to a von Mises concentration parameter of kappa}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
 (https://paulbays.com).
@@ -13,7 +13,7 @@ The code has been adapted from Matlab code written by Paul Bays
 k2sd(k)
 }
 \description{
-Standard deviation of Von Mises K parameter
+Standard deviation of von Mises kappa parameter
 Returns the standard deviation of a wrapped normal distribution
-corresponding to a Von Mises concentration parameter of K
+corresponding to a von Mises concentration parameter of kappa
 }

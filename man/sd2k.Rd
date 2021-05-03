@@ -2,18 +2,18 @@
 % Please edit documentation in R/utilities.R
 \name{sd2k}
 \alias{sd2k}
-\title{Translate from standard deviation to Von Mises K parameter
-Returns the Von Mises concentration parameter K corresponding
-to a standard deviation S of a wrapped normal distributions}
+\title{Translate from standard deviation to von Mises kappa parameter
+Returns the von Mises concentration parameter kappa corresponding
+to a standard deviation sd of a wrapped normal distribution}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
 (https://paulbays.com).
 }
 \usage{
-sd2k(s)
+sd2k(sd)
 }
 \description{
-Translate from standard deviation to Von Mises K parameter
-Returns the Von Mises concentration parameter K corresponding
-to a standard deviation S of a wrapped normal distributions
+Translate from standard deviation to von Mises kappa parameter
+Returns the von Mises concentration parameter kappa corresponding
+to a standard deviation sd of a wrapped normal distribution
 }

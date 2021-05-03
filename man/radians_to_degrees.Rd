@@ -11,7 +11,7 @@ The code has been adapted from Matlab code written by Paul Bays
 radians_to_degrees(rad)
 }
 \arguments{
-\item{deg}{Radian value to transform into degrees}
+\item{rad}{Radian value to transform into degrees}
 }
 \description{
 A function to transform radians into degrees
