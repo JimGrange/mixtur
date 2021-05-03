@@ -75,4 +75,4 @@ bays_data[, 3:10] <- round(bays_data[, 3:10], 3)
 bays2009_full <- bays_data
 
 # save data file
-save(bays2009_full, file = "bays2009_full.rda")
+save(bays2009_full, file = "bays2009_full.rda", compress='xz')

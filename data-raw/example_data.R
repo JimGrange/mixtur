@@ -21,6 +21,6 @@ example_data <- example_data %>%
 
 example_data[, 3:7] <- round(example_data[, 3:7], 0)
 
-save(example_data, file = "example_data.rda")
+save(example_data, file = "example_data.rda", compress='xz')
 
 

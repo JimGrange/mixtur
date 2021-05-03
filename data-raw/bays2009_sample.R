@@ -81,4 +81,4 @@ bays2009_sample <- bays_data %>%
 
 
 # save data file
-save(bays2009_sample, file = "bays2009_sample.rda")
+save(bays2009_sample, file = "bays2009_sample.rda", compress='xz')
