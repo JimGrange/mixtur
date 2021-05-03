@@ -958,6 +958,7 @@ plot_error <- function(data,
 #' @importFrom dplyr group_by
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
+#' @importFrom rlang .data
 #'
 plot_precision <- function(data,
                            unit = "degrees",
@@ -1003,21 +1004,23 @@ plot_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$id) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     } else{
       final_data <- data %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     }
   }
 
@@ -1029,24 +1032,26 @@ plot_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(condition) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$id, .data$condition) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$condition) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     } else{
       final_data <- data %>%
-        group_by(condition) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(condition) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$condition) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$condition) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     }
   }
 
@@ -1058,24 +1063,26 @@ plot_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(set_size) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$id, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$set_size) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     } else{
       final_data <- data %>%
-        group_by(set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(set_size) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$set_size) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     }
   }
 
@@ -1088,24 +1095,26 @@ plot_precision <- function(data,
 
     if(!is.null(id_var)){
       final_data <- data %>%
-        group_by(id, condition, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     } else{
       final_data <- data %>%
-        group_by(condition, set_size) %>%
-        summarise(precision = get_precision_single(error)[, 1],
-                  bias = get_precision_single(error)[, 2]) %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_precision = mean(precision),
-                  se_precision = sd(precision) / sqrt(length(precision)),
-                  mean_bias = mean(bias),
-                  se_bias = sd(bias) / sqrt(length(bias)))
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(precision = get_precision_single(.data$error)[, 1],
+                  bias = get_precision_single(.data$error)[, 2]) %>%
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_precision = mean(.data$precision),
+                  se_precision = sd(.data$precision) /
+                    sqrt(length(.data$precision)),
+                  mean_bias = mean(.data$bias),
+                  se_bias = sd(.data$bias) / sqrt(length(.data$bias)))
     }
   }
 
@@ -1121,10 +1130,10 @@ plot_precision <- function(data,
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = condition,
-                                   y = mean_precision)) +
-      geom_errorbar(aes(ymax = mean_precision + se_precision,
-                        ymin = mean_precision - se_precision),
+    plot <- ggplot(final_data, aes(x = .data$condition,
+                                   y = .data$mean_precision)) +
+      geom_errorbar(aes(ymax = .data$mean_precision + .data$se_precision,
+                        ymin = .data$mean_precision - .data$se_precision),
                     width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
@@ -1143,10 +1152,10 @@ plot_precision <- function(data,
     # ensure set size is numeric
     final_data$set_size <- as.numeric(as.character(final_data$set_size))
 
-    plot <- ggplot(final_data, aes(x = set_size,
-                                   y = mean_precision)) +
-      geom_errorbar(aes(ymax = mean_precision + se_precision,
-                        ymin = mean_precision - se_precision),
+    plot <- ggplot(final_data, aes(x = .data$set_size,
+                                   y = .data$mean_precision)) +
+      geom_errorbar(aes(ymax = .data$mean_precision + .data$se_precision,
+                        ymin = .data$mean_precision - .data$se_precision),
                     width = 0.00) +
       geom_point(size = 2.5) +
       theme_bw() +
@@ -1168,15 +1177,15 @@ plot_precision <- function(data,
     # add some jitter to the plotting position
     pd = position_dodge(0.2)
 
-    plot <- ggplot(final_data, aes(x = set_size,
-                                   y = mean_precision,
-                                   group = condition)) +
-      geom_errorbar(aes(ymax = mean_precision + se_precision,
-                        ymin = mean_precision - se_precision,
-                        colour = condition),
+    plot <- ggplot(final_data, aes(x = .data$set_size,
+                                   y = .data$mean_precision,
+                                   group = .data$condition)) +
+      geom_errorbar(aes(ymax = .data$mean_precision + .data$se_precision,
+                        ymin = .data$mean_precision - .data$se_precision,
+                        colour = .data$condition),
                     width = 0.00,
                     position = pd) +
-      geom_point(aes(colour = condition),
+      geom_point(aes(colour = .data$condition),
                  position = pd,
                  size = 2.5) +
       theme_bw() +
