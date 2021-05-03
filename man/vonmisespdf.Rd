@@ -2,20 +2,38 @@
 % Please edit documentation in R/utilities.R
 \name{vonmisespdf}
 \alias{vonmisespdf}
-\title{Probability density function of the Von Mises distribution.
-Returns the probability density function for the Von Mises distribution with
-mean MU and concentration K, evaluated at the values in X (given in
-radians).}
+\title{Probability density function of the von Mises distribution.
+Returns the probability density function for the von Mises distribution with
+location parameter mu and concentration parameter kappa, evaluated at the
+values in x (given in radians, from -pi to pi).}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
 (https://paulbays.com).
 }
 \usage{
-vonmisespdf(x, mu, k)
+vonmisespdf(x, mu, kappa)
+}
+\arguments{
+\item{x}{a numeric value (or vector) of quantiles}
+
+\item{mu}{a numeric value indicating the location parameter of the von Mises
+distribution}
+
+\item{kappa}{a numeric value indicating the concentration parameter of the
+von Mises distribution}
 }
 \description{
-Probability density function of the Von Mises distribution.
-Returns the probability density function for the Von Mises distribution with
-mean MU and concentration K, evaluated at the values in X (given in
-radians).
+Probability density function of the von Mises distribution.
+Returns the probability density function for the von Mises distribution with
+location parameter mu and concentration parameter kappa, evaluated at the
+values in x (given in radians, from -pi to pi).
+}
+\examples{
+
+# establish quantile values
+x <- seq(from = -pi, to = pi, length.out = 100)
+
+# calculate pdf
+y <- vonmisespdf(x = x, mu = 0, kappa = 8.2)
+
 }

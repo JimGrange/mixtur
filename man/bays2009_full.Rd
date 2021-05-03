@@ -8,6 +8,7 @@
 A data frame with 7271 rows and 10 variables:
 \describe{
   \item{id}{participant identification}
+  \item{set_size}{the set size of each trial}
   \item{duration}{the duration of the sample array (in milliseconds, ms),
   with levels 100ms, 500ms, 2000ms}
   \item{response}{the participant's recollection of the target orientation

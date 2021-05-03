@@ -12,8 +12,14 @@ The code has been adapted from Matlab code written by Paul Bays
 \usage{
 sd2k(sd)
 }
+\arguments{
+\item{sd}{A numeric value for standard deviation}
+}
 \description{
 Translate from standard deviation to von Mises kappa parameter
 Returns the von Mises concentration parameter kappa corresponding
 to a standard deviation sd of a wrapped normal distribution
+}
+\examples{
+kappa <- sd2k(0.361)
 }

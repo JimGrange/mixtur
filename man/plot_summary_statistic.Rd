@@ -53,7 +53,11 @@ can plot mean absolute error, resultant vector length, and precision of the
 behavioural data.
 }
 \examples{
-data(example_data)
-plot_summary_statistic(example_data, condition_var = "condition")
+data(bays2009_full)
+plot_summary_statistic(bays2009_full,
+                      unit = "radians",
+                      statistic = "precision",
+                      set_size_var = "set_size",
+                      condition_var = "duration")
 
 }

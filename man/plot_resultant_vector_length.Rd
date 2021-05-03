@@ -2,12 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot_resultant_vector_length}
 \alias{plot_resultant_vector_length}
-\title{degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-from pi to 2 * pi, but could also be already in -pi to pi).
-a single participant (i.e., there is no id column) set to "NULL".
-size of each response.
-condition of each response.
-the plot should be returned.}
+\title{Plot resultant vector length of behavioural data}
 \usage{
 plot_resultant_vector_length(
   data,
@@ -20,11 +15,35 @@ plot_resultant_vector_length(
   return_data = FALSE
 )
 }
-\description{
+\arguments{
+\item{data}{A data frame with columns containing: participant identifier
+('id_var'); the participants' response per trial ('response_var'); the
+target value ('target_var'); and, if applicable, the set size of each
+response ('set_size_var'), and the condition of each response
+('condition_var').}
+
+\item{unit}{The unit of measurement in the data frame: "degrees"
+(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
 degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
-from pi to 2 * pi, but could also be already in -pi to pi).
-a single participant (i.e., there is no id column) set to "NULL".
-size of each response.
-condition of each response.
-the plot should be returned.
+from pi to 2 * pi, but could also be already in -pi to pi).}
+
+\item{id_var}{The column name coding for participant id. If the data is from
+a single participant (i.e., there is no id column) set to "NULL".}
+
+\item{response_var}{The column name coding for the participants' responses.}
+
+\item{target_var}{The column name coding for the target value.}
+
+\item{set_size_var}{The column name (if applicable) coding for the set
+size of each response.}
+
+\item{condition_var}{The column name (if applicable) coding for the}
+
+\item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
+the plot should be returned.}
+}
+\description{
+Function to plot the resultant vector length of response error in
+ behavioural data. Requires a data frame that (at least) has target value
+ data and participant response data.
 }

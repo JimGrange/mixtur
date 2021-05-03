@@ -9,9 +9,21 @@ The code has been adapted from Matlab code written by Paul Bays
 (https://paulbays.com).
 }
 \usage{
-randomvonmises(n, mu, k)
+randomvonmises(n, mu, kappa)
+}
+\arguments{
+\item{n}{An integer indicating how many values to generate}
+
+\item{mu}{A numeric value indicating the location parameter of the von Mises
+distribution to generate values from}
+
+\item{kappa}{A numeric value indicating the concentration parameter of the
+von Mises distribution}
 }
 \description{
 Generates N random samples from a Von Mises distribution with mean mu and
 concentration k
+}
+\examples{
+simulated_values <- randomvonmises(n = 100, mu = 0, kappa = 8.2)
 }

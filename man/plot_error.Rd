@@ -57,7 +57,9 @@ values. Requires a data frame that (at least) has target value data and
 participant response data.
 }
 \examples{
-data(example_data)
-plot_error(example_data, condition_var = "condition")
+data(bays2009_full)
+plot_error(bays2009_full,
+          unit = "radians",
+          set_size_var = "set_size")
 
 }

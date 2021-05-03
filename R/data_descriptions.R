@@ -37,6 +37,7 @@
 #' @format A data frame with 7271 rows and 10 variables:
 #' \describe{
 #'   \item{id}{participant identification}
+#'   \item{set_size}{the set size of each trial}
 #'   \item{duration}{the duration of the sample array (in milliseconds, ms),
 #'   with levels 100ms, 500ms, 2000ms}
 #'   \item{response}{the participant's recollection of the target orientation
@@ -103,8 +104,9 @@
 #' @format A data frame with 15,200 rows and 11 variables:
 #' \describe{
 #'   \item{id}{participant identification}
+#'   \item{set_size}{the set size of each trial}
 #'   \item{response}{the participant's recollection of the target
-#'   colour in degrees (1-180)}
+#'   colour in degrees (1-360)}
 #'   \item{target}{the orientation of the target colour in degrees (1-360)}
 #'   \item{non_target_1}{the orientation of the first non-target in degrees
 #'   (1-360)}

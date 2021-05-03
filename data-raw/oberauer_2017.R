@@ -98,4 +98,4 @@ for(i in 1:nrow(data)){
 
 # save data file
 oberauer_2017 <- data
-save(oberauer_2017, file = "oberauer_2017.rda", compress = "xz")
+save(oberauer_2017, file = "oberauer_2017.rda", compress = "bzip2")

@@ -8,8 +8,9 @@
 A data frame with 15,200 rows and 11 variables:
 \describe{
   \item{id}{participant identification}
+  \item{set_size}{the set size of each trial}
   \item{response}{the participant's recollection of the target
-  colour in degrees (1-180)}
+  colour in degrees (1-360)}
   \item{target}{the orientation of the target colour in degrees (1-360)}
   \item{non_target_1}{the orientation of the first non-target in degrees
   (1-360)}

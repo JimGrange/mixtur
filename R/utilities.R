@@ -3,7 +3,6 @@
 
 
 # map onto circular space -------------------------------------------------
-#' @export
 map_to_circular <- function(data, unit){
 
   if(unit == "degrees"){
@@ -107,28 +106,35 @@ cstd <- function(x) {
 # generate random samples from vin mises ----------------------------------
 #' Generates N random samples from a Von Mises distribution with mean mu and
 #' concentration k
+#' @param n An integer indicating how many values to generate
+#' @param mu A numeric value indicating the location parameter of the von Mises
+#' distribution to generate values from
+#' @param kappa A numeric value indicating the concentration parameter of the
+#' von Mises distribution
+#' @examples
+#' simulated_values <- randomvonmises(n = 100, mu = 0, kappa = 8.2)
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
 #' @importFrom stats runif
 #' @export
-randomvonmises <- function(n, mu, k) {
+randomvonmises <- function(n, mu, kappa) {
 
   x = NULL
 
-  if(k == 0) {
+  if(kappa == 0) {
     x <- (runif(n) * 2 - 1) * pi
   }
 
-  a <- 1 + (1 + 4 * (k ^ 2)) ^ 0.5
-  b <- (a - (2 * a) ^ 0.5) / (2 * k)
+  a <- 1 + (1 + 4 * (kappa ^ 2)) ^ 0.5
+  b <- (a - (2 * a) ^ 0.5) / (2 * kappa)
   r <- (1 + b ^ 2) / (2 * b)
   obs <- 1
 
   while(obs <= n) {
     z = cos(pi * runif(1))
     f = (1 + r * z) / (r + z)
-    c = k * (r - f)
+    c = kappa * (r - f)
     u = runif(1)
 
     if((c * (2 - c) - u > 0) | (log(c / u) + 1 - c >= 0)) {
@@ -144,16 +150,29 @@ randomvonmises <- function(n, mu, k) {
 
 
 # probability density function of von mises -------------------------------
-#' Probability density function of the Von Mises distribution.
-#' Returns the probability density function for the Von Mises distribution with
-#' mean MU and concentration K, evaluated at the values in X (given in
-#' radians).
+#' Probability density function of the von Mises distribution.
+#' Returns the probability density function for the von Mises distribution with
+#' location parameter mu and concentration parameter kappa, evaluated at the
+#' values in x (given in radians, from -pi to pi).
+#' @param x a numeric value (or vector) of quantiles
+#' @param mu a numeric value indicating the location parameter of the von Mises
+#' distribution
+#' @param kappa a numeric value indicating the concentration parameter of the
+#' von Mises distribution
+#' @examples
+#'
+#' # establish quantile values
+#' x <- seq(from = -pi, to = pi, length.out = 100)
+#'
+#' # calculate pdf
+#' y <- vonmisespdf(x = x, mu = 0, kappa = 8.2)
+#'
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
 #' @export
-vonmisespdf <- function(x, mu, k) {
-  p <- exp(k * cos(x - mu)) / (2 * pi * besselI(k, 0))
+vonmisespdf <- function(x, mu, kappa) {
+  p <- exp(kappa * cos(x - mu)) / (2 * pi * besselI(kappa, 0))
   return(p)
 }
 
@@ -229,9 +248,15 @@ A1inv <- function(r) {
 #' Standard deviation of von Mises kappa parameter
 #' Returns the standard deviation of a wrapped normal distribution
 #' corresponding to a von Mises concentration parameter of kappa
+#'@param k A numeric value for concentration parameter kappa of the von
+#' Mises distribution
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
+#'
+#' @examples
+#' sd <- k2sd(8.4)
+#'
 #' @export
 k2sd <- function(k){
 
@@ -253,6 +278,9 @@ k2sd <- function(k){
 #' Translate from standard deviation to von Mises kappa parameter
 #' Returns the von Mises concentration parameter kappa corresponding
 #' to a standard deviation sd of a wrapped normal distribution
+#' @param sd A numeric value for standard deviation
+#' @examples
+#' kappa <- sd2k(0.361)
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://paulbays.com).
