@@ -968,6 +968,7 @@ plot_precision <- function(data,
                            condition_var = NULL,
                            return_data = FALSE){
 
+
   # add id column
   data$id <- data[[id_var]]
 
@@ -1234,6 +1235,7 @@ plot_precision <- function(data,
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point scale_x_continuous scale_y_continuous
 #' theme_bw facet_wrap vars geom_line scale_colour_brewer
 #' @importFrom stats dunif
+#' @importFrom rlang .data
 #' @export
 plot_model_fit <- function(participant_data,
                            model_fit,
@@ -1299,13 +1301,13 @@ plot_model_fit <- function(participant_data,
           if(mean_K < set_sizes[i]){
             level_preds <- level_preds %>%
               mutate(y = ((mean_K / set_sizes[i]) *
-                            vonmisespdf(x, 0, mean_kappa)) +
+                            vonmisespdf(.data$x, 0, mean_kappa)) +
                        ((1 - (mean_K / set_sizes[i])) *
-                          dunif(x, min = -pi, max = pi)))
+                          dunif(.data$x, min = -pi, max = pi)))
 
           } else {
             level_preds <- level_preds %>%
-              mutate(y = vonmisespdf(x, 0, mean_kappa))
+              mutate(y = vonmisespdf(.data$x, 0, mean_kappa))
           }
 
           level_preds <- level_preds %>%
@@ -1321,15 +1323,15 @@ plot_model_fit <- function(participant_data,
       }
 
       #--- plot the human data & model predictions
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error)) +
         geom_line(data = model_preds,
-                  aes(x = x, y = y),
+                  aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
                   col = "#D95F02",
                   lwd = 1.3) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
         facet_wrap(vars(set_size), ncol = n_col) +
@@ -1349,12 +1351,12 @@ plot_model_fit <- function(participant_data,
 
       # get the mean K and kappa parameters from the model fit
       mean_K <- model_fit %>%
-        group_by(condition) %>%
-        summarise(mean_K = mean(K))
+        group_by(.data$condition) %>%
+        summarise(mean_K = mean(.data$K))
 
       mean_kappa <- model_fit %>%
-        group_by(condition) %>%
-        summarise(mean_kappa = mean(kappa))
+        group_by(.data$condition) %>%
+        summarise(mean_kappa = mean(.data$kappa))
 
       # get the model predictions
       conditions <- unique(human_error$condition)
@@ -1376,12 +1378,14 @@ plot_model_fit <- function(participant_data,
 
           if(level_K < set_sizes[j]){
             level_preds <- level_preds %>%
-              mutate(y = ((level_K / set_sizes[j]) * vonmisespdf(x, 0, level_kappa)) +
-                       ((1 - (level_K / set_sizes[j])) * dunif(x, min = -pi, max = pi)))
+              mutate(y = ((level_K / set_sizes[j]) *
+                            vonmisespdf(.data$x, 0, level_kappa)) +
+                       ((1 - (level_K / set_sizes[j])) *
+                          dunif(.data$x, min = -pi, max = pi)))
 
           } else {
             level_preds <- level_preds %>%
-              mutate(y = vonmisespdf(x, 0, level_kappa))
+              mutate(y = vonmisespdf(.data$x, 0, level_kappa))
           }
 
           level_preds <- level_preds %>%
@@ -1401,20 +1405,20 @@ plot_model_fit <- function(participant_data,
       human_error$condition <- as.factor(human_error[[condition_var]])
       model_preds$condition <- as.factor(model_preds$condition)
 
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error,
-                                      group = condition)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error,
+                                      group = .data$condition)) +
         geom_line(data = model_preds,
-                  aes(x = x,
-                      y = y,
-                      colour = condition),
+                  aes(x = .data$x,
+                      y = .data$y,
+                      colour = .data$condition),
                   alpha = 0.8,
                   lwd = 1) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error,
-                          colour = condition),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
                       width = 0.00) +
-        geom_point(aes(colour = condition)) +
+        geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
@@ -1487,15 +1491,15 @@ plot_model_fit <- function(participant_data,
       }
 
       #--- plot the human data & model predictions
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error)) +
         geom_line(data = model_preds,
-                  aes(x = x, y = y),
+                  aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
                   col = "#D95F02",
                   lwd = 1.3) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
         facet_wrap(vars(set_size), ncol = n_col) +
@@ -1515,12 +1519,12 @@ plot_model_fit <- function(participant_data,
 
       # get the mean K and kappa parameters from the model fit
       mean_K <- model_fit %>%
-        group_by(condition) %>%
-        summarise(mean_K = mean(K))
+        group_by(.data$condition) %>%
+        summarise(mean_K = mean(.data$K))
 
       mean_kappa <- model_fit %>%
         group_by(condition) %>%
-        summarise(mean_kappa = mean(kappa))
+        summarise(mean_kappa = mean(.data$kappa))
 
       # get the model predictions
       conditions <- unique(human_error$condition)
@@ -1575,20 +1579,20 @@ plot_model_fit <- function(participant_data,
       human_error$condition <- as.factor(human_error[[condition_var]])
       model_preds$condition <- as.factor(model_preds$condition)
 
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error,
-                                      group = condition)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error,
+                                      group = .data$condition)) +
         geom_line(data = model_preds,
-                  aes(x = x,
-                      y = y,
-                      colour = condition),
+                  aes(x = .data$x,
+                      y = .data$y,
+                      colour = .data$condition),
                   alpha = 0.8,
                   lwd = 1) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error,
-                          colour = condition),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
                       width = 0.00) +
-        geom_point(aes(colour = condition)) +
+        geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
@@ -1641,19 +1645,19 @@ plot_model_fit <- function(participant_data,
 
       # get the model predictions
       model_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                            y = vonmisespdf(x, 0, mean_k) * (mean_p_t) +
-                              dunif(x, min = -pi, max = pi) * (mean_p_u))
+                            y = vonmisespdf(.data$x, 0, mean_k) * (mean_p_t) +
+                              dunif(.data$x, min = -pi, max = pi) * (mean_p_u))
 
       # plot the human data & model predictions
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error)) +
         geom_line(data = model_preds,
-                  aes(x = x, y = y),
+                  aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
                   col = "#D95F02",
                   lwd = 1.3) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
         theme_bw() +
@@ -1672,20 +1676,20 @@ plot_model_fit <- function(participant_data,
       # 2-component and 3-component model make same predictions for
       # target error
       mean_k <- model_fit %>%
-        group_by(condition) %>%
-        summarise(mean_k = mean(kappa))
+        group_by(.data$condition) %>%
+        summarise(mean_k = mean(.data$kappa))
       mean_p_t <- model_fit %>%
-        group_by(condition) %>%
-        summarise(mean_p_t = mean(p_t))
+        group_by(.data$condition) %>%
+        summarise(mean_p_t = mean(.data$p_t))
 
       if(components == 3){
         mean_p_u <- model_fit %>%
-          group_by(condition) %>%
-          summarise(mean_p_u = mean(p_n) + mean(p_u))
+          group_by(.data$condition) %>%
+          summarise(mean_p_u = mean(.data$p_n) + mean(.data$p_u))
       } else {
         mean_p_u <- model_fit %>%
-          group_by(condition) %>%
-          summarise(mean_p_u = mean(p_u))
+          group_by(.data$condition) %>%
+          summarise(mean_p_u = mean(.data$p_u))
       }
 
 
@@ -1707,8 +1711,8 @@ plot_model_fit <- function(participant_data,
           pull()
 
         level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                              y = vonmisespdf(x, 0, level_k) * (level_p_t) +
-                                dunif(x, min = -pi, max = pi) * (level_p_u))
+                              y = vonmisespdf(.data$x, 0, level_k) * (level_p_t) +
+                                dunif(.data$x, min = -pi, max = pi) * (level_p_u))
 
         level_preds <- level_preds %>%
           mutate(condition = conditions[i])
@@ -1721,15 +1725,15 @@ plot_model_fit <- function(participant_data,
       }
 
       #---- plot the human data & model predictions
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error)) +
         geom_line(data = model_preds,
-                  aes(x = x, y = y),
+                  aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
                   col = "#D95F02",
                   lwd = 1.3) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
         facet_wrap(vars(condition), ncol = n_col) +
@@ -1750,20 +1754,20 @@ plot_model_fit <- function(participant_data,
       # 2-component and 3-component model make same predictions for
       # target error
       mean_k <- model_fit %>%
-        group_by(set_size) %>%
-        summarise(mean_k = mean(kappa))
+        group_by(.data$set_size) %>%
+        summarise(mean_k = mean(.data$kappa))
       mean_p_t <- model_fit %>%
-        group_by(set_size) %>%
-        summarise(mean_p_t = mean(p_t))
+        group_by(.data$set_size) %>%
+        summarise(mean_p_t = mean(.data$p_t))
 
       if(components == 3){
         mean_p_u <- model_fit %>%
-          group_by(set_size) %>%
-          summarise(mean_p_u = mean(p_n) + mean(p_u))
+          group_by(.data$set_size) %>%
+          summarise(mean_p_u = mean(.data$p_n) + mean(.data$p_u))
       } else {
         mean_p_u <- model_fit %>%
-          group_by(set_size) %>%
-          summarise(mean_p_u = mean(p_u))
+          group_by(.data$set_size) %>%
+          summarise(mean_p_u = mean(.data$p_u))
       }
 
 
@@ -1785,8 +1789,8 @@ plot_model_fit <- function(participant_data,
           pull()
 
         level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                              y = vonmisespdf(x, 0, level_k) * (level_p_t) +
-                                dunif(x, min = -pi, max = pi) * (level_p_u))
+                              y = vonmisespdf(.data$x, 0, level_k) * (level_p_t) +
+                                dunif(.data$x, min = -pi, max = pi) * (level_p_u))
 
         level_preds <- level_preds %>%
           mutate(set_size = set_sizes[i])
@@ -1801,15 +1805,15 @@ plot_model_fit <- function(participant_data,
 
 
       #---- plot the human data & model predictions
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error)) +
         geom_line(data = model_preds,
-                  aes(x = x, y = y),
+                  aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
                   col = "#D95F02",
                   lwd = 1.3) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error),
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
         facet_wrap(vars(set_size), ncol = n_col) +
@@ -1832,20 +1836,20 @@ plot_model_fit <- function(participant_data,
       # 2-component and 3-component model make same predictions for
       # target error
       mean_k <- model_fit %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_k = mean(kappa))
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_k = mean(.data$kappa))
       mean_p_t <- model_fit %>%
-        group_by(set_size, condition) %>%
-        summarise(mean_p_t = mean(p_t))
+        group_by(.data$set_size, .data$condition) %>%
+        summarise(mean_p_t = mean(.data$p_t))
 
       if(components == 3){
         mean_p_u <- model_fit %>%
-          group_by(set_size, condition) %>%
-          summarise(mean_p_u = mean(p_n) + mean(p_u))
+          group_by(.data$set_size, .data$condition) %>%
+          summarise(mean_p_u = mean(.data$p_n) + mean(.data$p_u))
       } else {
         mean_p_u <- model_fit %>%
-          group_by(set_size, condition) %>%
-          summarise(mean_p_u = mean(p_u))
+          group_by(.data$set_size, .data$condition) %>%
+          summarise(mean_p_u = mean(.data$p_u))
       }
 
 
@@ -1872,8 +1876,8 @@ plot_model_fit <- function(participant_data,
             pull()
 
           level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                                y = vonmisespdf(x, 0, level_k) * (level_p_t) +
-                                  dunif(x, min = -pi, max = pi) * (level_p_u))
+                                y = vonmisespdf(.data$x, 0, level_k) * (level_p_t) +
+                                  dunif(.data$x, min = -pi, max = pi) * (level_p_u))
 
           level_preds <- level_preds %>%
             mutate(set_size = set_sizes[i]) %>%
@@ -1891,20 +1895,20 @@ plot_model_fit <- function(participant_data,
       human_error$condition <- as.factor(human_error[[condition_var]])
       model_preds$condition <- as.factor(model_preds$condition)
 
-      plot <- ggplot(human_error, aes(x = x,
-                                      y = mean_error,
-                                      group = condition)) +
+      plot <- ggplot(human_error, aes(x = .data$x,
+                                      y = .data$mean_error,
+                                      group = .data$condition)) +
         geom_line(data = model_preds,
-                  aes(x = x,
-                      y = y,
-                      colour = condition),
+                  aes(x = .data$x,
+                      y = .data$y,
+                      colour = .data$condition),
                   alpha = 0.8,
                   lwd = 1) +
-        geom_errorbar(aes(ymax = mean_error + se_error,
-                          ymin = mean_error - se_error,
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
                           colour = condition),
                       width = 0.00) +
-        geom_point(aes(colour = condition)) +
+        geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
@@ -1950,6 +1954,7 @@ plot_model_fit <- function(participant_data,
 #' @importFrom dplyr all_of
 #' @importFrom graphics hist
 #' @importFrom ggplot2 position_dodge
+#' @importFrom rlang .data
 #' @export
 plot_model_parameters <- function(model_fit,
                                   id_var = "id",
@@ -1976,24 +1981,24 @@ plot_model_parameters <- function(model_fit,
 
     # get plot data
     plot_data <- model_fit %>%
-      pivot_longer(K:p_u,
+      pivot_longer(.data$kappa:.data$p_u,
                     names_to = "Parameter") %>%
-      mutate(Parameter = as.factor(Parameter)) %>%
-      group_by(Parameter) %>%
-      summarise(mean_value = mean(value),
-                se_value = sd(value) / sqrt(length(value)))
+      mutate(Parameter = as.factor(.data$Parameter)) %>%
+      group_by(.data$Parameter) %>%
+      summarise(mean_value = mean(.data$value),
+                se_value = sd(.data$value) / sqrt(length(.data$value)))
 
 
     # do the plot if it's the 2-component model
     if(components == 2){
 
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_u"))
+                                    levels = c("kappa", "p_t", "p_u"))
 
-      plot <- ggplot(plot_data, aes(x = Parameter,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+      plot <- ggplot(plot_data, aes(x = .data$Parameter,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
@@ -2006,12 +2011,12 @@ plot_model_parameters <- function(model_fit,
     if(components == 3){
 
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_n", "p_u"))
+                                    levels = c("kappa", "p_t", "p_n", "p_u"))
 
-      plot <- ggplot(plot_data, aes(x = Parameter,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+      plot <- ggplot(plot_data, aes(x = .data$Parameter,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
@@ -2031,21 +2036,22 @@ plot_model_parameters <- function(model_fit,
     # get the plot data
     if(components == 2){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_u, condition) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$condition) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(condition, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$condition, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
     if(components == 3){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_n, p_u, condition) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+               .data$condition) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(condition, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$condition, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
 
     ## do the plot if it's the 2-component model
@@ -2055,15 +2061,15 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 2){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = condition,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+                                    levels = c("kappa", "p_t", "p_u"))
+      plot <- ggplot(plot_data, aes(x = .data$condition,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        labs(x = condition_var) +
+        labs(x = .data$condition_var) +
         facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
@@ -2076,11 +2082,11 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 3){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_n", "p_u"))
-      plot <- ggplot(plot_data, aes(x = condition,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+                                    levels = c("kappa", "p_t", "p_n", "p_u"))
+      plot <- ggplot(plot_data, aes(x = .data$condition,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
@@ -2094,11 +2100,11 @@ plot_model_parameters <- function(model_fit,
     participant_condition <- model_fit %>%
       select(all_of(condition_var))
     function_condition <- model_fit %>%
-      select(condition)
+      select(.data$condition)
 
     if(colnames(participant_condition) != colnames(function_condition)){
       model_fit <- model_fit %>%
-        select(-condition)
+        select(-.data$condition)
     }
 
   }
@@ -2111,21 +2117,22 @@ plot_model_parameters <- function(model_fit,
     # get the plot data
     if(components == 2){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_u, set_size) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(set_size, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$set_size, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
     if(components == 3){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_n, p_u, set_size) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+               .data$set_size) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(set_size, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$set_size, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
 
     ## do the plot if it's the 2-component model
@@ -2135,11 +2142,11 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 2){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = set_size,
-                                    y = mean_value)) ++
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+                                    levels = c("kappa", "p_t", "p_u"))
+      plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                    y = .data$mean_value)) ++
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
@@ -2156,11 +2163,11 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 3){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_n", "p_u"))
-      plot <- ggplot(plot_data, aes(x = set_size,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+                                    levels = c("kappa", "p_t", "p_n", "p_u"))
+      plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
@@ -2173,11 +2180,11 @@ plot_model_parameters <- function(model_fit,
     participant_set_size <- model_fit %>%
       select(all_of(set_size_var))
     function_set_size <- model_fit %>%
-      select(set_size)
+      select(.data$set_size)
 
     if(colnames(participant_set_size) != colnames(function_set_size)){
       model_fit <- model_fit %>%
-        select(-set_size)
+        select(-.data$set_size)
     }
 
   }
@@ -2192,21 +2199,23 @@ plot_model_parameters <- function(model_fit,
     # get the plot data
     if(components == 2){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_u, set_size, condition) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size,
+               .data$condition) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(condition, set_size, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$condition, .data$set_size, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
     if(components == 3){
       plot_data <- model_fit %>%
-        select(id_var, K, p_t, p_n, p_u, set_size, condition) %>%
-        pivot_longer(K:p_u,
+        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+               .data$set_size, .data$condition) %>%
+        pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(condition, set_size, Parameter) %>%
-        summarise(mean_value = mean(value),
-                  se_value = sd(value) / sqrt(length(value)))
+        group_by(.data$condition, .data$set_size, .data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
     }
 
     ## do the plot if it's the 2-component model
@@ -2217,11 +2226,11 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 2){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = set_size,
-                                    y = mean_value)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value),
+                                    levels = c("kappa", "p_t", "p_u"))
+      plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                    y = .data$mean_value)) +
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value),
                       width = 0.00) +
         geom_point() +
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
@@ -2240,19 +2249,19 @@ plot_model_parameters <- function(model_fit,
 
     if(components == 3){
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("K", "p_t", "p_n", "p_u"))
+                                    levels = c("kappa", "p_t", "p_n", "p_u"))
       pd <- position_dodge(0.3)
-      plot <- ggplot(plot_data, aes(x = set_size,
-                                    y = mean_value,
+      plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                    y = .data$mean_value,
                                     group = condition)) +
-        geom_errorbar(aes(ymax = mean_value + se_value,
-                          ymin = mean_value - se_value,
+        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                          ymin = .data$mean_value - .data$se_value,
                           colour = condition),
                       width = 0.00,
                       position = pd) +
-        geom_point(aes(colour = condition),
+        geom_point(aes(colour = .data$condition),
                    position = pd) +
-        scale_colour_brewer(palette = "Dark2", name = condition_var) +
+        scale_colour_brewer(palette = "Dark2", name = .data$condition_var) +
         labs(x = "Set Size",
              y = "Mean Parameter Value") +
         facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
@@ -2266,22 +2275,22 @@ plot_model_parameters <- function(model_fit,
     participant_set_size <- model_fit %>%
       select(all_of(set_size_var))
     function_set_size <- model_fit %>%
-      select(set_size)
+      select(.data$set_size)
 
     if(colnames(participant_set_size) != colnames(function_set_size)){
       model_fit <- model_fit %>%
-        select(-set_size)
+        select(-.data$set_size)
     }
 
     # condition
     participant_condition <- model_fit %>%
       select(all_of(condition_var))
     function_condition <- model_fit %>%
-      select(condition)
+      select(.data$condition)
 
     if(colnames(participant_condition) != colnames(function_condition)){
       model_fit <- model_fit %>%
-        select(-condition)
+        select(-.data$condition)
     }
 
   }
