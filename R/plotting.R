@@ -1969,6 +1969,8 @@ plot_model_fit <- function(participant_data,
 #'
 #'@param model_fit The model fit object containing the parameters to be
 #'plotted.
+#'@param model A string indicating the model that was fit to the data. Currently
+#' the options are "2_component", "3_component", "slots", and "slots_averaging".
 #'@param id_var The column name coding for participant id. If the data is from
 #'a single participant (i.e., there is no id column) set to NULL.
 #'@param set_size_var The column name (if applicable) coding for the set
@@ -1992,6 +1994,7 @@ plot_model_fit <- function(participant_data,
 #' @importFrom rlang .data
 #' @export
 plot_model_parameters <- function(model_fit,
+                                  model,
                                   id_var = "id",
                                   set_size_var = NULL,
                                   condition_var = NULL,
@@ -2002,33 +2005,24 @@ plot_model_parameters <- function(model_fit,
     return("Error: Only use this function for multiple participants.")
   }
 
+  #---- slots models
+  if(model == "slots" || model == "slots_averaging"){
 
-  # check how many components in the model fit object
-  if(is.null(model_fit$p_n)){
-    components <- 2
-  } else{
-    components <- 3
-  }
+    # no condition manipulation
+    if(is.null(condition_var)){
 
+      # get plot data
+      plot_data <- model_fit %>%
+        pivot_longer(.data$K:.data$kappa,
+                     names_to = "Parameter") %>%
+        mutate(Parameter = as.factor(.data$Parameter)) %>%
+        group_by(.data$Parameter) %>%
+        summarise(mean_value = mean(.data$value),
+                  se_value = sd(.data$value) / sqrt(length(.data$value)))
 
-  # no set size or condition manipulation
-  if(is.null(set_size_var) && is.null(condition_var)){
-
-    # get plot data
-    plot_data <- model_fit %>%
-      pivot_longer(.data$kappa:.data$p_u,
-                    names_to = "Parameter") %>%
-      mutate(Parameter = as.factor(.data$Parameter)) %>%
-      group_by(.data$Parameter) %>%
-      summarise(mean_value = mean(.data$value),
-                se_value = sd(.data$value) / sqrt(length(.data$value)))
-
-
-    # do the plot if it's the 2-component model
-    if(components == 2){
-
+      # do the plot
       plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_u"))
+                                    levels = c("K", "kappa"))
 
       plot <- ggplot(plot_data, aes(x = .data$Parameter,
                                     y = .data$mean_value)) +
@@ -2042,293 +2036,380 @@ plot_model_parameters <- function(model_fit,
     }
 
 
-    # do the plot if it's the 3-component model
-    if(components == 3){
+      # there is a condition manipulation
+      if(!is.null(condition_var)){
 
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_n", "p_u"))
+        model_fit$condition <- model_fit[[condition_var]]
 
-      plot <- ggplot(plot_data, aes(x = .data$Parameter,
-                                    y = .data$mean_value)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        labs(y = "Mean Parameter Value") +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
+        # get plot data
+        plot_data <- model_fit %>%
+          pivot_longer(.data$K:.data$kappa,
+                       names_to = "Parameter") %>%
+          group_by(.data$condition, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
 
-    }
+        # do the plot
+        plot_data$condition <- as.factor(plot_data$condition)
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("K", "kappa"))
 
-  }
+        plot <- ggplot(plot_data, aes(x = .data$condition,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
 
+        ## rename columns to user-determined names
+        participant_condition <- model_fit %>%
+          select(all_of(condition_var))
+        function_condition <- model_fit %>%
+          select(.data$condition)
 
-  # no set size manipulation but there is a condition manipulation
-  if(is.null(set_size_var) && !is.null(condition_var)){
-
-    model_fit$condition <- model_fit[[condition_var]]
-
-    # get the plot data
-    if(components == 2){
-      plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$condition) %>%
-        pivot_longer(.data$kappa:.data$p_u,
-                     names_to = "Parameter") %>%
-        group_by(.data$condition, .data$Parameter) %>%
-        summarise(mean_value = mean(.data$value),
-                  se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-    if(components == 3){
-      plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
-               .data$condition) %>%
-        pivot_longer(.data$kappa:.data$p_u,
-                     names_to = "Parameter") %>%
-        group_by(.data$condition, .data$Parameter) %>%
-        summarise(mean_value = mean(.data$value),
-                  se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-
-    ## do the plot if it's the 2-component model
-
-    # ensure condition is factor
-    plot_data$condition <- as.factor(plot_data$condition)
-
-    if(components == 2){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = .data$condition,
-                                    y = .data$mean_value)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        labs(y = "Mean Parameter Value") +
-        labs(x = condition_var) +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
-    }
-
-
-    ## do the plot if it's the 3-component model
-
-    # ensure condition is factor
-    plot_data$condition <- as.factor(plot_data$condition)
-
-    if(components == 3){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_n", "p_u"))
-      plot <- ggplot(plot_data, aes(x = .data$condition,
-                                    y = .data$mean_value)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        labs(y = "Mean Parameter Value") +
-        labs(x = condition_var) +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
-    }
-
-
-    ## rename columns to user-determined names
-    participant_condition <- model_fit %>%
-      select(all_of(condition_var))
-    function_condition <- model_fit %>%
-      select(.data$condition)
-
-    if(colnames(participant_condition) != colnames(function_condition)){
-      model_fit <- model_fit %>%
-        select(-.data$condition)
-    }
+        if(colnames(participant_condition) != colnames(function_condition)){
+          model_fit <- model_fit %>%
+            select(-.data$condition)
+        }
+      }
 
   }
 
-  # set size manipulation, but no condition manipulation
-  if(!is.null(set_size_var) && is.null(condition_var)){
+  #---- components models
+  if(model == "2_component" || model == "3_component"){
 
-    model_fit$set_size <- model_fit[[set_size_var]]
+    # check how many components in the model fit object
+    if(is.null(model_fit$p_n)){
+      components <- 2
+    } else{
+      components <- 3
+    }
 
-    # get the plot data
-    if(components == 2){
+
+    # no set size or condition manipulation
+    if(is.null(set_size_var) && is.null(condition_var)){
+
+      # get plot data
       plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size) %>%
         pivot_longer(.data$kappa:.data$p_u,
                      names_to = "Parameter") %>%
-        group_by(.data$set_size, .data$Parameter) %>%
+        mutate(Parameter = as.factor(.data$Parameter)) %>%
+        group_by(.data$Parameter) %>%
         summarise(mean_value = mean(.data$value),
                   se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-    if(components == 3){
-      plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
-               .data$set_size) %>%
-        pivot_longer(.data$kappa:.data$p_u,
-                     names_to = "Parameter") %>%
-        group_by(.data$set_size, .data$Parameter) %>%
-        summarise(mean_value = mean(.data$value),
-                  se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-
-    ## do the plot if it's the 2-component model
-
-    # ensure set size is numeric
-    plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
-
-    if(components == 2){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = .data$set_size,
-                                    y = .data$mean_value)) ++
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        labs(y = "Mean Parameter Value") +
-        labs(x = "Set Size") +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
-    }
 
 
-    ## do the plot if it's the 3-component model
+      # do the plot if it's the 2-component model
+      if(components == 2){
 
-    # ensure set size is numeric
-    plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_u"))
 
-    if(components == 3){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_n", "p_u"))
-      plot <- ggplot(plot_data, aes(x = .data$set_size,
-                                    y = .data$mean_value)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        labs(y = "Mean Parameter Value") +
-        labs(x = "Set Size") +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
+        plot <- ggplot(plot_data, aes(x = .data$Parameter,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      # do the plot if it's the 3-component model
+      if(components == 3){
+
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_n", "p_u"))
+
+        plot <- ggplot(plot_data, aes(x = .data$Parameter,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+
+      }
+
     }
 
-    ## rename columns to user-determined names
-    participant_set_size <- model_fit %>%
-      select(all_of(set_size_var))
-    function_set_size <- model_fit %>%
-      select(.data$set_size)
 
-    if(colnames(participant_set_size) != colnames(function_set_size)){
-      model_fit <- model_fit %>%
-        select(-.data$set_size)
+    # no set size manipulation but there is a condition manipulation
+    if(is.null(set_size_var) && !is.null(condition_var)){
+
+      model_fit$condition <- model_fit[[condition_var]]
+
+      # get the plot data
+      if(components == 2){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$condition) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$condition, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+      if(components == 3){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+                 .data$condition) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$condition, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+
+      ## do the plot if it's the 2-component model
+
+      # ensure condition is factor
+      plot_data$condition <- as.factor(plot_data$condition)
+
+      if(components == 2){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_u"))
+        plot <- ggplot(plot_data, aes(x = .data$condition,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          labs(x = condition_var) +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      ## do the plot if it's the 3-component model
+
+      # ensure condition is factor
+      plot_data$condition <- as.factor(plot_data$condition)
+
+      if(components == 3){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_n", "p_u"))
+        plot <- ggplot(plot_data, aes(x = .data$condition,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          labs(x = condition_var) +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      ## rename columns to user-determined names
+      participant_condition <- model_fit %>%
+        select(all_of(condition_var))
+      function_condition <- model_fit %>%
+        select(.data$condition)
+
+      if(colnames(participant_condition) != colnames(function_condition)){
+        model_fit <- model_fit %>%
+          select(-.data$condition)
+      }
+
     }
 
+    # set size manipulation, but no condition manipulation
+    if(!is.null(set_size_var) && is.null(condition_var)){
+
+      model_fit$set_size <- model_fit[[set_size_var]]
+
+      # get the plot data
+      if(components == 2){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$set_size, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+      if(components == 3){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+                 .data$set_size) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$set_size, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+
+      ## do the plot if it's the 2-component model
+
+      # ensure set size is numeric
+      plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
+
+      if(components == 2){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_u"))
+        plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                      y = .data$mean_value)) ++
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          labs(x = "Set Size") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      ## do the plot if it's the 3-component model
+
+      # ensure set size is numeric
+      plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
+
+      if(components == 3){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_n", "p_u"))
+        plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          labs(y = "Mean Parameter Value") +
+          labs(x = "Set Size") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+      ## rename columns to user-determined names
+      participant_set_size <- model_fit %>%
+        select(all_of(set_size_var))
+      function_set_size <- model_fit %>%
+        select(.data$set_size)
+
+      if(colnames(participant_set_size) != colnames(function_set_size)){
+        model_fit <- model_fit %>%
+          select(-.data$set_size)
+      }
+
+    }
+
+
+    # both set size & condition manipulation
+    if(!is.null(set_size_var) && !is.null(condition_var)){
+
+      model_fit$condition <- model_fit[[condition_var]]
+      model_fit$set_size <- model_fit[[set_size_var]]
+
+      # get the plot data
+      if(components == 2){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size,
+                 .data$condition) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$condition, .data$set_size, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+      if(components == 3){
+        plot_data <- model_fit %>%
+          select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
+                 .data$set_size, .data$condition) %>%
+          pivot_longer(.data$kappa:.data$p_u,
+                       names_to = "Parameter") %>%
+          group_by(.data$condition, .data$set_size, .data$Parameter) %>%
+          summarise(mean_value = mean(.data$value),
+                    se_value = sd(.data$value) / sqrt(length(.data$value)))
+      }
+
+      ## do the plot if it's the 2-component model
+
+      # ensure set size is numeric & condition is factor
+      plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
+      plot_data$condition <- as.factor(plot_data$condition)
+
+      if(components == 2){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_u"))
+        plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                      y = .data$mean_value)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value),
+                        width = 0.00) +
+          geom_point() +
+          scale_colour_brewer(palette = "Dark2", name = condition_var) +
+          labs(x = "Set Size",
+               y = "Mean Parameter Value") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      ## do the plot if it's the 3-component model
+
+      # ensure set size is numeric & condition is factor
+      plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
+      plot_data$condition <- as.factor(plot_data$condition)
+
+      if(components == 3){
+        plot_data$Parameter <- factor(plot_data$Parameter,
+                                      levels = c("kappa", "p_t", "p_n", "p_u"))
+        pd <- position_dodge(0.3)
+        plot <- ggplot(plot_data, aes(x = .data$set_size,
+                                      y = .data$mean_value,
+                                      group = .data$condition)) +
+          geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
+                            ymin = .data$mean_value - .data$se_value,
+                            colour = .data$condition),
+                        width = 0.00,
+                        position = pd) +
+          geom_point(aes(colour = .data$condition),
+                     position = pd) +
+          scale_colour_brewer(palette = "Dark2", name = condition_var) +
+          labs(x = "Set Size",
+               y = "Mean Parameter Value") +
+          facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
+          theme_bw()
+      }
+
+
+      ## rename columns to user-determined names
+
+      # set size
+      participant_set_size <- model_fit %>%
+        select(all_of(set_size_var))
+      function_set_size <- model_fit %>%
+        select(.data$set_size)
+
+      if(colnames(participant_set_size) != colnames(function_set_size)){
+        model_fit <- model_fit %>%
+          select(-.data$set_size)
+      }
+
+      # condition
+      participant_condition <- model_fit %>%
+        select(all_of(condition_var))
+      function_condition <- model_fit %>%
+        select(.data$condition)
+
+      if(colnames(participant_condition) != colnames(function_condition)){
+        model_fit <- model_fit %>%
+          select(-.data$condition)
+      }
+
+    }
   }
 
 
-  # both set size & condition manipulation
-  if(!is.null(set_size_var) && !is.null(condition_var)){
-
-    model_fit$condition <- model_fit[[condition_var]]
-    model_fit$set_size <- model_fit[[set_size_var]]
-
-    # get the plot data
-    if(components == 2){
-      plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_u, .data$set_size,
-               .data$condition) %>%
-        pivot_longer(.data$kappa:.data$p_u,
-                     names_to = "Parameter") %>%
-        group_by(.data$condition, .data$set_size, .data$Parameter) %>%
-        summarise(mean_value = mean(.data$value),
-                  se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-    if(components == 3){
-      plot_data <- model_fit %>%
-        select(id_var, .data$kappa, .data$p_t, .data$p_n, .data$p_u,
-               .data$set_size, .data$condition) %>%
-        pivot_longer(.data$kappa:.data$p_u,
-                     names_to = "Parameter") %>%
-        group_by(.data$condition, .data$set_size, .data$Parameter) %>%
-        summarise(mean_value = mean(.data$value),
-                  se_value = sd(.data$value) / sqrt(length(.data$value)))
-    }
-
-    ## do the plot if it's the 2-component model
-
-    # ensure set size is numeric & condition is factor
-    plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
-    plot_data$condition <- as.factor(plot_data$condition)
-
-    if(components == 2){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_u"))
-      plot <- ggplot(plot_data, aes(x = .data$set_size,
-                                    y = .data$mean_value)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value),
-                      width = 0.00) +
-        geom_point() +
-        scale_colour_brewer(palette = "Dark2", name = condition_var) +
-        labs(x = "Set Size",
-             y = "Mean Parameter Value") +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
-    }
-
-
-    ## do the plot if it's the 3-component model
-
-    # ensure set size is numeric & condition is factor
-    plot_data$set_size <- as.numeric(as.character(plot_data$set_size))
-    plot_data$condition <- as.factor(plot_data$condition)
-
-    if(components == 3){
-      plot_data$Parameter <- factor(plot_data$Parameter,
-                                    levels = c("kappa", "p_t", "p_n", "p_u"))
-      pd <- position_dodge(0.3)
-      plot <- ggplot(plot_data, aes(x = .data$set_size,
-                                    y = .data$mean_value,
-                                    group = .data$condition)) +
-        geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
-                          ymin = .data$mean_value - .data$se_value,
-                          colour = .data$condition),
-                      width = 0.00,
-                      position = pd) +
-        geom_point(aes(colour = .data$condition),
-                   position = pd) +
-        scale_colour_brewer(palette = "Dark2", name = condition_var) +
-        labs(x = "Set Size",
-             y = "Mean Parameter Value") +
-        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
-        theme_bw()
-    }
-
-
-    ## rename columns to user-determined names
-
-    # set size
-    participant_set_size <- model_fit %>%
-      select(all_of(set_size_var))
-    function_set_size <- model_fit %>%
-      select(.data$set_size)
-
-    if(colnames(participant_set_size) != colnames(function_set_size)){
-      model_fit <- model_fit %>%
-        select(-.data$set_size)
-    }
-
-    # condition
-    participant_condition <- model_fit %>%
-      select(all_of(condition_var))
-    function_condition <- model_fit %>%
-      select(.data$condition)
-
-    if(colnames(participant_condition) != colnames(function_condition)){
-      model_fit <- model_fit %>%
-        select(-.data$condition)
-    }
-
-  }
 
   # return the plot & the plot data
   if(return_data == TRUE){

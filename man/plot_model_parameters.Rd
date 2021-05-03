@@ -6,6 +6,7 @@
 \usage{
 plot_model_parameters(
   model_fit,
+  model,
   id_var = "id",
   set_size_var = NULL,
   condition_var = NULL,
@@ -16,6 +17,9 @@ plot_model_parameters(
 \arguments{
 \item{model_fit}{The model fit object containing the parameters to be
 plotted.}
+
+\item{model}{A string indicating the model that was fit to the data. Currently
+the options are "2_component", "3_component", "slots", and "slots_averaging".}
 
 \item{id_var}{The column name coding for participant id. If the data is from
 a single participant (i.e., there is no id column) set to NULL.}

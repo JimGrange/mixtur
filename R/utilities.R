@@ -322,4 +322,3 @@ bic <- function(ll, parms, n){
   value <- round(value, 3)
   return(value)
 }
-
