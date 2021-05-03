@@ -701,6 +701,9 @@ plot_error <- function(data,
                        n_col = 2,
                        return_data = FALSE){
 
+  condition <- NULL
+  set_size <- NULL
+
 
   # establish the break points of the density plot
   break_points <- round(seq(from = -pi, to = pi, length.out = n_bins), 3)
@@ -869,7 +872,7 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(condition), ncol = n_col)
+      facet_wrap(vars(.data$condition), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- condition_var
@@ -893,7 +896,7 @@ plot_error <- function(data,
                                       max(final_data$se_error))) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = n_col)
+      facet_wrap(vars(.data$set_size), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
@@ -925,7 +928,7 @@ plot_error <- function(data,
       scale_colour_brewer(palette = "Dark2", name = condition_var) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
-      facet_wrap(vars(set_size), ncol = n_col)
+      facet_wrap(vars(.data$set_size), ncol = n_col)
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
@@ -1362,7 +1365,7 @@ plot_model_fit <- function(participant_data,
                           ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -1394,11 +1397,11 @@ plot_model_fit <- function(participant_data,
         for(j in 1:length(set_sizes)){
 
           level_K <- mean_K %>%
-            filter(condition == conditions[i]) %>%
+            filter(.data$condition == conditions[i]) %>%
             pull()
 
           level_kappa <- mean_kappa %>%
-            filter(condition == conditions[i]) %>%
+            filter(.data$condition == conditions[i]) %>%
             pull()
 
           level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
@@ -1447,7 +1450,7 @@ plot_model_fit <- function(participant_data,
                           colour = .data$condition),
                       width = 0.00) +
         geom_point(aes(colour = .data$condition)) +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -1530,7 +1533,7 @@ plot_model_fit <- function(participant_data,
                           ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -1551,7 +1554,7 @@ plot_model_fit <- function(participant_data,
         summarise(mean_K = mean(.data$K))
 
       mean_kappa <- model_fit %>%
-        group_by(condition) %>%
+        group_by(.data$condition) %>%
         summarise(mean_kappa = mean(.data$kappa))
 
       # get the model predictions
@@ -1562,11 +1565,11 @@ plot_model_fit <- function(participant_data,
         for(j in 1:length(set_sizes)){
 
           level_K <- mean_K %>%
-            filter(condition == conditions[i]) %>%
+            filter(.data$condition == conditions[i]) %>%
             pull()
 
           level_kappa <- mean_kappa %>%
-            filter(condition == conditions[i]) %>%
+            filter(.data$condition == conditions[i]) %>%
             pull()
 
           level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
@@ -1621,7 +1624,7 @@ plot_model_fit <- function(participant_data,
                           colour = .data$condition),
                       width = 0.00) +
         geom_point(aes(colour = .data$condition)) +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -1727,15 +1730,15 @@ plot_model_fit <- function(participant_data,
       for(i in 1:length(conditions)){
 
         level_k = mean_k %>%
-          filter(condition == conditions[i]) %>%
+          filter(.data$condition == conditions[i]) %>%
           pull()
 
         level_p_t = mean_p_t %>%
-          filter(condition == conditions[i]) %>%
+          filter(.data$condition == conditions[i]) %>%
           pull()
 
         level_p_u = mean_p_u %>%
-          filter(condition == conditions[i]) %>%
+          filter(.data$condition == conditions[i]) %>%
           pull()
 
         level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
@@ -1764,7 +1767,7 @@ plot_model_fit <- function(participant_data,
                           ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
-        facet_wrap(vars(condition), ncol = n_col) +
+        facet_wrap(vars(.data$condition), ncol = n_col) +
         theme_bw() +
         labs(x = "Error (Radians)",
              y = "Probability Density")
@@ -1805,20 +1808,22 @@ plot_model_fit <- function(participant_data,
       for(i in 1:length(set_sizes)){
 
         level_k = mean_k %>%
-          filter(set_size == set_sizes[i]) %>%
+          filter(.data$set_size == set_sizes[i]) %>%
           pull()
 
         level_p_t = mean_p_t %>%
-          filter(set_size == set_sizes[i]) %>%
+          filter(.data$set_size == set_sizes[i]) %>%
           pull()
 
         level_p_u = mean_p_u %>%
-          filter(set_size == set_sizes[i]) %>%
+          filter(.data$set_size == set_sizes[i]) %>%
           pull()
 
         level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                              y = vonmisespdf(.data$x, 0, level_k) * (level_p_t) +
-                                dunif(.data$x, min = -pi, max = pi) * (level_p_u))
+                              y = vonmisespdf(.data$x, 0, level_k) *
+                                (level_p_t) +
+                                dunif(.data$x, min = -pi, max = pi) *
+                                (level_p_u))
 
         level_preds <- level_preds %>%
           mutate(set_size = set_sizes[i])
@@ -1844,7 +1849,7 @@ plot_model_fit <- function(participant_data,
                           ymin = .data$mean_error - .data$se_error),
                       width = 0.00) +
         geom_point() +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -1889,23 +1894,25 @@ plot_model_fit <- function(participant_data,
         for(j in 1:length(conditions)){
 
           level_k <- mean_k %>%
-            filter(set_size == set_sizes[i]) %>%
-            filter(condition == conditions[j]) %>%
+            filter(.data$set_size == set_sizes[i]) %>%
+            filter(.data$condition == conditions[j]) %>%
             pull()
 
           level_p_t <-  mean_p_t %>%
-            filter(set_size == set_sizes[i]) %>%
-            filter(condition == conditions[j]) %>%
+            filter(.data$set_size == set_sizes[i]) %>%
+            filter(.data$condition == conditions[j]) %>%
             pull()
 
           level_p_u <-  mean_p_u %>%
-            filter(set_size == set_sizes[i]) %>%
-            filter(condition == conditions[j]) %>%
+            filter(.data$set_size == set_sizes[i]) %>%
+            filter(.data$condition == conditions[j]) %>%
             pull()
 
           level_preds <- tibble(x = seq(-pi, pi, length.out = 1000),
-                                y = vonmisespdf(.data$x, 0, level_k) * (level_p_t) +
-                                  dunif(.data$x, min = -pi, max = pi) * (level_p_u))
+                                y = vonmisespdf(.data$x, 0, level_k) *
+                                  (level_p_t) +
+                                  dunif(.data$x, min = -pi, max = pi) *
+                                  (level_p_u))
 
           level_preds <- level_preds %>%
             mutate(set_size = set_sizes[i]) %>%
@@ -1934,10 +1941,10 @@ plot_model_fit <- function(participant_data,
                   lwd = 1) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error,
-                          colour = condition),
+                          colour = .data$condition),
                       width = 0.00) +
         geom_point(aes(colour = .data$condition)) +
-        facet_wrap(vars(set_size), ncol = n_col) +
+        facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
         scale_colour_brewer(palette = "Dark2") +
         labs(x = "Error (Radians)",
@@ -2030,7 +2037,7 @@ plot_model_parameters <- function(model_fit,
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2048,7 +2055,7 @@ plot_model_parameters <- function(model_fit,
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
 
     }
@@ -2097,8 +2104,8 @@ plot_model_parameters <- function(model_fit,
                       width = 0.00) +
         geom_point() +
         labs(y = "Mean Parameter Value") +
-        labs(x = .data$condition_var) +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        labs(x = condition_var) +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2119,7 +2126,7 @@ plot_model_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = condition_var) +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2179,7 +2186,7 @@ plot_model_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2200,7 +2207,7 @@ plot_model_parameters <- function(model_fit,
         geom_point() +
         labs(y = "Mean Parameter Value") +
         labs(x = "Set Size") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2264,7 +2271,7 @@ plot_model_parameters <- function(model_fit,
         scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
@@ -2281,18 +2288,18 @@ plot_model_parameters <- function(model_fit,
       pd <- position_dodge(0.3)
       plot <- ggplot(plot_data, aes(x = .data$set_size,
                                     y = .data$mean_value,
-                                    group = condition)) +
+                                    group = .data$condition)) +
         geom_errorbar(aes(ymax = .data$mean_value + .data$se_value,
                           ymin = .data$mean_value - .data$se_value,
-                          colour = condition),
+                          colour = .data$condition),
                       width = 0.00,
                       position = pd) +
         geom_point(aes(colour = .data$condition),
                    position = pd) +
-        scale_colour_brewer(palette = "Dark2", name = .data$condition_var) +
+        scale_colour_brewer(palette = "Dark2", name = condition_var) +
         labs(x = "Set Size",
              y = "Mean Parameter Value") +
-        facet_wrap(vars(Parameter), ncol = n_col, scales = "free") +
+        facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
         theme_bw()
     }
 
