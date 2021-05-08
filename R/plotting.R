@@ -1971,8 +1971,7 @@ plot_model_fit <- function(participant_data,
 #'plotted.
 #'@param model A string indicating the model that was fit to the data. Currently
 #' the options are "2_component", "3_component", "slots", and "slots_averaging".
-#'@param id_var The column name coding for participant id. If the data is from
-#'a single participant (i.e., there is no id column) set to NULL.
+#'@param id_var The column name coding for participant id.
 #'@param set_size_var The column name (if applicable) coding for the set
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
@@ -2002,7 +2001,7 @@ plot_model_parameters <- function(model_fit,
                                   return_data = FALSE){
 
   if(is.null(id_var)){
-    return("Error: Only use this function for multiple participants.")
+    stop("id_var required", call. = FALSE)
   }
 
   #---- slots models
@@ -2408,7 +2407,6 @@ plot_model_parameters <- function(model_fit,
 
     }
   }
-
 
 
   # return the plot & the plot data

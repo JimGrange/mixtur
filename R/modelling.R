@@ -518,7 +518,7 @@ fit_slots_gd <- function(model,
 
   # set minimum & maximum parameter values
   min_parms <- c(0, 0)
-  max_parms <- c(30, 30)
+  max_parms <- c(Inf, Inf)
 
 
   # initialise log likelihood

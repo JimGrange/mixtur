@@ -21,8 +21,7 @@ plotted.}
 \item{model}{A string indicating the model that was fit to the data. Currently
 the options are "2_component", "3_component", "slots", and "slots_averaging".}
 
-\item{id_var}{The column name coding for participant id. If the data is from
-a single participant (i.e., there is no id column) set to NULL.}
+\item{id_var}{The column name coding for participant id.}
 
 \item{set_size_var}{The column name (if applicable) coding for the set
 size of each response.}
