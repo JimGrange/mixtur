@@ -617,7 +617,11 @@ slots_model_averaging_pdf_gd <- function(data,
 
   ll <- -sum(log(data$p_error))
 
-  return(ll)
+  if(ll == Inf){
+    return(.Machine$double.xmax)
+  } else{
+    return(ll)
+  }
 
 }
 
@@ -661,7 +665,13 @@ slots_model_pdf_gd <- function(data,
                                TRUE ~ p_error_memory))
 
   ll <- -sum(log(d$p_error))
-  return(ll)
+
+  if(ll == Inf){
+    return(.Machine$double.xmax)
+  } else{
+    return(ll)
+  }
+
 }
 
 
@@ -998,9 +1008,13 @@ components_model_pdf_gd <- function(response,
 
   # calculate log likelihood of model
   weights <- rowSums(cbind(w_t, w_g, w_n))
-  LL <- sum(log(weights))
+  ll <- sum(log(weights))
 
-  return(-LL)
+  if(ll == Inf){
+    return(.Machine$double.xmax)
+  } else{
+    return(-ll)
+  }
 }
 
 
