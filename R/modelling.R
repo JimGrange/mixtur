@@ -617,7 +617,7 @@ slots_model_averaging_pdf_gd <- function(data,
 
   ll <- -sum(log(data$p_error))
 
-  if(ll == Inf){
+  if(ll == Inf || ll == -Inf ||  is.na(ll)){
     return(.Machine$double.xmax)
   } else{
     return(ll)
@@ -666,7 +666,7 @@ slots_model_pdf_gd <- function(data,
 
   ll <- -sum(log(d$p_error))
 
-  if(ll == Inf){
+  if(ll == Inf || ll == -Inf || is.na(ll)){
     return(.Machine$double.xmax)
   } else{
     return(ll)
@@ -929,7 +929,6 @@ components_model_pdf_gd <- function(response,
                                     min_parms,
                                     max_parms) {
 
-
   # extract the parameters
   parms <- c(start_parms[1],
              1 - start_parms[2] - start_parms[3],
@@ -1008,12 +1007,13 @@ components_model_pdf_gd <- function(response,
 
   # calculate log likelihood of model
   weights <- rowSums(cbind(w_t, w_g, w_n))
-  ll <- sum(log(weights))
+  ll <- -sum(log(weights))
 
-  if(ll == Inf){
+
+  if(ll == Inf || ll == -Inf || is.na(ll)){
     return(.Machine$double.xmax)
-  } else{
-    return(-ll)
+  } else {
+    return(ll)
   }
 }
 
