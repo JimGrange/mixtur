@@ -63,9 +63,9 @@ set size of each response.}
 \item{condition_var}{The quoted column name (if applicable) coding for the
 condition of each response.}
 
-\item{return_fit}{If set to TRUE, the function will return the negative
-log-likelihood of the model fit as well as the number of trials used in the
-fit (which is important for calculating some model comparison statistics).}
+\item{return_fit}{If set to TRUE, the function will return the log-likelihood
+of the model fit, Akiakie's Information Criterion (AIC), Bayesian Information
+Criterion (BIC), as well as the number of trials used in the fit.}
 }
 \description{
 This is the function called by the user to fit either the two- or three-
