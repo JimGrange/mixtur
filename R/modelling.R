@@ -48,9 +48,9 @@
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
 #'
-#' @param return_fit If set to TRUE, the function will return the negative
-#' log-likelihood of the model fit as well as the number of trials used in the
-#' fit (which is important for calculating some model comparison statistics).
+#' @param return_fit If set to TRUE, the function will return the log-likelihood
+#' of the model fit, Akiakie's Information Criterion (AIC), Bayesian Information
+#' Criterion (BIC), as well as the number of trials used in the fit.
 #'
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select filter
@@ -416,6 +416,24 @@ fit_mixtur <- function(data,
   # print message to user
   print("Model fit finished.")
 
+
+  # add AIC, AIC_C, and BIC if requested
+  if(return_fit == TRUE){
+
+    if(model == "2_component" || model == "slots" || model == "slots_averaging"){
+      n_parms <- 2
+    } else {
+      n_parms <- 3
+    }
+
+    fit <- fit %>%
+      mutate(aic = aic(LL, n_parms),
+             aic_c = aic_c(LL, n_parms, n),
+             bic = bic(LL, n_parms, n))
+
+  }
+
+
   return(fit)
 
 }
@@ -565,7 +583,7 @@ fit_slots_gd <- function(model,
   }
 
   if(return.ll == TRUE) {
-    return(list(parameters = parameters, LL = log_lik))
+    return(list(parameters = parameters, LL = -log_lik))
   } else {
     return(parameters)
   }
@@ -910,7 +928,7 @@ fit_components_gd <- function(response,
 
 
   if(return.ll == TRUE) {
-    return(list(parameters = parameters, LL = log_lik))
+    return(list(parameters = parameters, LL = -log_lik))
   } else {
     return(parameters)
   }
