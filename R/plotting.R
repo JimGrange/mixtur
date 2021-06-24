@@ -29,14 +29,16 @@
 #'condition of each response.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
 #'
 #'@examples
 #'data(bays2009_full)
-#'plot_summary_statistic(bays2009_full,
-#'                       unit = "radians",
-#'                       statistic = "precision",
-#'                       set_size_var = "set_size",
-#'                       condition_var = "duration")
+# plot_summary_statistic(bays2009_full,
+#                       unit = "radians",
+#                       statistic = "precision",
+#                       set_size_var = "set_size",
+#                       condition_var = "duration")
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -53,7 +55,8 @@ plot_summary_statistic <- function(data,
                                    target_var = "target",
                                    set_size_var = NULL,
                                    condition_var = NULL,
-                                   return_data = FALSE){
+                                   return_data = FALSE,
+                                   palette = "Dark2"){
 
 
   if(statistic == "precision"){
@@ -64,7 +67,8 @@ plot_summary_statistic <- function(data,
                    target_var = target_var,
                    set_size_var = set_size_var,
                    condition_var = condition_var,
-                   return_data = return_data)
+                   return_data = return_data,
+                   palette = palette)
   }
 
   if(statistic == "mean_absolute_error"){
@@ -75,7 +79,8 @@ plot_summary_statistic <- function(data,
                              target_var = target_var,
                              set_size_var = set_size_var,
                              condition_var = condition_var,
-                             return_data = return_data)
+                             return_data = return_data,
+                             palette = palette)
   }
 
 
@@ -87,7 +92,8 @@ plot_summary_statistic <- function(data,
                                  target_var = target_var,
                                  set_size_var = set_size_var,
                                  condition_var = condition_var,
-                                 return_data = return_data)
+                                 return_data = return_data,
+                                 palette = palette)
   }
 
 
@@ -126,6 +132,8 @@ plot_summary_statistic <- function(data,
 # 'condition of each response.
 #' @param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #' the plot should be returned.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -143,7 +151,8 @@ plot_resultant_vector_length <- function(data,
                                          target_var = "target",
                                          set_size_var = NULL,
                                          condition_var = NULL,
-                                         return_data = FALSE){
+                                         return_data = FALSE,
+                                         palette = "Dark2"){
 
   # add id column
   data$id <- data[[id_var]]
@@ -349,7 +358,7 @@ plot_resultant_vector_length <- function(data,
                  position = pd,
                  size = 2.5) +
       theme_bw() +
-      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      scale_colour_brewer(palette = palette, name = condition_var) +
       labs(x = "Set Size",
            y = "Resultant Vector Length")
 
@@ -423,7 +432,8 @@ plot_mean_absolute_error <- function(data,
                                      target_var = "target",
                                      set_size_var = NULL,
                                      condition_var = NULL,
-                                     return_data = FALSE){
+                                     return_data = FALSE,
+                                     palette = "Dark2"){
 
   # add id column
   data$id <- data[[id_var]]
@@ -621,7 +631,7 @@ plot_mean_absolute_error <- function(data,
                  position = pd,
                  size = 2.5) +
       theme_bw() +
-      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      scale_colour_brewer(palette = palette, name = condition_var) +
       labs(x = "Set Size",
            y = "Mean Absolute Error")
 
@@ -673,6 +683,8 @@ plot_mean_absolute_error <- function(data,
 #'plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
 #'
 #'@examples
 #'data(bays2009_full)
@@ -699,7 +711,8 @@ plot_error <- function(data,
                        condition_var = NULL,
                        n_bins = 18,
                        n_col = 2,
-                       return_data = FALSE){
+                       return_data = FALSE,
+                       palette = "Dark2"){
 
   condition <- NULL
   set_size <- NULL
@@ -925,7 +938,7 @@ plot_error <- function(data,
       scale_y_continuous(limits = c(0,
                                     max(final_data$mean_error) +
                                       max(final_data$se_error))) +
-      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      scale_colour_brewer(palette = palette, name = condition_var) +
       labs(x = "Error (Radians)",
            y = "Probability Density") +
       facet_wrap(vars(.data$set_size), ncol = n_col)
@@ -989,7 +1002,8 @@ plot_precision <- function(data,
                            target_var = "target",
                            set_size_var = NULL,
                            condition_var = NULL,
-                           return_data = FALSE){
+                           return_data = FALSE,
+                           palette = "Dark2"){
 
 
   # add id column
@@ -1211,7 +1225,7 @@ plot_precision <- function(data,
                  position = pd,
                  size = 2.5) +
       theme_bw() +
-      scale_colour_brewer(palette = "Dark2", name = condition_var) +
+      scale_colour_brewer(palette = palette, name = condition_var) +
       labs(x = "Set Size",
            y = "Precision")
 
@@ -1260,6 +1274,8 @@ plot_precision <- function(data,
 #'plot of the behavioural data.
 #'@param n_col An integer controlling the number of columns in the resulting
 #'plot.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
 #'
 #' @importFrom tidyr tibble
 #' @importFrom dplyr %>% mutate
@@ -1278,7 +1294,8 @@ plot_model_fit <- function(participant_data,
                            set_size_var = NULL,
                            condition_var = NULL,
                            n_bins = 18,
-                           n_col = 2){
+                           n_col = 2,
+                           palette = "Dark2"){
 
 
   # error message if unsupported model called
@@ -1307,7 +1324,8 @@ plot_model_fit <- function(participant_data,
                               set_size_var = set_size_var,
                               condition_var = condition_var,
                               n_bins = n_bins,
-                              return_data = TRUE)
+                              return_data = TRUE,
+                              palette = palette)
 
     human_error <- human_error$data
 
@@ -1359,7 +1377,7 @@ plot_model_fit <- function(participant_data,
         geom_line(data = model_preds,
                   aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
-                  col = "#D95F02",
+                  col = "#000000",
                   lwd = 1.3) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error),
@@ -1367,7 +1385,7 @@ plot_model_fit <- function(participant_data,
         geom_point() +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
     }
@@ -1452,7 +1470,7 @@ plot_model_fit <- function(participant_data,
         geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
 
@@ -1473,7 +1491,8 @@ plot_model_fit <- function(participant_data,
                               set_size_var = set_size_var,
                               condition_var = condition_var,
                               n_bins = n_bins,
-                              return_data = TRUE)
+                              return_data = TRUE,
+                              palette = palette)
 
     human_error <- human_error$data
 
@@ -1527,7 +1546,7 @@ plot_model_fit <- function(participant_data,
         geom_line(data = model_preds,
                   aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
-                  col = "#D95F02",
+                  col = "#000000",
                   lwd = 1.3) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error),
@@ -1535,7 +1554,7 @@ plot_model_fit <- function(participant_data,
         geom_point() +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
 
@@ -1626,7 +1645,7 @@ plot_model_fit <- function(participant_data,
         geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
 
@@ -1654,7 +1673,8 @@ plot_model_fit <- function(participant_data,
                               set_size_var = set_size_var,
                               condition_var = condition_var,
                               n_bins = n_bins,
-                              return_data = TRUE)
+                              return_data = TRUE,
+                              palette = palette)
 
     human_error <- human_error$data
 
@@ -1685,7 +1705,7 @@ plot_model_fit <- function(participant_data,
         geom_line(data = model_preds,
                   aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
-                  col = "#D95F02",
+                  col = "#000000",
                   lwd = 1.3) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error),
@@ -1761,7 +1781,7 @@ plot_model_fit <- function(participant_data,
         geom_line(data = model_preds,
                   aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
-                  col = "#D95F02",
+                  col = "#000000",
                   lwd = 1.3) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error),
@@ -1843,7 +1863,7 @@ plot_model_fit <- function(participant_data,
         geom_line(data = model_preds,
                   aes(x = .data$x, y = .data$y),
                   alpha = 0.8,
-                  col = "#D95F02",
+                  col = "#000000",
                   lwd = 1.3) +
         geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
                           ymin = .data$mean_error - .data$se_error),
@@ -1851,7 +1871,7 @@ plot_model_fit <- function(participant_data,
         geom_point() +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
 
@@ -1946,7 +1966,7 @@ plot_model_fit <- function(participant_data,
         geom_point(aes(colour = .data$condition)) +
         facet_wrap(vars(.data$set_size), ncol = n_col) +
         theme_bw() +
-        scale_colour_brewer(palette = "Dark2") +
+        scale_colour_brewer(palette = palette) +
         labs(x = "Error (Radians)",
              y = "Probability Density")
 
@@ -1980,6 +2000,8 @@ plot_model_fit <- function(participant_data,
 #'plot.
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -1998,7 +2020,8 @@ plot_model_parameters <- function(model_fit,
                                   set_size_var = NULL,
                                   condition_var = NULL,
                                   n_col = 2,
-                                  return_data = FALSE){
+                                  return_data = FALSE,
+                                  palette = "Dark2"){
 
   if(is.null(id_var)){
     stop("id_var required", call. = FALSE)
@@ -2345,7 +2368,7 @@ plot_model_parameters <- function(model_fit,
                             ymin = .data$mean_value - .data$se_value),
                         width = 0.00) +
           geom_point() +
-          scale_colour_brewer(palette = "Dark2", name = condition_var) +
+          scale_colour_brewer(palette = palette, name = condition_var) +
           labs(x = "Set Size",
                y = "Mean Parameter Value") +
           facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +
@@ -2373,7 +2396,7 @@ plot_model_parameters <- function(model_fit,
                         position = pd) +
           geom_point(aes(colour = .data$condition),
                      position = pd) +
-          scale_colour_brewer(palette = "Dark2", name = condition_var) +
+          scale_colour_brewer(palette = palette, name = condition_var) +
           labs(x = "Set Size",
                y = "Mean Parameter Value") +
           facet_wrap(vars(.data$Parameter), ncol = n_col, scales = "free") +

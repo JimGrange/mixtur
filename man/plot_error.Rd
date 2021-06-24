@@ -14,7 +14,8 @@ plot_error(
   condition_var = NULL,
   n_bins = 18,
   n_col = 2,
-  return_data = FALSE
+  return_data = FALSE,
+  palette = "Dark2"
 )
 }
 \arguments{
@@ -50,6 +51,9 @@ plot.}
 
 \item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
 the plot should be returned.}
+
+\item{palette}{A character stating the preferred colour palette to use. To
+see all available palettes, type display.brewer.all() into the console.}
 }
 \description{
 Function to plot the response error in behavioural data relative to target

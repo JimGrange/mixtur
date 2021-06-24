@@ -427,9 +427,9 @@ fit_mixtur <- function(data,
     }
 
     fit <- fit %>%
-      mutate(aic = aic(LL, n_parms),
-             aic_c = aic_c(LL, n_parms, n),
-             bic = bic(LL, n_parms, n))
+      mutate(aic = aic(.data$LL, n_parms),
+             aic_c = aic_c(.data$LL, n_parms, .data$n),
+             bic = bic(.data$LL, n_parms, .data$n))
 
   }
 

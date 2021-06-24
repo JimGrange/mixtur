@@ -12,7 +12,8 @@ plot_resultant_vector_length(
   target_var = "target",
   set_size_var = NULL,
   condition_var = NULL,
-  return_data = FALSE
+  return_data = FALSE,
+  palette = "Dark2"
 )
 }
 \arguments{
@@ -41,6 +42,9 @@ size of each response.}
 
 \item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
 the plot should be returned.}
+
+\item{palette}{A character stating the preferred colour palette to use. To
+see all available palettes, type display.brewer.all() into the console.}
 }
 \description{
 Function to plot the resultant vector length of response error in

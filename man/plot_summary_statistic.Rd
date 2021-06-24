@@ -13,7 +13,8 @@ plot_summary_statistic(
   target_var = "target",
   set_size_var = NULL,
   condition_var = NULL,
-  return_data = FALSE
+  return_data = FALSE,
+  palette = "Dark2"
 )
 }
 \arguments{
@@ -46,6 +47,9 @@ condition of each response.}
 
 \item{return_data}{A boolean (TRUE or FALSE) indicating whether the data for
 the plot should be returned.}
+
+\item{palette}{A character stating the preferred colour palette to use. To
+see all available palettes, type display.brewer.all() into the console.}
 }
 \description{
 Function to plot model-free summary statistics of behavioural data. Users
@@ -54,10 +58,5 @@ behavioural data.
 }
 \examples{
 data(bays2009_full)
-plot_summary_statistic(bays2009_full,
-                      unit = "radians",
-                      statistic = "precision",
-                      set_size_var = "set_size",
-                      condition_var = "duration")
 
 }

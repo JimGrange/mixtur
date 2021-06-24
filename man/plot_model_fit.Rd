@@ -15,7 +15,8 @@ plot_model_fit(
   set_size_var = NULL,
   condition_var = NULL,
   n_bins = 18,
-  n_col = 2
+  n_col = 2,
+  palette = "Dark2"
 )
 }
 \arguments{
@@ -53,6 +54,9 @@ plot of the behavioural data.}
 
 \item{n_col}{An integer controlling the number of columns in the resulting
 plot.}
+
+\item{palette}{A character stating the preferred colour palette to use. To
+see all available palettes, type display.brewer.all() into the console.}
 }
 \description{
 Plot model fit against human error data (target errors)
