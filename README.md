@@ -5,7 +5,8 @@
 continuous report visual short-term memory studies. The package allows
 users to implement the 2-component (Zhang & Luck, 2008) and 3-component
 (Bays, Catalao, & Husain, 2009) mixture models of continuous-report
-visual short-term memory data.
+visual short-term memory data. The package can also fit & simulate the slots
+and slots-plus averagine models of Zhang & Luck.
 
 The package allows users to:
 
@@ -21,7 +22,7 @@ The package allows users to:
 
 We have a pre-print showing users how to use the package:
 
-  - Grange, J.A., Moore, S.B., & Berry, E.D.J. (under review). *mixtur:
+  - Grange, J.A. & Moore, S.B.(under review). *mixtur:
     An R package for designing, analysing, and modelling continuous
     report visual short-term memory studies*.
     <https://psyarxiv.com/n6gqx/>
@@ -47,6 +48,9 @@ library(mixtur)
 ```
 
 ## Acknowledgements & References
+
+  - We are grateful to Ed. D.J. Berry who contributed to the package 
+    development.
 
   - Portions of the package code have been adapted from code written by
     Paul Bays in Matlab, with permission. We are etremely grateful to
