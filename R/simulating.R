@@ -113,7 +113,6 @@ simulate_mixtur <- function(n_trials,
   }
 
   return(simulated_data)
-
 }
 
 # simulate data from the slots models -------------------------------------
