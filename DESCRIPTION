@@ -1,8 +1,8 @@
 Package: mixtur
 Title: An R package for designing, analysing, and modelling continuous 
     report visual short-term memory studies
-Version: 1.1.0
-Date: 2021-05-02
+Version: 1.2.0
+Date: 2021-06-25
 Authors@R: c(
     person("Jim A.", "Grange", email = "grange.jim@gmail.com", role = c("aut", "cre")),
     person("Stuart B.", "Moore", role = "aut"), 
