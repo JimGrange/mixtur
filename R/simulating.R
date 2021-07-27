@@ -8,7 +8,7 @@
 #' the 2_component or 3_component model, if multiple values are provided to
 #' the set_size argument, kappa must be a vector of parameter values to use
 #' for each set size).
-#' @param p_u a numeric valueindicating the probability of uniform guessing to
+#' @param p_u a numeric value indicating the probability of uniform guessing to
 #' use when simulating from the 2_component and 3_component models. Note, when
 #' simulating from the 2_component or 3_component model, if multiple values are
 #' provided to the set_size argument, p_u must be a vector of parameter values

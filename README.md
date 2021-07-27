@@ -6,7 +6,7 @@ continuous report visual short-term memory studies. The package allows
 users to implement the 2-component (Zhang & Luck, 2008) and 3-component
 (Bays, Catalao, & Husain, 2009) mixture models of continuous-report
 visual short-term memory data. The package can also fit & simulate the slots
-and slots-plus averagine models of Zhang & Luck.
+and slots-plus averaging models of Zhang & Luck.
 
 The package allows users to:
 
@@ -53,7 +53,7 @@ library(mixtur)
     development.
 
   - Portions of the package code have been adapted from code written by
-    Paul Bays in Matlab, with permission. We are etremely grateful to
+    Paul Bays in Matlab, with permission. We are extremely grateful to
     Paul Bays for this permission. See <https://paulbays.com>.
 
   - Bays, P. M., Catalao, R. F. G., & Husain, M. (2009). The precision
