@@ -132,8 +132,8 @@ plot_summary_statistic <- function(data,
 # 'condition of each response.
 #' @param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #' the plot should be returned.
-#'@param palette A character stating the preferred colour palette to use. To
-#'see all available palettes, type display.brewer.all() into the console.
+#' @param palette A character stating the preferred colour palette to use. To
+#' see all available palettes, type display.brewer.all() into the console.
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%

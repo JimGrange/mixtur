@@ -134,8 +134,6 @@ fit_mixtur <- function(data,
     data <- data
   }
 
-  # TODO: Radians not in range -pi to pi
-
   # print message to user
   print("Model fit running. Please wait...")
 

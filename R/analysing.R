@@ -77,6 +77,7 @@ get_summary_statistics <- function(data,
   }
 
   if(unit == "radians"){
+
     response <- data[[response_var]]
     target <- data[[target_var]]
     data$error <- wrap(response - target)
