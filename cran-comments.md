@@ -15,9 +15,9 @@ There were 2 NOTEs:
 
 * New submission
 
-This is the initial submission of the package to CRAN.
+  This is the initial submission of the package to CRAN.
 
 * Examples with CPU (user + system) or elapsed time > 10s
 
-The two functions with elapsed time > 10s ("fit_mixtur" and "simulate_mixtur")
-are necessarily long as they are conducting model fit routines.
+  The two functions with elapsed time > 10s ("fit_mixtur" and "simulate_mixtur")
+  are necessarily long as they are conducting model fit routines.
