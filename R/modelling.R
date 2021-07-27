@@ -62,6 +62,7 @@
 #' data <- bays2009_full
 #'
 #' # fit the 3-component mixture model ignoring condition
+#' \dontrun{
 #' fit <- fit_mixtur(data = data,
 #'                   model = "3_component",
 #'                   unit = "radians",
@@ -71,6 +72,7 @@
 #'                   non_target_var = "non_target",
 #'                   set_size_var = "set_size",
 #'                   condition_var = NULL)
+#'}
 #'
 #' @export
 fit_mixtur <- function(data,
