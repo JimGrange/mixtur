@@ -1,5 +1,10 @@
-## Initial Submission
-This is the initial submission of the package to CRAN.
+## Resubmission
+This is the a revised submission of the package to CRAN to respond to CRAN comments on our original submission.
+
+In this resubmission we have:
+
+* Removed the redundant "An R Package..." from the package's title
+* Shortened the name to less than 65 characters
 
 ## Test environments
 * local OS Cataline v.10.15.7, R 4.0.2

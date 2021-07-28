@@ -1,5 +1,5 @@
 Package: mixtur
-Title: An R Package for Designing, Analysing, and Modelling Continuous Report Visual Short-Term Memory Studies
+Title: Modelling Continuous Report Visual Short-Term Memory Studies
 Version: 1.2.0
 Date: 2021-07-27
 Authors@R: c(
