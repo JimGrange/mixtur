@@ -137,7 +137,7 @@ fit_mixtur <- function(data,
   }
 
   # print message to user
-  print("Model fit running. Please wait...")
+  message("Model fit running. Please wait...")
 
 
   #---- fitting the slots models
@@ -414,7 +414,7 @@ fit_mixtur <- function(data,
 
 
   # print message to user
-  print("Model fit finished.")
+  message("Model fit finished.")
 
 
   # add AIC, AIC_C, and BIC if requested

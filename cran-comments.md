@@ -6,6 +6,8 @@ In this resubmission we have:
 * Removed the redundant "An R Package..." from the package's title
 * Shortened the name to less than 65 characters
 
+* Messages written to the console now use message() rather than print()
+
 ## Test environments
 * local OS Cataline v.10.15.7, R 4.0.2
 * local Windows 10 Home, R 4.0.5

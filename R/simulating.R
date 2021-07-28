@@ -136,7 +136,7 @@ simulate_slots <- function(n_trials,
                            min_angle_distance = 20){
 
   # print message to user
-  print("Simulating data. Please wait...")
+  message("Simulating data. Please wait...")
 
   # work out the number of trials to simulate per set size
   trials_per_set_size <- numeric(length(set_size))
@@ -296,7 +296,7 @@ simulate_slots <- function(n_trials,
 
 
   # print message to user
-  print("Simulating data finished.")
+  message("Simulating data finished.")
 
   return(sim_data)
 
@@ -321,7 +321,7 @@ simulate_components <- function(n_trials,
                                 min_angle_distance = 20){
 
   # print message to user
-  print("Simulating data. Please wait...")
+  message("Simulating data. Please wait...")
 
     # check that p_u (or p_u + p_n) do not exceed 1
   if(is.null(p_n)){
@@ -441,7 +441,7 @@ simulate_components <- function(n_trials,
     sample_n(n_trials)
 
   # print message to user
-  print("Simulating data finished.")
+  message("Simulating data finished.")
 
   return(sim_data)
 }
@@ -558,7 +558,7 @@ fixed_angle_simulate_mixtur <- function(n_trials,
 
 
   # print message to user
-  print("Simulating data. Please wait...")
+  message("Simulating data. Please wait...")
 
   # check that p_t, p_n, and p_u sum to 1
   if(is.null(p_n)){
@@ -602,7 +602,7 @@ fixed_angle_simulate_mixtur <- function(n_trials,
   }
 
   # print message to user
-  print("Simulating data finished.")
+  message("Simulating data finished.")
 
   return(model_data)
 }
