@@ -25,7 +25,7 @@ Description: A set of utility functions for analysing and modelling data from
     continuous report short-term memory experiments using either the 2-component
     mixure model of Zhang and Luck (2008) <doi:10.1038/nature06860> 
     or the 3-component mixture model of Bays, Catalao, and Husain (2009) 
-    <doi:10.1167/9.10.7>. Users are able to simulate from these
+    <doi:10.1167/9.10.7>. Users are also able to simulate from these models.
 Depends: 
   R (>= 4.0)
 Imports:
