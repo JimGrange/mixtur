@@ -1,12 +1,21 @@
 ## Resubmission
-This is the a revised submission of the package to CRAN to respond to CRAN comments on our original submission.
+This is the a revised submission of the package responding to CRAN comments on 
+our original (and initial) submission.
 
 In this resubmission we have:
 
-* Removed the redundant "An R Package..." from the package's title
-* Shortened the name to less than 65 characters
+* Removed the redundant "An R Package..." from the package's title.
+* Shortened the name to less than 65 characters.
 
-* Messages written to the console now use message() rather than print()
+* Added relevant references to the description field of our DESCRIPTION file.
+
+* Examples which previously were wrapped in \dontrun{} are now wrapped in 
+\donttest{} as advised.
+
+* Messages written to the console now use message() rather than print().
+
+* Relevant copyright declarations relating to code developed by Paul Bays is 
+now contained in a Copyright field of our DESCRIPTION file.
 
 ## Test environments
 * local OS Cataline v.10.15.7, R 4.0.2
