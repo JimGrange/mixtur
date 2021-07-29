@@ -3,9 +3,24 @@ Title: Modelling Continuous Report Visual Short-Term Memory Studies
 Version: 1.2.0
 Date: 2021-07-27
 Authors@R: c(
-    person("Jim A.", "Grange", email = "grange.jim@gmail.com", role = c("aut", "cre")),
-    person("Stuart B.", "Moore", role = "aut"), 
-    person("Ed D.J.", "Berry", role = c("aut", "ctb")))
+    person(
+        given = "Jim", 
+        family = "Grange", 
+        role = c("aut", "cre"), 
+        email = "grange.jim@gmail.com", 
+        comment = c(ORCID = "0000-0002-8352-8390")
+    ),
+    person(
+        given = "Stuart B.",
+        family = "Moore",
+        role = c("aut"),
+        comment = c(ORCID = "0000-0002-0747-9304")
+    ),
+    person(
+        given = "Ed D. J.",
+        family = "Berry",
+        role = c("ctb")
+    ))
 Description: A set of utility functions for analysing and modelling data from 
     continuous report short-term memory experiments using either the 2-component or 
     3-component mixture model. Users are able to simulate from these models, too. 
@@ -22,5 +37,7 @@ Suggests: knitr, rmarkdown
 License: GPL-3
 LazyData: true
 URL: https://github.com/JimGrange/mixtur
+BugReports: https://github.com/JimGrange/mixtur/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.1
+Copyright: Some functions have been adapted from Matlab code written by Paul Bays (https://bayslab.com) published under GNU General Public License.

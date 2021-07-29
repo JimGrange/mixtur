@@ -5,7 +5,8 @@
 \title{Fit the mixture model.}
 \source{
 The code for the 3-component model has been adapted from Matlab code
-written by Paul Bays (https://paulbays.com).
+written by Paul Bays (https://bayslab.com) published under GNU General
+Public License.
 }
 \usage{
 fit_mixtur(
@@ -77,7 +78,7 @@ component mixture model.
 data <- bays2009_full
 
 # fit the 3-component mixture model ignoring condition
-\dontrun{
+\donttest{
 fit <- fit_mixtur(data = data,
                   model = "3_component",
                   unit = "radians",

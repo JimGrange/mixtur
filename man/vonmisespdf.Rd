@@ -8,7 +8,7 @@ location parameter mu and concentration parameter kappa, evaluated at the
 values in x (given in radians, from -pi to pi).}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
-(https://paulbays.com).
+(https://bayslab.com) published under GNU General Public License.
 }
 \usage{
 vonmisespdf(x, mu, kappa)

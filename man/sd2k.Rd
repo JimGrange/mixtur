@@ -7,7 +7,7 @@ Returns the von Mises concentration parameter kappa corresponding
 to a standard deviation sd of a wrapped normal distribution}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
-(https://paulbays.com).
+(https://bayslab.com) published under GNU General Public License.
 }
 \usage{
 sd2k(sd)

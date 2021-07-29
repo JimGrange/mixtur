@@ -42,7 +42,7 @@ Generate simulated data from mixture models
 \examples{
 
 # simulate from the slots model
-\dontrun{
+\donttest{
 slots_data <- simulate_mixtur(n_trials = 1000,
                              model = "slots",
                              kappa = 8.2,
@@ -51,7 +51,7 @@ slots_data <- simulate_mixtur(n_trials = 1000,
 }
 
 # simulate one set size from the 3_component model
-\dontrun{
+\donttest{
 component_data <- simulate_mixtur(n_trials = 1000,
                                  model = "3_component",
                                  kappa = 8.2,
@@ -61,7 +61,7 @@ component_data <- simulate_mixtur(n_trials = 1000,
 }
 
 # simulate multiple set sizes from the 3_component model
-\dontrun{
+\donttest{
 component_data_multiple_sets <- simulate_mixtur(n_trials = 1000,
                                                model = "3_component",
                                                kappa = c(10, 8, 6),

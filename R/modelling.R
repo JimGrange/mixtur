@@ -6,7 +6,8 @@
 #'
 #' @source
 #' The code for the 3-component model has been adapted from Matlab code
-#' written by Paul Bays (https://paulbays.com).
+#' written by Paul Bays (https://bayslab.com) published under GNU General
+#' Public License.
 #' @param data A data frame with columns containing (at the very least)
 #' trial-level participant response and target values This data can either be
 #' in degrees (1-360 or 1-180) or radians. If the 3-component mixture model is
@@ -62,7 +63,7 @@
 #' data <- bays2009_full
 #'
 #' # fit the 3-component mixture model ignoring condition
-#' \dontrun{
+#' \donttest{
 #' fit <- fit_mixtur(data = data,
 #'                   model = "3_component",
 #'                   unit = "radians",

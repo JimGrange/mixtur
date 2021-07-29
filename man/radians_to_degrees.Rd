@@ -5,7 +5,7 @@
 \title{Transform radians into degrees}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
-(https://paulbays.com).
+(https://bayslab.com) published under GNU General Public License.
 }
 \usage{
 radians_to_degrees(rad)

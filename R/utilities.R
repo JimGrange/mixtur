@@ -31,7 +31,7 @@ map_to_circular <- function(data, unit){
 #' @param deg Degree value to transform into radians
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #' @export
 degrees_to_radians <- function(deg){deg * pi / 180}
 
@@ -44,7 +44,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #' @param rad Radian value to transform into degrees
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #' @export
 radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 
@@ -56,7 +56,7 @@ radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 # @param data The data (in radians) to be mapped
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com).
+# (https://bayslab.com) published under GNU General Public License.
 wrap <- function(data, bound = pi) {
   result <- ((data + bound) %% (bound * 2)) - bound
   return(result)
@@ -68,7 +68,7 @@ wrap <- function(data, bound = pi) {
 # Calculate the circular equivalent of the mean
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com).
+# (https://bayslab.com) published under GNU General Public License.
 cmean <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -85,7 +85,7 @@ cmean <- function(x) {
 # Calculate the circular equivalent of standard deviation
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com).
+# (https://bayslab.com) published under GNU General Public License.
 cstd <- function(x) {
 
   if(any(abs(x) > pi)) {
@@ -115,7 +115,7 @@ cstd <- function(x) {
 #' simulated_values <- randomvonmises(n = 100, mu = 0, kappa = 8.2)
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #' @importFrom stats runif
 #' @export
 randomvonmises <- function(n, mu, kappa) {
@@ -169,7 +169,7 @@ randomvonmises <- function(n, mu, kappa) {
 #'
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #' @export
 vonmisespdf <- function(x, mu, kappa) {
   p <- exp(kappa * cos(x - mu)) / (2 * pi * besselI(kappa, 0))
@@ -183,8 +183,7 @@ vonmisespdf <- function(x, mu, kappa) {
 # logspace function for logarithmically spaced vectors
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com). See also
-# http://r.789695.n4.nabble.com/logarithmic-seq-tp900431p900433.html
+# (https://bayslab.com) published under GNU General Public License.
 logspace <- function(a, b, n){
   exp(log(10) * seq(a, b, length.out = n))
 }
@@ -195,7 +194,7 @@ logspace <- function(a, b, n){
 # trapz function from the caTools package by Jarek Tuszynski
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com).
+# (https://bayslab.com) published under GNU General Public License.
 trapz <- function(x, y) {
   idx <- 2:length(x)
   return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
@@ -207,8 +206,7 @@ trapz <- function(x, y) {
 # Recreate Matlab's repmat function
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com) which itself was adapted from
-# http://haky-functions.blogspot.co.uk/2006/11/repmat-function-matlab.html
+# (https://bayslab.com) published under GNU General Public License.
 repmat = function(x, nn){
 
   mx <- NROW(x)
@@ -227,7 +225,7 @@ repmat = function(x, nn){
 # Inverse of A1 function.
 # @source
 # The code has been adapted from Matlab code written by Paul Bays
-# (https://paulbays.com).
+# (https://bayslab.com) published under GNU General Public License.
 A1inv <- function(r) {
 
   if(0 <= r & r < 0.53) {
@@ -252,7 +250,7 @@ A1inv <- function(r) {
 #' Mises distribution
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #'
 #' @examples
 #' sd <- k2sd(8.4)
@@ -283,7 +281,7 @@ k2sd <- function(k){
 #' kappa <- sd2k(0.361)
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
-#' (https://paulbays.com).
+#' (https://bayslab.com) published under GNU General Public License.
 #' @export
 sd2k <- function(sd){
 

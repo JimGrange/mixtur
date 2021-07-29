@@ -6,7 +6,7 @@
 concentration k}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
-(https://paulbays.com).
+(https://bayslab.com) published under GNU General Public License.
 }
 \usage{
 randomvonmises(n, mu, kappa)

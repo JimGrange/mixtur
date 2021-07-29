@@ -7,7 +7,7 @@ Returns the standard deviation of a wrapped normal distribution
 corresponding to a von Mises concentration parameter of kappa}
 \source{
 The code has been adapted from Matlab code written by Paul Bays
-(https://paulbays.com).
+(https://bayslab.com) published under GNU General Public License.
 }
 \usage{
 k2sd(k)
