@@ -144,6 +144,7 @@ plot_summary_statistic <- function(data,
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
 #' position_dodge
 #' @importFrom rlang .data
+#' @noRd
 plot_resultant_vector_length <- function(data,
                                          unit = "degrees",
                                          id_var = "id",
@@ -425,6 +426,7 @@ plot_resultant_vector_length <- function(data,
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
 #' position_dodge
 #' @importFrom rlang .data
+#' @noRd
 plot_mean_absolute_error <- function(data,
                                      unit = "degrees",
                                      id_var = "id",
@@ -994,7 +996,7 @@ plot_error <- function(data,
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point theme_bw
 #' @importFrom rlang .data
-#'
+#' @noRd
 plot_precision <- function(data,
                            unit = "degrees",
                            id_var = "id",

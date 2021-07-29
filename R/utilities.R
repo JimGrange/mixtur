@@ -32,7 +32,7 @@ map_to_circular <- function(data, unit){
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://bayslab.com) published under GNU General Public License.
-#' @export
+#' @noRd
 degrees_to_radians <- function(deg){deg * pi / 180}
 
 
@@ -45,7 +45,7 @@ degrees_to_radians <- function(deg){deg * pi / 180}
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://bayslab.com) published under GNU General Public License.
-#' @export
+#' @noRd
 radians_to_degrees <- function(rad) {(rad * 180) / (pi)}
 
 
@@ -117,7 +117,7 @@ cstd <- function(x) {
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://bayslab.com) published under GNU General Public License.
 #' @importFrom stats runif
-#' @export
+#' @noRd
 randomvonmises <- function(n, mu, kappa) {
 
   x = NULL
@@ -170,7 +170,7 @@ randomvonmises <- function(n, mu, kappa) {
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://bayslab.com) published under GNU General Public License.
-#' @export
+#' @noRd
 vonmisespdf <- function(x, mu, kappa) {
   p <- exp(kappa * cos(x - mu)) / (2 * pi * besselI(kappa, 0))
   return(p)
@@ -255,7 +255,7 @@ A1inv <- function(r) {
 #' @examples
 #' sd <- k2sd(8.4)
 #'
-#' @export
+#' @noRd
 k2sd <- function(k){
 
   if(k == 0){
@@ -282,7 +282,7 @@ k2sd <- function(k){
 #' @source
 #' The code has been adapted from Matlab code written by Paul Bays
 #' (https://bayslab.com) published under GNU General Public License.
-#' @export
+#' @noRd
 sd2k <- function(sd){
 
   r <- exp(-sd ^ 2 / 2)
