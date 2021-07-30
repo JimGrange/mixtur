@@ -41,16 +41,10 @@ set size of each response.}
 condition of each response.}
 }
 \value{
-\code{mean_absolute_error} The mean absolute error of the participant
-response.
-
-\code{resultant_vector_length} The (normalised) resultant vector
-length of the response errors.
-
-\code{precision} The reciprocal of the circular standard deviation of
-the response error, with correction for guessing.
-
-\code{bias} The bias of the precision estimate.
+Returns a data frame containing the summary statistics
+\code{mean_absolute_error}, \code{resultant_vector_length},
+\code{precision}, and \code{bias} per participant (if applicable),
+set-size (if applicable), and condition (if applicable).
 }
 \description{
 Returns participant-level summary statistic data of response error estimates

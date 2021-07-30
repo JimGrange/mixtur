@@ -5,9 +5,14 @@ our original (and initial) submission.
 In this resubmission we have:
 
 * Removed the redundant "An R Package..." from the package's title.
+
 * Shortened the name to less than 65 characters.
 
 * Added relevant references to the description field of our DESCRIPTION file.
+
+* Added \value to .Rd files regarding exported methods and explained the
+functions' results in the documentation (including the structure of the 
+output and what the output means).
 
 * Examples which previously were wrapped in \dontrun{} are now wrapped in 
 \donttest{} as advised.
@@ -15,7 +20,7 @@ In this resubmission we have:
 * Messages written to the console now use message() rather than print().
 
 * Relevant copyright declarations relating to code developed by Paul Bays is 
-now contained in a Copyright field of our DESCRIPTION file.
+now contained in a Copyright field in our DESCRIPTION file.
 
 ## Test environments
 * local OS Cataline v.10.15.7, R 4.0.2

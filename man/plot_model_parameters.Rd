@@ -39,6 +39,20 @@ the plot should be returned.}
 \item{palette}{A character stating the preferred colour palette to use. To
 see all available palettes, type display.brewer.all() into the console.}
 }
+\value{
+If \code{return_data} is set to \code{FALSE} (which it is by
+default),the function returns a ggplot2 object visualising the mean model
+parameters across participants (if applicable) per set-size (if applicable)
+and condition (if applicable).
+
+If \code{return_data} is set to \code{TRUE}, the function returns a
+list with two components:
+
+ \itemize{
+ \item \code{plot:} The ggplot2 object.
+ \item \code{data:} A data frame with the data used to generate the plot.
+ }
+}
 \description{
 Function to plot the best-fitting parameters of either the 2-component or
 3-component model. .

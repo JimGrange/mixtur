@@ -58,6 +58,12 @@ plot.}
 \item{palette}{A character stating the preferred colour palette to use. To
 see all available palettes, type display.brewer.all() into the console.}
 }
+\value{
+The function returns a ggplot2 object visualising the mean observed
+response error density distribution across participants (if applicable)
+per set-size (if applicable) and condition (if applicable) together with the
+model predictions superimposed.
+}
 \description{
 Plot model fit against human error data (target errors)
 }

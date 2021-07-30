@@ -36,6 +36,10 @@ simulating from the slots and slots_averaging models.}
 \item{set_size}{a numeric value (or vector) indicating the set size(s) to
 use in the simulations}
 }
+\value{
+Returns a data frame containing simulated responses from the
+requested model per set-size (if applicable).
+}
 \description{
 Generate simulated data from mixture models
 }

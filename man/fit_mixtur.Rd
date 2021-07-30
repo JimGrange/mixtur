@@ -68,6 +68,12 @@ condition of each response.}
 of the model fit, Akiakie's Information Criterion (AIC), Bayesian Information
 Criterion (BIC), as well as the number of trials used in the fit.}
 }
+\value{
+Returns a data frame with best-fitting parameters per participant (if
+applicable), set-size (if applicable), and condition (if applicable). If
+\code{return_fit} was set to \code{TRUE}, the data frame will also include
+the log-likelihood value and information criteria of the model fit.
+}
 \description{
 This is the function called by the user to fit either the two- or three-
 component mixture model.

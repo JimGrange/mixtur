@@ -25,13 +25,12 @@
 #' set size of each response.
 #' @param condition_var The quoted column name (if applicable) coding for the
 #' condition of each response.
-#' @return \code{mean_absolute_error} The mean absolute error of the participant
-#' response.
-#' @return \code{resultant_vector_length} The (normalised) resultant vector
-#' length of the response errors.
-#' @return \code{precision} The reciprocal of the circular standard deviation of
-#' the response error, with correction for guessing.
-#' @return \code{bias} The bias of the precision estimate.
+#'
+#' @return Returns a data frame containing the summary statistics
+#' \code{mean_absolute_error}, \code{resultant_vector_length},
+#' \code{precision}, and \code{bias} per participant (if applicable),
+#' set-size (if applicable), and condition (if applicable).
+#'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise

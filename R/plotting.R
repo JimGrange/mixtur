@@ -32,13 +32,25 @@
 #'@param palette A character stating the preferred colour palette to use. To
 #'see all available palettes, type display.brewer.all() into the console.
 #'
+#'@return If \code{return_data} is set to \code{FALSE} (which it is by default),
+#' the function returns a ggplot2 object visualising the summary statistic
+#' averaged across participants (if applicable) per set-size (if applicable)
+#' and condition (if applicable).
+#'
+#' @return If \code{return_data} is set to \code{TRUE}, the function returns a
+#' list with two components:
+#'
+#'  \itemize{
+#'  \item \code{plot:} The ggplot2 object.
+#'  \item \code{data:} A data frame with the data used to generate the plot.
+#'  }
+#'
 #'@examples
-#'data(bays2009_full)
-# plot_summary_statistic(bays2009_full,
-#                       unit = "radians",
-#                       statistic = "precision",
-#                       set_size_var = "set_size",
-#                       condition_var = "duration")
+#' plot_summary_statistic(bays2009_full,
+#'                       unit = "radians",
+#'                       statistic = "precision",
+#'                       set_size_var = "set_size",
+#'                       condition_var = "duration")
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -688,8 +700,21 @@ plot_mean_absolute_error <- function(data,
 #'@param palette A character stating the preferred colour palette to use. To
 #'see all available palettes, type display.brewer.all() into the console.
 #'
+#'@return If \code{return_data} is set to \code{FALSE} (which it is by default),
+#' the function returns a ggplot2 object visualising the density distribution
+#' of response error averaged across participants (if applicable) per set-size
+#' (if applicable) and condition (if applicable).
+#'
+#' @return If \code{return_data} is set to \code{TRUE}, the function returns a
+#' list with two components:
+#'
+#'  \itemize{
+#'  \item \code{plot:} The ggplot2 object.
+#'  \item \code{data:} A data frame with the data used to generate the plot.
+#'  }
+#'
+#'
 #'@examples
-#'data(bays2009_full)
 #' plot_error(bays2009_full,
 #'           unit = "radians",
 #'           set_size_var = "set_size")
@@ -1278,6 +1303,13 @@ plot_precision <- function(data,
 #'plot.
 #'@param palette A character stating the preferred colour palette to use. To
 #'see all available palettes, type display.brewer.all() into the console.
+#'
+#'@return The function returns a ggplot2 object visualising the mean observed
+#' response error density distribution across participants (if applicable)
+#' per set-size (if applicable) and condition (if applicable) together with the
+#' model predictions superimposed.
+#'
+#'
 #'
 #' @importFrom tidyr tibble
 #' @importFrom dplyr %>% mutate
@@ -2005,6 +2037,18 @@ plot_model_fit <- function(participant_data,
 #'@param palette A character stating the preferred colour palette to use. To
 #'see all available palettes, type display.brewer.all() into the console.
 #'
+#'@return If \code{return_data} is set to \code{FALSE} (which it is by
+#' default),the function returns a ggplot2 object visualising the mean model
+#' parameters across participants (if applicable) per set-size (if applicable)
+#' and condition (if applicable).
+#'
+#' @return If \code{return_data} is set to \code{TRUE}, the function returns a
+#' list with two components:
+#'
+#'  \itemize{
+#'  \item \code{plot:} The ggplot2 object.
+#'  \item \code{data:} A data frame with the data used to generate the plot.
+#'  }
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
