@@ -39,7 +39,7 @@ There were no ERRORs or WARNINGS.
 
 There was 1 NOTE:
 
-* New submission
+1. New submission
 
   This is the initial submission of the package to CRAN.
 
@@ -47,13 +47,13 @@ There was 1 NOTE:
 ## R-hub builder test (Windows Server)
 There was 1 ERROR:
 
-* Error : Bioconductor does not yet build and check packages for R version 4.2
+1. Bioconductor does not yet build and check packages for R version 4.2
 
   This issue seems to be with setting up the container for testing on r-hub
   rather than an issue with the package as I cannot replicate it locally. This
   has been discussed under Issue #471 on the r-hub github page (https://github.com/r-hub/rhub/issues/471).  
 
-There were 2 NOTEs:
+There were 3 NOTEs:
 
 1. New submission
 
@@ -65,5 +65,66 @@ There were 2 NOTEs:
     Status: Forbidden
     Message: 403
 
-  I've checked the offending doi <doi:10.1167/9.10.7> and it is correct and 
-  working in the browser. Following the advice stated 
+  I've checked the offending doi (10.1167/9.10.7) and it is correct and 
+  working in the browser. Following the advice stated on R-hub (https://blog.r-hub.io/2020/12/01/url-checks/) I have proceeded with submission
+  with this comment added to explain. 
+  
+3. Possibly mis-spelled words in DESCRIPTION:
+  al (27:42)
+  et (27:39)
+  Zhang (26:22)
+  
+  These have been checked and are all correct.
+  
+  
+## R-hub builder test (Ubuntu Linux)
+There were no ERRORs or WARNINGs.
+
+There were 3 NOTEs:
+
+1. New submission
+
+  This is the initial submission of the package to CRAN.
+
+2. Found the following (possibly) invalid DOIs:
+    DOI: 10.1167/9.10.7
+    From: DESCRIPTION
+    Status: Forbidden
+    Message: 403
+
+  I've checked the offending doi (10.1167/9.10.7) and it is correct and 
+  working in the browser. Following the advice stated on R-hub (https://blog.r-hub.io/2020/12/01/url-checks/) I have proceeded with submission
+  with this comment added to explain. 
+  
+3. Possibly mis-spelled words in DESCRIPTION:
+  al (27:42)
+  et (27:39)
+  Zhang (26:22)
+  
+  These have been checked and are all correct.
+  
+## R-hub builder test (Fedora Linux)
+There were no ERRORs or WARNINGs.
+
+There were 3 NOTEs:
+
+1. New submission
+
+  This is the initial submission of the package to CRAN.
+
+2. Found the following (possibly) invalid DOIs:
+    DOI: 10.1167/9.10.7
+    From: DESCRIPTION
+    Status: Forbidden
+    Message: 403
+
+  I've checked the offending doi (10.1167/9.10.7) and it is correct and 
+  working in the browser. Following the advice stated on R-hub (https://blog.r-hub.io/2020/12/01/url-checks/) I have proceeded with submission
+  with this comment added to explain. 
+  
+3. Possibly mis-spelled words in DESCRIPTION:
+  al (27:42)
+  et (27:39)
+  Zhang (26:22)
+  
+  These have been checked and are all correct.
