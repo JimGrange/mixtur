@@ -13,7 +13,7 @@ A data frame with 3600 rows and 6 variables:
   \item{target_ori}{the orientation of the target in degrees (1-180)}
   \item{response_ori}{the participant's recollection of the target
   orientation in degrees (1-180)}
-  \item{non_target_1}{the orinetation of the first non-target in degrees
+  \item{non_target_1}{the orientation of the first non-target in degrees
   (1-180)}
   \item{non_target_2}{the orientation of the second non-target in degrees
   (1-180)}

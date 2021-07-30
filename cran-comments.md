@@ -34,7 +34,7 @@ now contained in a Copyright field in our DESCRIPTION file.
 ## R CMD check results
 There were no ERRORs, WARNINGs, or NOTEs. 
 
-## Win-builder test
+## Win-builder test (devel and release)
 There were no ERRORs or WARNINGS. 
 
 There was 1 NOTE:
@@ -44,11 +44,26 @@ There was 1 NOTE:
   This is the initial submission of the package to CRAN.
 
 
-## R-hub builder tests
-There were no ERRORs or WARNINGS on any of the 3 platforms.
+## R-hub builder test (Windows Server)
+There was 1 ERROR:
 
-There was 1 NOTE on each of the 3 platforms:
+* Error : Bioconductor does not yet build and check packages for R version 4.2
 
-* New submission
+  This issue seems to be with setting up the container for testing on r-hub
+  rather than an issue with the package as I cannot replicate it locally. This
+  has been discussed under Issue #471 on the r-hub github page (https://github.com/r-hub/rhub/issues/471).  
+
+There were 2 NOTEs:
+
+1. New submission
 
   This is the initial submission of the package to CRAN.
+
+2. Found the following (possibly) invalid DOIs:
+    DOI: 10.1167/9.10.7
+    From: DESCRIPTION
+    Status: Forbidden
+    Message: 403
+
+  I've checked the offending doi <doi:10.1167/9.10.7> and it is correct and 
+  working in the browser. Following the advice stated 
