@@ -4,7 +4,7 @@
 [![](http://www.r-pkg.org/badges/version/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
 
-# mixtur
+# mixtur <a ><img src='images/logo/mixtur_logo.png' align="right" height="250" /></a>
 
 **mixtur** is an R package for designing, analysing, and modelling
 continuous report visual short-term memory studies. The package allows
