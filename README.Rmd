@@ -37,13 +37,13 @@ The package allows users to:
 
 ## Installation
 
-You can install the released version of mixtur from [CRAN](https://cran.r-project.org/web/packages/mixtur/index.html) with:
+You can install the released version of mixtur (v1.2.0) from [CRAN](https://cran.r-project.org/web/packages/mixtur/index.html) with:
 
 ``` r
 install.packages("mixtur")
 ```
 
-The development version can be installed from [GitHub](https://github.com/) with:
+The development version (v1.2.0.9000) can be installed from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
