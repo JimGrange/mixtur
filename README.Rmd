@@ -1,5 +1,17 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 [![](http://www.r-pkg.org/badges/version/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
@@ -10,8 +22,8 @@
 continuous report visual short-term memory studies. The package allows
 users to implement the 2-component (Zhang & Luck, 2008) and 3-component
 (Bays, Catalao, & Husain, 2009) mixture models of continuous-report
-visual short-term memory data. The package can also fit & simulate the
-slots and slots-plus averaging models of Zhang & Luck.
+visual short-term memory data. The package can also fit & simulate the slots
+and slots-plus averaging models of Zhang & Luck.
 
 The package allows users to:
 
@@ -25,15 +37,13 @@ The package allows users to:
 
 ## Installation
 
-You can install the released version of mixtur from
-[CRAN](https://cran.r-project.org/web/packages/mixtur/index.html) with:
+You can install the released version of mixtur from [CRAN](https://cran.r-project.org/web/packages/mixtur/index.html) with:
 
 ``` r
 install.packages("mixtur")
 ```
 
-The development version can be installed from
-[GitHub](https://github.com/) with:
+The development version can be installed from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -44,9 +54,10 @@ devtools::install_github("JimGrange/mixtur")
 
 We have a pre-print showing users how to use the package:
 
-  - Grange, J.A. & Moore, S.B. (under review). *mixtur: An R package for
-    designing, analysing, and modelling continuous report visual
-    short-term memory studies*. <https://psyarxiv.com/n6gqx/>
+  - Grange, J.A. & Moore, S.B. (under review). *mixtur:
+    An R package for designing, analysing, and modelling continuous
+    report visual short-term memory studies*.
+    <https://psyarxiv.com/n6gqx/>
 
 The pre-print also includes several simulation studies exploring some
 properties of the models (including parameter recovery simulations,
@@ -55,7 +66,7 @@ researchers wishing to use mixture modelling in their own research.
 
 ## Acknowledgements & References
 
-  - We are grateful to Ed. D.J. Berry who contributed to the package
+  - We are grateful to Ed. D.J. Berry who contributed to the package 
     development.
 
   - Portions of the package code have been adapted from code written by
