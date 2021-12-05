@@ -42,8 +42,7 @@ devtools::install_github("JimGrange/mixtur")
 
 ## Pre-print
 
-We have a paper showing users how to use the package, together with some
-simulation studies to assess parameter recovery etc. A pre-print of the
+We have a paper showing users how to use the package. A pre-print of the
 paper can be found here:
 
   - Grange, J.A. & Moore, S.B. (in press). mixtur: An R package for
