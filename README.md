@@ -42,11 +42,14 @@ devtools::install_github("JimGrange/mixtur")
 
 ## Pre-print
 
-We have a pre-print showing users how to use the package:
+We have a paper showing users how to use the package, together with some
+simulation studies to assess parameter recovery etc. A pre-print of the
+paper can be found here:
 
-  - Grange, J.A. & Moore, S.B. (under review). *mixtur: An R package for
+  - Grange, J.A. & Moore, S.B. (in press). mixtur: An R package for
     designing, analysing, and modelling continuous report visual
-    short-term memory studies*. <https://psyarxiv.com/n6gqx/>
+    short-term memory studies. *Behavior Research Methods.*
+    <https://psyarxiv.com/n6gqx/>
 
 The pre-print also includes several simulation studies exploring some
 properties of the models (including parameter recovery simulations,
