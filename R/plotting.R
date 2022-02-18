@@ -699,6 +699,8 @@ plot_mean_absolute_error <- function(data,
 #'the plot should be returned.
 #'@param palette A character stating the preferred colour palette to use. To
 #'see all available palettes, type display.brewer.all() into the console.
+#'@param scale_y_axis A vector of 2 elements stating the minimum and maximum
+#'value to use for the y-axis in the plots.
 #'
 #'@return If \code{return_data} is set to \code{FALSE} (which it is by default),
 #' the function returns a ggplot2 object visualising the density distribution
@@ -739,7 +741,8 @@ plot_error <- function(data,
                        n_bins = 18,
                        n_col = 2,
                        return_data = FALSE,
-                       palette = "Dark2"){
+                       palette = "Dark2",
+                       scale_y_axis = NULL){
 
   condition <- NULL
   set_size <- NULL
@@ -880,39 +883,71 @@ plot_error <- function(data,
   # no set size or condition manipulation
   if(is.null(set_size_var) && is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = .data$x,
-                                   y = .data$mean_error)) +
-      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
-                        ymin = .data$mean_error - .data$se_error),
-                    width = 0.00) +
-      geom_point() +
-      theme_bw() +
-      scale_x_continuous(limits = c(-pi, pi)) +
-      scale_y_continuous(limits = c(0,
-                                    max(final_data$mean_error) +
-                                      max(final_data$se_error))) +
-      labs(x = "Error (Radians)",
-           y = "Probability Density")
+
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+    }
+
     }
 
 
   # no set size manipulation but there is a condition manipulation
   if(is.null(set_size_var) && !is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = .data$x,
-                                   y = .data$mean_error)) +
-      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
-                        ymin = .data$mean_error - .data$se_error),
-                    width = 0.00) +
-      geom_point() +
-      theme_bw() +
-      scale_x_continuous(limits = c(-pi, pi)) +
-      scale_y_continuous(limits = c(0,
-                                    max(final_data$mean_error) +
-                                      max(final_data$se_error))) +
-      labs(x = "Error (Radians)",
-           y = "Probability Density") +
-      facet_wrap(vars(.data$condition), ncol = n_col)
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$condition), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$condition), ncol = n_col)
+    }
+
 
     # rename the final_data frame
     colnames(final_data)[1] <- condition_var
@@ -923,20 +958,37 @@ plot_error <- function(data,
   # set size manipulation, but no condition manipulation
   if(!is.null(set_size_var) && is.null(condition_var)){
 
-    plot <- ggplot(final_data, aes(x = .data$x,
-                                   y = .data$mean_error)) +
-      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
-                        ymin = .data$mean_error - .data$se_error),
-                    width = 0.00) +
-      geom_point() +
-      theme_bw() +
-      scale_x_continuous(limits = c(-pi, pi)) +
-      scale_y_continuous(limits = c(0,
-                                    max(final_data$mean_error) +
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
                                       max(final_data$se_error))) +
-      labs(x = "Error (Radians)",
-           y = "Probability Density") +
-      facet_wrap(vars(.data$set_size), ncol = n_col)
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    }
+
+
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
@@ -950,25 +1002,45 @@ plot_error <- function(data,
     # add position jitter to avoid over-plotting
     pd <- position_dodge(0.1)
 
-    plot <- ggplot(final_data, aes(x = .data$x,
-                                   y = .data$mean_error,
-                                   group = .data$condition)) +
-      geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
-                        ymin = .data$mean_error - .data$se_error,
-                        colour = .data$condition),
-                    width = 0.00,
-                    position = pd) +
-      geom_point(aes(colour = .data$condition),
-                 position = pd) +
-      theme_bw() +
-      scale_x_continuous(limits = c(-pi, pi)) +
-      scale_y_continuous(limits = c(0,
-                                    max(final_data$mean_error) +
-                                      max(final_data$se_error))) +
-      scale_colour_brewer(palette = palette, name = condition_var) +
-      labs(x = "Error (Radians)",
-           y = "Probability Density") +
-      facet_wrap(vars(.data$set_size), ncol = n_col)
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error,
+                                     group = .data$condition)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
+                      width = 0.00,
+                      position = pd) +
+        geom_point(aes(colour = .data$condition),
+                   position = pd) +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        scale_colour_brewer(palette = palette, name = condition_var) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error,
+                                     group = .data$condition)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
+                      width = 0.00,
+                      position = pd) +
+        geom_point(aes(colour = .data$condition),
+                   position = pd) +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    }
+
 
     # rename the final_data frame
     colnames(final_data)[1] <- set_size_var
