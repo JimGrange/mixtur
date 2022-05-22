@@ -1059,6 +1059,441 @@ plot_error <- function(data,
 }
 
 
+# plot behavioral error relative to non-targets---------------------------
+#' Plot response error of behavioural data relative to non-target values.
+#'
+#'Function to plot the response error in behavioural data relative to
+#'non-target values. Note that this function also applies a correction to
+#'account for the minimum angle distance on feature values. Requires a data
+#'frame that (at least) has target value data, non-target values, and
+#'participant response data.
+#'
+#'@param data A data frame with columns containing: participant identifier
+#'('id_var'); the participants' response per trial ('response_var'); the
+#'target value ('target_var'); and, if applicable, the set size of each
+#'response ('set_size_var'), and the condition of each response
+#'('condition_var').
+#'@param unit The unit of measurement in the data frame: "degrees"
+#'(measurement is in degrees, from 0 to 360); "degrees_180 (measurement is in
+#'degrees, but limited to 0 to 180); or "radians" (measurement is in radians,
+#'from pi to 2 * pi, but could also be already in -pi to pi).
+#'@param id_var The column name coding for participant id. If the data is from
+#'a single participant (i.e., there is no id column) set to "NULL".
+#'@param response_var The column name coding for the participants' responses.
+#'@param target_var The column name coding for the target value.
+#'@param non_target_var The column name coding for the non-target values.
+#'@param feature_distance A numeric value providing the minimum distance betwen
+#'feature values (if applicable). Must be in the same unit as passed to the
+#''unit' argument.
+#'@param set_size_var The column name (if applicable) coding for the set
+#'size of each response.
+#'@param condition_var The column name (if applicable) coding for the
+#'condition of each response.
+#'@param n_bins An integer controlling the number of cells / bins used in the
+#'plot.
+#'@param n_col An integer controlling the number of columns in the resulting
+#'plot.
+#'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
+#'the plot should be returned.
+#'@param palette A character stating the preferred colour palette to use. To
+#'see all available palettes, type display.brewer.all() into the console.
+#'@param scale_y_axis A vector of 2 elements stating the minimum and maximum
+#'value to use for the y-axis in the plots.
+#'
+#'@return If \code{return_data} is set to \code{FALSE} (which it is by default),
+#' the function returns a ggplot2 object visualising the density distribution
+#' of response error averaged across participants (if applicable) per set-size
+#' (if applicable) and condition (if applicable).
+#'
+#' @return If \code{return_data} is set to \code{TRUE}, the function returns a
+#' list with two components:
+#'
+#'  \itemize{
+#'  \item \code{plot:} The ggplot2 object.
+#'  \item \code{data:} A data frame with the data used to generate the plot.
+#'  }
+#'
+#'
+#'@examples
+#' plot_error_non_target(bays2009_full,
+#'                       unit = "radians",
+#'                       set_size_var = "set_size")
+#'
+#' @importFrom stats sd
+#' @importFrom dplyr %>%
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom dplyr rename
+#' @importFrom graphics hist
+#' @importFrom ggplot2 ggplot aes geom_errorbar labs geom_point scale_x_continuous scale_y_continuous
+#' theme_bw facet_wrap position_dodge
+#' @importFrom rlang .data
+#' @export
+plot_error_non_target <- function(data,
+                                  unit = "degrees",
+                                  id_var = "id",
+                                  response_var = "response",
+                                  target_var = "target",
+                                  non_target_var = "non_target",
+                                  feature_distance = NULL,
+                                  set_size_var = NULL,
+                                  condition_var = NULL,
+                                  n_bins = 18,
+                                  n_col = 2,
+                                  return_data = FALSE,
+                                  palette = "Dark2",
+                                  scale_y_axis = NULL){
+
+
+  # Location-independent feature binding in visual working memory for
+  # sequentially presented objects
+  # https://osf.io/t6zgr/
+
+  condition <- NULL
+  set_size <- NULL
+
+  data <- tibble(data)
+
+  # establish the break points of the density plot
+  break_points <- round(seq(from = -pi, to = pi, length.out = n_bins), 3)
+
+  # get the list of participant ids
+  ids <- unique(data[[id_var]])
+
+  # get the non-target column names
+  if(!is.null(non_target_var)){
+    non_target_cols <- data %>%
+      select(contains(non_target_var)) %>%
+      colnames()
+  }
+
+  # error message if no non-target columns found
+  if(is.null(non_target_cols)){
+    stop("This function requires non-target feature values. Please ensure
+         you have set the non_target_var argument correctly", call. = FALSE)
+  }
+
+  # calculate response error mapped onto circular space ------
+  # note that "non_target_cols" become the deviation of participant response
+  # from each non-target feature value
+  if(unit == "degrees"){
+    data[, response_var] <- data[[response_var]] / 180 * pi
+    data[, target_var] <- data[[target_var]] / 180 * pi
+    data[, non_target_cols] <- .data[, non_target_cols] / 180 * pi
+    data[, non_target_cols] <- wrap(.data[, non_target_cols] -
+                                      data[[response_var]])
+
+  }
+
+  if(unit == "degrees_180"){
+    data[, response_var]  <- data[[response_var]] / 90 * pi
+    data[, target_var]  <- data[[target_var]] / 90 * pi
+    data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
+    data[, non_target_cols] <- wrap(.data[, non_target_cols] -
+                                      data[[response_var]])
+  }
+
+  if(unit == "radians"){
+
+    # get deviations from non-target values
+    data[, non_target_cols] <- wrap(data[, non_target_cols] -
+                                       data[[response_var]])
+
+  }
+  # TODO
+  if(unit == "wrapped_radians"){
+    data$error <- data$response
+  }
+
+
+  # find PDF of mean error from non-targets ----
+
+  # no set size or condition manipulation
+  if(is.null(set_size_var) && is.null(condition_var)){
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$id) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    } else{
+      final_data <- data %>%
+        pivot_longer(non_target_cols) %>%
+        select(-.data$name) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    }
+  }
+
+  # no set size manipulation but there is a condition manipulation
+  if(is.null(set_size_var) && !is.null(condition_var)){
+
+    data$condition <- as.factor(data[[condition_var]])
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$id, .data$condition) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    } else{
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$condition) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    }
+  }
+
+  # set size manipulation, but no condition manipulation
+  if(!is.null(set_size_var) && is.null(condition_var)){
+    data$set_size <- data[[set_size_var]]
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$id, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    } else{
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    }
+  }
+
+  # both set size & condition manipulation
+  if(!is.null(set_size_var) && !is.null(condition_var)){
+    data$set_size <- data[[set_size_var]]
+    data$condition <- as.factor(data[[condition_var]])
+
+    if(!is.null(id_var)){
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$id, .data$condition, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    } else{
+      final_data <- data %>%
+        pivot_longer(non_target_cols, values_to = "error") %>%
+        select(-.data$name) %>%
+        group_by(.data$condition, .data$set_size) %>%
+        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+        group_by(.data$set_size, .data$condition, .data$x) %>%
+        summarise(mean_error = mean(.data$y),
+                  se_error = (sd(.data$y) / sqrt(length(.data$y))))
+    }
+  }
+
+  # plot the data ----
+
+  # no set size or condition manipulation
+  if(is.null(set_size_var) && is.null(condition_var)){
+
+
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density")
+    }
+
+  }
+
+
+  # no set size manipulation but there is a condition manipulation
+  if(is.null(set_size_var) && !is.null(condition_var)){
+
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$condition), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$condition), ncol = n_col)
+    }
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- condition_var
+
+  }
+
+  # set size manipulation, but no condition manipulation
+  if(!is.null(set_size_var) && is.null(condition_var)){
+
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error),
+                      width = 0.00) +
+        geom_point() +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    }
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+
+  }
+
+
+  # both set size & condition manipulation
+  if(!is.null(set_size_var) && !is.null(condition_var)){
+
+    # add position jitter to avoid over-plotting
+    pd <- position_dodge(0.1)
+
+    if(is.null(scale_y_axis)){
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error,
+                                     group = .data$condition)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
+                      width = 0.00,
+                      position = pd) +
+        geom_point(aes(colour = .data$condition),
+                   position = pd) +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(0,
+                                      max(final_data$mean_error) +
+                                        max(final_data$se_error))) +
+        scale_colour_brewer(palette = palette, name = condition_var) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    } else {
+      plot <- ggplot(final_data, aes(x = .data$x,
+                                     y = .data$mean_error,
+                                     group = .data$condition)) +
+        geom_errorbar(aes(ymax = .data$mean_error + .data$se_error,
+                          ymin = .data$mean_error - .data$se_error,
+                          colour = .data$condition),
+                      width = 0.00,
+                      position = pd) +
+        geom_point(aes(colour = .data$condition),
+                   position = pd) +
+        theme_bw() +
+        scale_x_continuous(limits = c(-pi, pi)) +
+        scale_y_continuous(limits = c(scale_y_axis[1], scale_y_axis[2])) +
+        labs(x = "Error (Radians)",
+             y = "Probability Density") +
+        facet_wrap(vars(.data$set_size), ncol = n_col)
+    }
+
+    # rename the final_data frame
+    colnames(final_data)[1] <- set_size_var
+    colnames(final_data)[2] <- condition_var
+
+  }
+
+
+  # return the plot & the plot data
+  if(return_data == TRUE){
+    return(list(plot = plot, data = final_data))
+  } else {
+    return(plot)
+  }
+
+
+
+}
+
+
 
 # plot behavioural precision ----------------------------------------------
 # Plot precision of behavioural data
