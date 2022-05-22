@@ -11,7 +11,6 @@ plot_error_non_target(
   response_var = "response",
   target_var = "target",
   non_target_var = "non_target",
-  feature_distance = NULL,
   set_size_var = NULL,
   condition_var = NULL,
   n_bins = 18,
@@ -41,10 +40,6 @@ a single participant (i.e., there is no id column) set to "NULL".}
 \item{target_var}{The column name coding for the target value.}
 
 \item{non_target_var}{The column name coding for the non-target values.}
-
-\item{feature_distance}{A numeric value providing the minimum distance betwen
-feature values (if applicable). Must be in the same unit as passed to the
-'unit' argument.}
 
 \item{set_size_var}{The column name (if applicable) coding for the set
 size of each response.}

@@ -1082,9 +1082,6 @@ plot_error <- function(data,
 #'@param response_var The column name coding for the participants' responses.
 #'@param target_var The column name coding for the target value.
 #'@param non_target_var The column name coding for the non-target values.
-#'@param feature_distance A numeric value providing the minimum distance betwen
-#'feature values (if applicable). Must be in the same unit as passed to the
-#''unit' argument.
 #'@param set_size_var The column name (if applicable) coding for the set
 #'size of each response.
 #'@param condition_var The column name (if applicable) coding for the
@@ -1135,7 +1132,6 @@ plot_error_non_target <- function(data,
                                   response_var = "response",
                                   target_var = "target",
                                   non_target_var = "non_target",
-                                  feature_distance = NULL,
                                   set_size_var = NULL,
                                   condition_var = NULL,
                                   n_bins = 18,
@@ -1179,7 +1175,9 @@ plot_error_non_target <- function(data,
   if(unit == "degrees"){
     data[, response_var] <- data[[response_var]] / 180 * pi
     data[, target_var] <- data[[target_var]] / 180 * pi
-    data[, non_target_cols] <- .data[, non_target_cols] / 180 * pi
+    data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
+
+    # get deviations from non-target values
     data[, non_target_cols] <- wrap(.data[, non_target_cols] -
                                       data[[response_var]])
 
@@ -1189,6 +1187,8 @@ plot_error_non_target <- function(data,
     data[, response_var]  <- data[[response_var]] / 90 * pi
     data[, target_var]  <- data[[target_var]] / 90 * pi
     data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
+
+    # get deviations from non-target values
     data[, non_target_cols] <- wrap(.data[, non_target_cols] -
                                       data[[response_var]])
   }
