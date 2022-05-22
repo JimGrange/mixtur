@@ -37,7 +37,7 @@ The development version (v1.2.0.9000) can be installed from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("JimGrange/mixtur")
+devtools::install_github("JimGrange/mixtur", ref = "development")
 ```
 
 ## Publication
