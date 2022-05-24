@@ -1145,10 +1145,11 @@ plot_error_non_target <- function(data,
   # sequentially presented objects
   # https://osf.io/t6zgr/
 
+  # take a copy of the data
+  data_copy <- data
+
   condition <- NULL
   set_size <- NULL
-
-  data <- tibble(data)
 
   # establish the break points of the density plot
   break_points <- round(seq(from = -pi, to = pi, length.out = n_bins), 3)
@@ -1169,17 +1170,36 @@ plot_error_non_target <- function(data,
          you have set the non_target_var argument correctly", call. = FALSE)
   }
 
+  # error message if wrapped radians are provided as input
+  if(unit == "wrapped_radians"){
+    stop("This function currently does not support wrapped radians as input",
+         call. = FALSE)
+  }
+
+
   # calculate response error mapped onto circular space ------
+
   # note that "non_target_cols" become the deviation of participant response
-  # from each non-target feature value
+  # from each non-target feature value. This is never returned to the user so
+  # helps with "behind the scenes" naming.
   if(unit == "degrees"){
     data[, response_var] <- data[[response_var]] / 180 * pi
     data[, target_var] <- data[[target_var]] / 180 * pi
     data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
 
-    # get deviations from non-target values
-    data[, non_target_cols] <- wrap(.data[, non_target_cols] -
+    # get deviations of response from target values
+    response <- data[[response_var]] / 180 * pi
+    target <- data[[target_var]] / 180 * pi
+    data$target_error <- wrap(response - target)
+
+    # get deviations of response from non-target values
+    data[, non_target_cols] <- wrap(data[, non_target_cols] -
                                       data[[response_var]])
+
+    # get deviations of target from non-target values
+    # (this has to use the data_copy data frame)
+    data_copy[, non_target_cols] <- wrap(data_copy[, non_target_cols] -
+                                           data_copy[[target_var]])
 
   }
 
@@ -1188,21 +1208,32 @@ plot_error_non_target <- function(data,
     data[, target_var]  <- data[[target_var]] / 90 * pi
     data[, non_target_cols] <- data[, non_target_cols] / 90 * pi
 
-    # get deviations from non-target values
-    data[, non_target_cols] <- wrap(.data[, non_target_cols] -
+    # get deviations of response from target values
+    data$target_error <- wrap(response - target)
+
+    # get deviations of response  from non-target values
+    data[, non_target_cols] <- wrap(data[, non_target_cols] -
                                       data[[response_var]])
   }
 
   if(unit == "radians"){
 
-    # get deviations from non-target values
+    # get deviations of response from target values
+    data$target_error <- wrap(data[[response_var]] - data[[target_var]])
+
+    # get deviations of response from non-target values
     data[, non_target_cols] <- wrap(data[, non_target_cols] -
                                        data[[response_var]])
+
+    # get deviations of target from non-target values
+    # (this has to use the data_copy data frame)
+    data_copy[, non_target_cols] <- wrap(data_copy[, non_target_cols] -
+                                           data_copy[[target_var]])
 
   }
   # TODO
   if(unit == "wrapped_radians"){
-    data$error <- data$response
+    data$target_error <- data$response
   }
 
 
@@ -1212,15 +1243,32 @@ plot_error_non_target <- function(data,
   if(is.null(set_size_var) && is.null(condition_var)){
 
     if(!is.null(id_var)){
-      final_data <- data %>%
+
+      # # get the expected non-target deviation
+      # expected <- data_copy %>%
+      #   pivot_longer(non_target_cols, values_to = "error") %>%
+      #   select(-.data$name) %>%
+      #   group_by(.data$id) %>%
+      #   summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+      #             x = hist(.data$error, breaks = break_points, plot = FALSE)$mids)
+
+      # get the actual non-target deviation deviation
+      actual <- data %>%
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$id) %>%
         summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
-                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
+                  x = hist(.data$error, breaks = break_points, plot = FALSE)$mids)
+
+      # apply the correction and summarise the data
+      # actual$y <- actual$y - expected$y
+
+
+      final_data <- actual %>%
         group_by(.data$x) %>%
         summarise(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
+
     } else{
       final_data <- data %>%
         pivot_longer(non_target_cols) %>%
