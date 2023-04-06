@@ -1,8 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![](http://www.r-pkg.org/badges/version/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/mixtur)](https://cran.r-project.org/web/packages/mixtur/index.html)
+[![](http://www.r-pkg.org/badges/version/mixtur)](https://CRAN.R-project.org/package=mixtur)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/mixtur)](https://CRAN.R-project.org/package=mixtur)
 
 # mixtur <a ><img src='images/logo/mixtur_logo.png' align="right" height="250" /></a>
 
@@ -26,7 +26,7 @@ The package allows users to:
 ## Installation
 
 You can install the released version of mixtur (v1.2.0) from
-[CRAN](https://cran.r-project.org/web/packages/mixtur/index.html) with:
+[CRAN](https://CRAN.R-project.org/package=mixtur) with:
 
 ``` r
 install.packages("mixtur")
