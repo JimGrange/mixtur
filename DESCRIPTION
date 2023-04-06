@@ -1,7 +1,7 @@
 Package: mixtur
 Title: Modelling Continuous Report Visual Short-Term Memory Studies
-Version: 1.2.0.9000
-Date: 2021-07-27
+Version: 1.2.1
+Date: 2023-04-06
 Authors@R: c(
     person(
         given = "Jim", 
@@ -32,13 +32,12 @@ Imports:
   dplyr, 
   ggplot2, 
   rlang,
-  tidyr,
-  RColorBrewer
+  tidyr
 Suggests: knitr, rmarkdown
 License: GPL-3
 LazyData: true
 URL: https://github.com/JimGrange/mixtur
 BugReports: https://github.com/JimGrange/mixtur/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Copyright: Some functions have been adapted from Matlab code written by Paul Bays (https://bayslab.com) published under GNU General Public License.

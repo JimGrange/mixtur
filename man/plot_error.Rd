@@ -54,7 +54,7 @@ plot.}
 the plot should be returned.}
 
 \item{palette}{A character stating the preferred colour palette to use. To
-see all available palettes, type display.brewer.all() into the console.}
+see all available palettes, type ?scale_colour_brewer into the console.}
 
 \item{scale_y_axis}{A vector of 2 elements stating the minimum and maximum
 value to use for the y-axis in the plots.}

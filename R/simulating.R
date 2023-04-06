@@ -143,10 +143,10 @@ simulate_slots <- function(n_trials,
   message("Simulating data. Please wait...")
 
   # work out the number of trials to simulate per set size
-  trials_per_set_size <- numeric(length(set_size))
+  trials_per_set_size <- length(set_size)
   remainder <- n_trials %% length(set_size)
 
-  for(i in 1:length(trials_per_set_size)){
+  for(i in 1:trials_per_set_size){
     if(i == 1){
       trials_per_set_size[i] <- floor(n_trials / length(set_size)) + remainder
     } else {
@@ -367,10 +367,10 @@ simulate_components <- function(n_trials,
   }
 
   # work out the number of trials to simulate per set size
-  trials_per_set_size <- numeric(length(set_size))
+  trials_per_set_size <- length(set_size)
   remainder <- n_trials %% length(set_size)
 
-  for(i in 1:length(trials_per_set_size)){
+  for(i in 1:trials_per_set_size){
     if(i == 1){
       trials_per_set_size[i] <- floor(n_trials / length(set_size)) + remainder
     } else {
@@ -458,7 +458,6 @@ simulate_components <- function(n_trials,
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
-#' @importFrom dplyr slice
 #' @importFrom dplyr relocate
 #' @importFrom rlang .data
 get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
@@ -487,7 +486,7 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
     if(set_size > 1){
       distractors <- trial_data[i, ] %>%
         select(contains("non_target")) %>%
-        slice() %>%
+        # slice() %>%
         unlist(.data, use.names = FALSE)
     }
 

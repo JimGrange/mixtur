@@ -30,7 +30,7 @@
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'@param palette A character stating the preferred colour palette to use. To
-#'see all available palettes, type display.brewer.all() into the console.
+#'see all available palettes, type ?scale_colour_brewer into the console.
 #'
 #'@return If \code{return_data} is set to \code{FALSE} (which it is by default),
 #' the function returns a ggplot2 object visualising the summary statistic
@@ -145,7 +145,7 @@ plot_summary_statistic <- function(data,
 #' @param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #' the plot should be returned.
 #' @param palette A character stating the preferred colour palette to use. To
-#' see all available palettes, type display.brewer.all() into the console.
+#' see all available palettes, type ?scale_colour_brewer into the console.
 #'
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
@@ -698,7 +698,7 @@ plot_mean_absolute_error <- function(data,
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'@param palette A character stating the preferred colour palette to use. To
-#'see all available palettes, type display.brewer.all() into the console.
+#'see all available palettes, type ?scale_colour_brewer into the console.
 #'@param scale_y_axis A vector of 2 elements stating the minimum and maximum
 #'value to use for the y-axis in the plots.
 #'
@@ -1374,7 +1374,7 @@ plot_precision <- function(data,
 #'@param n_col An integer controlling the number of columns in the resulting
 #'plot.
 #'@param palette A character stating the preferred colour palette to use. To
-#'see all available palettes, type display.brewer.all() into the console.
+#'see all available palettes, type ?scale_colour_brewer into the console.
 #'
 #'@return The function returns a ggplot2 object visualising the mean observed
 #' response error density distribution across participants (if applicable)
@@ -2107,7 +2107,7 @@ plot_model_fit <- function(participant_data,
 #'@param return_data A boolean (TRUE or FALSE) indicating whether the data for
 #'the plot should be returned.
 #'@param palette A character stating the preferred colour palette to use. To
-#'see all available palettes, type display.brewer.all() into the console.
+#'see all available palettes, type?scale_colour_brewer into the console.
 #'
 #'@return If \code{return_data} is set to \code{FALSE} (which it is by
 #' default),the function returns a ggplot2 object visualising the mean model
