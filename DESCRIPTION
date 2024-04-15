@@ -1,6 +1,6 @@
 Package: mixtur
 Title: Modelling Continuous Report Visual Short-Term Memory Studies
-Version: 1.2.1.9000
+Version: 1.2.2.9000
 Date: 2023-04-06
 Authors@R: c(
     person(
