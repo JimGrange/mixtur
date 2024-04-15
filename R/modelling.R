@@ -874,7 +874,7 @@ fit_level_components <- function(data,
 #' @importFrom stats optim
 fit_components_gd <- function(response,
                               target,
-                              non_targets = replicate(NROW(response), 0),
+                              non_targets = rep(0, NROW(response)),
                               return.ll = TRUE) {
 
   # check the data is in correct shape
@@ -960,7 +960,7 @@ components_model_pdf_gd <- function(response,
              start_parms[3])
 
   if(is.null(non_targets)){
-    non_targets <- replicate(NROW(response), 0)
+    non_targets <- rep(0, NROW(response))
   }
 
   # check the data is in correct shape
@@ -1018,7 +1018,7 @@ components_model_pdf_gd <- function(response,
 
   # get the weight contributions of target and guess responses to performance
   w_t <- p_t * vonmisespdf(error, 0, kappa)
-  w_g <- p_u * replicate(n, 1) / (2 * pi)
+  w_g <- p_u * rep(1, n) / (2 * pi)
 
   # if present, get the weight contribution of non-target responses
   # to performance
@@ -1050,7 +1050,7 @@ components_model_pdf_gd <- function(response,
 # user.
 fit_components_em <- function(response,
                               target,
-                              non_targets = replicate(NROW(response), 0),
+                              non_targets = rep(0, NROW(response)),
                               return.ll = TRUE) {
 
   # check the data is in correct shape
@@ -1117,7 +1117,7 @@ components_model_pdf_em <- function(response,
                                     start_parms = NULL) {
 
   if(is.null(non_targets)){
-    non_targets <- replicate(NROW(response), 0)
+    non_targets <- rep(0, NROW(response))
   }
 
   # check the data is in correct shape
@@ -1179,7 +1179,7 @@ components_model_pdf_em <- function(response,
 
     # get the weight contributions of target and guess responses to performance
     w_t <- p_t * vonmisespdf(error, 0, kappa)
-    w_g <- p_u * replicate(n, 1) / (2 * pi)
+    w_g <- p_u * rep(1, n) / (2 * pi)
 
     # if present, get the weight contribution of non-target responses
     # to performance
