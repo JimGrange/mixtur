@@ -739,16 +739,16 @@ fit_level_components <- function(data,
                         p_u = FALSE, LL = FALSE, n = FALSE)
   }
 
-
   # loop over every participant
   for(i in seq_along(l)) {
 
     # get the current participant's data
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
 
-    # get the response and the target values
+    # get the response, target values and error
     response <- as.matrix(df[, response_var])
     target <- as.matrix(df[, target_var])
+    error <- wrap(response - target)
 
 
     #--- pass the data to the fit function
@@ -759,11 +759,13 @@ fit_level_components <- function(data,
       if(fit_method == "EM"){
         fit <- fit_components_em(response,
                                  target,
+                                 error = error,
                                  return.ll = return_fit)
       }
       if(fit_method == "GD"){
         fit <- fit_components_gd(response,
                                  target,
+                                 error = error,
                                  return.ll = return_fit)
       }
 
@@ -791,11 +793,13 @@ fit_level_components <- function(data,
         if(is.null(non_target_var)) {
           fit <- fit_components_em(response,
                                    target,
+                                   error = error,
                                    return.ll = return_fit)
         } else {
           fit <- fit_components_em(response,
                                    target,
                                    non_targets,
+                                   error = error,
                                    return.ll = return_fit)
         }
       }
@@ -804,11 +808,13 @@ fit_level_components <- function(data,
         if(is.null(non_target_var)) {
           fit <- fit_components_gd(response,
                                    target,
+                                   error = error,
                                    return.ll = return_fit)
         } else {
           fit <- fit_components_gd(response,
                                    target,
                                    non_targets,
+                                   error = error,
                                    return.ll = return_fit)
         }
       }
@@ -875,6 +881,7 @@ fit_level_components <- function(data,
 fit_components_gd <- function(response,
                               target,
                               non_targets = rep(0, NROW(response)),
+                              error,
                               return.ll = TRUE) {
 
   # check the data is in correct shape
@@ -916,6 +923,7 @@ fit_components_gd <- function(response,
                           response = response,
                           target = target,
                           non_targets = non_targets,
+                          error = error,
                           method = "Nelder-Mead",
                           control = list(parscale = c(1, 0.1, 0.1)))
 
@@ -949,6 +957,7 @@ fit_components_gd <- function(response,
 components_model_pdf_gd <- function(response,
                                     target,
                                     non_targets,
+                                    error,
                                     start_parms = NULL,
                                     min_parms,
                                     max_parms) {
@@ -1002,9 +1011,6 @@ components_model_pdf_gd <- function(response,
     p_u <- parms[4]
   }
 
-  # calculate response error from target value
-  error <- wrap(response - target)
-
   # if present, calculate response error from non-targets
   if(nn > 0){
     non_target_error <- wrap(repmat(response, nn) - non_targets)
@@ -1018,19 +1024,20 @@ components_model_pdf_gd <- function(response,
 
   # get the weight contributions of target and guess responses to performance
   w_t <- p_t * vonmisespdf(error, 0, kappa)
-  w_g <- p_u * rep(1, n) / (2 * pi)
+  w_g <- p_u / (2 * pi)
 
   # if present, get the weight contribution of non-target responses
   # to performance
   if(nn == 0){
-    w_n <- matrix(nrow = NROW(non_target_error),
-                  ncol = NCOL(non_target_error))
+    w_n <- 0
   } else {
     w_n <- p_n/nn * vonmisespdf(non_target_error, 0, kappa)
+    w_n <- rowSums(w_n)
+    w_n[is.nan(w_n)] <- 0
   }
 
   # calculate log likelihood of model
-  weights <- rowSums(cbind(w_t, w_g, w_n))
+  weights <- w_t + w_g + w_n
   ll <- -sum(log(weights))
 
 
@@ -1051,6 +1058,7 @@ components_model_pdf_gd <- function(response,
 fit_components_em <- function(response,
                               target,
                               non_targets = rep(0, NROW(response)),
+                              error,
                               return.ll = TRUE) {
 
   # check the data is in correct shape
@@ -1085,6 +1093,7 @@ fit_components_em <- function(response,
         est_list <- components_model_pdf_em(response = response,
                                             target = target,
                                             non_targets = non_targets,
+                                            error = error,
                                             start_parms = c(kappa[i],
                                                             1 - N[j] - U[k],
                                                             N[j], U[k]))
@@ -1114,6 +1123,7 @@ fit_components_em <- function(response,
 components_model_pdf_em <- function(response,
                                     target,
                                     non_targets,
+                                    error,
                                     start_parms = NULL) {
 
   if(is.null(non_targets)){
@@ -1157,9 +1167,6 @@ components_model_pdf_em <- function(response,
     p_n <- start_parms[3];
     p_u <- start_parms[4]
   }
-
-  # calculate response error from target value
-  error <- wrap(response - target)
 
   # if present, calculate response error from non-targets
   if(nn > 0){
