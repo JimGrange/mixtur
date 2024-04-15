@@ -760,12 +760,14 @@ fit_level_components <- function(data,
         fit <- fit_components_em(response,
                                  target,
                                  error = error,
+                                 model = model,
                                  return.ll = return_fit)
       }
       if(fit_method == "GD"){
         fit <- fit_components_gd(response,
                                  target,
                                  error = error,
+                                 model = model,
                                  return.ll = return_fit)
       }
 
@@ -794,12 +796,14 @@ fit_level_components <- function(data,
           fit <- fit_components_em(response,
                                    target,
                                    error = error,
+                                   model = model,
                                    return.ll = return_fit)
         } else {
           fit <- fit_components_em(response,
                                    target,
                                    non_targets,
                                    error = error,
+                                   model = model,
                                    return.ll = return_fit)
         }
       }
@@ -809,12 +813,14 @@ fit_level_components <- function(data,
           fit <- fit_components_gd(response,
                                    target,
                                    error = error,
+                                   model = model,
                                    return.ll = return_fit)
         } else {
           fit <- fit_components_gd(response,
                                    target,
                                    non_targets,
                                    error = error,
+                                   model = model,
                                    return.ll = return_fit)
         }
       }
@@ -882,6 +888,7 @@ fit_components_gd <- function(response,
                               target,
                               non_targets = rep(0, NROW(response)),
                               error,
+                              model,
                               return.ll = TRUE) {
 
   # check the data is in correct shape
@@ -914,27 +921,49 @@ fit_components_gd <- function(response,
     for(j in seq_along(N)) {
       for(k in seq_along(U)) {
 
-        start_parms <- c(kappa[i],
-                        N[j],
-                        U[k])
+        if (model == "2_component") {
+          start_parms <- c(kappa[i],
+                          U[j])
+          pdf_fun <- components_model_pdf_gd_2p
+          control = list(parscale = c(1, 0.1))
+        } else {
+          start_parms <- c(kappa[i],
+                          N[j],
+                          U[k])
+          pdf_fun <- components_model_pdf_gd
+          control = list(parscale = c(1, 0.1, 0.1))
+        }
+
+
+
 
         est_list <- optim(par = start_parms,
-                          fn = components_model_pdf_gd,
+                          fn = pdf_fun,
                           response = response,
                           target = target,
                           non_targets = non_targets,
                           error = error,
                           method = "Nelder-Mead",
-                          control = list(parscale = c(1, 0.1, 0.1)))
+                          control = control)
 
 
         if (est_list$value < log_lik & !is.nan(est_list$value) ) {
           log_lik <- est_list$value
-          parameters <- c(est_list$par[1],
-                          1 - est_list$par[2] - est_list$par[3],
-                          est_list$par[2],
-                          est_list$par[3])
-          parameters <- round(parameters, 3)
+
+          if(model == "2_component"){
+            parameters <- c(est_list$par[1],
+                            1 - est_list$par[2],
+                            0,
+                            est_list$par[2])
+            parameters <- round(parameters, 3)
+          } else {
+
+            parameters <- c(est_list$par[1],
+                            1 - est_list$par[2] - est_list$par[3],
+                            est_list$par[2],
+                            est_list$par[3])
+            parameters <- round(parameters, 3)
+          }
         }
       }
     }
@@ -948,6 +977,11 @@ fit_components_gd <- function(response,
   }
 }
 
+components_model_pdf_gd_2p <- function(response, target, non_targets, error, start_parms = NULL,
+                                       min_parms, max_parms) {
+  start_parms <- c(start_parms[1], 0, start_parms[2])
+  components_model_pdf_gd(response, target, non_targets, error, start_parms, min_parms, max_parms)
+}
 
 
 # components model likelihood function gd  ---------------------------------
@@ -973,8 +1007,8 @@ components_model_pdf_gd <- function(response,
   }
 
   # check the data is in correct shape
-  if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
-     (any(non_targets != 0) & NROW(non_targets) != NROW(response) |
+  if(NCOL(response) > 2 || NCOL(target) > 1 || NROW(response) != NROW(target) ||
+     (any(non_targets != 0) & NROW(non_targets) != NROW(response) ||
       NROW(non_targets) != NROW(target))) {
     stop("likelihood error: Input not correctly dimensioned", call. = FALSE)
   }
@@ -1037,8 +1071,8 @@ components_model_pdf_gd <- function(response,
   }
 
   # calculate log likelihood of model
-  weights <- w_t + w_g + w_n
-  ll <- -sum(log(weights))
+  w_t <- w_t + w_g + w_n
+  ll <- -sum(log(w_t))
 
 
   if(ll == Inf || ll == -Inf || is.na(ll)){
@@ -1059,6 +1093,7 @@ fit_components_em <- function(response,
                               target,
                               non_targets = rep(0, NROW(response)),
                               error,
+                              model,
                               return.ll = TRUE) {
 
   # check the data is in correct shape
