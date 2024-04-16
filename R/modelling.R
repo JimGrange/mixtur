@@ -750,6 +750,9 @@ fit_level_components <- function(data,
     target <- df[, target_var]
     error <- wrap(response - target)
 
+    # precalculate cos(error) for speedup
+    cos_error <- cos(error)
+
 
     #--- pass the data to the fit function
 
@@ -766,9 +769,10 @@ fit_level_components <- function(data,
       if(fit_method == "GD"){
         fit <- fit_components_gd(response,
                                  target,
-                                 error = error,
+                                 error = cos_error,
                                  model = model,
-                                 return.ll = return_fit)
+                                 return.ll = return_fit,
+                                 precos = TRUE)
       }
 
     }
@@ -797,8 +801,9 @@ fit_level_components <- function(data,
       # if present, calculate response error from non-targets
       if (nn > 0) {
         non_target_error <- wrap(response - non_targets)
+        cos_non_target_error <- cos(non_target_error)
       } else {
-        non_target_error <- NULL
+        cos_non_target_error <- NULL
       }
 
       if(fit_method == "EM"){
@@ -822,18 +827,20 @@ fit_level_components <- function(data,
         if(is.null(non_target_var)) {
           fit <- fit_components_gd(response,
                                    target,
-                                   error = error,
-                                   non_target_error = non_target_error,
+                                   error = cos_error,
+                                   non_target_error = cos_non_target_error,
                                    model = model,
-                                   return.ll = return_fit)
+                                   return.ll = return_fit,
+                                   precos = TRUE)
         } else {
           fit <- fit_components_gd(response,
                                    target,
                                    non_targets,
-                                   error = error,
-                                   non_target_error = non_target_error,
+                                   error = cos_error,
+                                   non_target_error = cos_non_target_error,
                                    model = model,
-                                   return.ll = return_fit)
+                                   return.ll = return_fit,
+                                   precos = TRUE)
         }
       }
     }
@@ -902,7 +909,8 @@ fit_components_gd <- function(response,
                               error,
                               non_target_error,
                               model,
-                              return.ll = TRUE) {
+                              return.ll = TRUE,
+                              precos = FALSE) {
 
   # check the data is in correct shape
   if(NCOL(response) > 2 | NCOL(target) > 1 | NROW(response) != NROW(target) |
@@ -954,9 +962,9 @@ fit_components_gd <- function(response,
                           fn = pdf_fun,
                           response = response,
                           target = target,
-                          non_targets = non_targets,
                           non_target_error = non_target_error,
                           error = error,
+                          precos = precos,
                           method = "Nelder-Mead",
                           control = control)
 
@@ -991,17 +999,16 @@ fit_components_gd <- function(response,
   }
 }
 
-components_model_pdf_gd_2p <- function(response, target, non_targets, error,
+components_model_pdf_gd_2p <- function(response, target, error,
                                        start_parms = NULL, non_target_error = NULL,
-                                       min_parms, max_parms) {
+                                       min_parms, max_parms, precos = FALSE) {
   start_parms <- c(start_parms[1], 0, start_parms[2])
   components_model_pdf_gd(response = response,
                           target = target,
-                          non_targets = non_targets,
                           error = error,
                           start_parms = start_parms,
                           min_parms = min_parms,
-                          max_parms = max_parms)
+                          max_parms = max_parms, precos = precos)
 }
 
 
@@ -1011,12 +1018,12 @@ components_model_pdf_gd_2p <- function(response, target, non_targets, error,
 # It is not expected that this function be called by the user.
 components_model_pdf_gd <- function(response,
                                     target,
-                                    non_targets,
                                     error,
                                     non_target_error = NULL,
                                     start_parms = NULL,
                                     min_parms,
-                                    max_parms) {
+                                    max_parms,
+                                    precos = FALSE) {
 
   # extract the parameters
   parms <- c(start_parms[1],
@@ -1049,7 +1056,13 @@ components_model_pdf_gd <- function(response,
   }
 
   # get the weight contributions of target and guess responses to performance
-  w_t <- p_t * vonmisespdf(error, 0, kappa)
+  if (precos) {
+    twopibe <- 2 * pi * besselI(kappa, 0)
+    w_t <- exp(kappa * error) / twopibe
+  } else {
+    w_t <- vonmisespdf(error, 0, kappa)
+  }
+  w_t <- p_t * w_t
   w_g <- p_u / (2 * pi)
 
   # combine the weights
@@ -1058,7 +1071,11 @@ components_model_pdf_gd <- function(response,
   # if present, get the weight contribution of non-target responses
   # to performance
   if (nn > 0) {
-    w_n <- vonmisespdf(non_target_error, 0, kappa)
+    if (precos) {
+      w_n <- exp(kappa * non_target_error) / twopibe
+    } else {
+      w_n <- vonmisespdf(non_target_error, 0, kappa)
+    }
     w_n <- p_n/nn * rowSums2(w_n)
     w_t <- w_t + w_n
   }
