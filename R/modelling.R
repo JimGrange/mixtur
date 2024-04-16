@@ -746,8 +746,8 @@ fit_level_components <- function(data,
     df <- as.data.frame.list(l[i], col.names = colnames(l[i]))
 
     # get the response, target values and error
-    response <- as.matrix(df[, response_var])
-    target <- as.matrix(df[, target_var])
+    response <- df[, response_var]
+    target <- df[, target_var]
     error <- wrap(response - target)
 
 
@@ -791,6 +791,14 @@ fit_level_components <- function(data,
         non_targets <- NULL
       }
 
+      # number of non-targets
+      nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
+
+      # if present, calculate response error from non-targets
+      if (nn > 0) {
+        non_target_error <- wrap(response - non_targets)
+      }
+
       if(fit_method == "EM"){
         if(is.null(non_target_var)) {
           fit <- fit_components_em(response,
@@ -813,6 +821,7 @@ fit_level_components <- function(data,
           fit <- fit_components_gd(response,
                                    target,
                                    error = error,
+                                   non_target_error = non_target_error,
                                    model = model,
                                    return.ll = return_fit)
         } else {
@@ -820,6 +829,7 @@ fit_level_components <- function(data,
                                    target,
                                    non_targets,
                                    error = error,
+                                   non_target_error = non_target_error,
                                    model = model,
                                    return.ll = return_fit)
         }
@@ -888,6 +898,7 @@ fit_components_gd <- function(response,
                               target,
                               non_targets = rep(0, NROW(response)),
                               error,
+                              non_target_error,
                               model,
                               return.ll = TRUE) {
 
@@ -942,6 +953,7 @@ fit_components_gd <- function(response,
                           response = response,
                           target = target,
                           non_targets = non_targets,
+                          non_target_error = non_target_error,
                           error = error,
                           method = "Nelder-Mead",
                           control = control)
@@ -977,10 +989,17 @@ fit_components_gd <- function(response,
   }
 }
 
-components_model_pdf_gd_2p <- function(response, target, non_targets, error, start_parms = NULL,
+components_model_pdf_gd_2p <- function(response, target, non_targets, error,
+                                       start_parms = NULL, non_target_error = NULL,
                                        min_parms, max_parms) {
   start_parms <- c(start_parms[1], 0, start_parms[2])
-  components_model_pdf_gd(response, target, non_targets, error, start_parms, min_parms, max_parms)
+  components_model_pdf_gd(response = response,
+                          target = target,
+                          non_targets = non_targets,
+                          error = error,
+                          start_parms = start_parms,
+                          min_parms = min_parms,
+                          max_parms = max_parms)
 }
 
 
@@ -992,6 +1011,7 @@ components_model_pdf_gd <- function(response,
                                     target,
                                     non_targets,
                                     error,
+                                    non_target_error,
                                     start_parms = NULL,
                                     min_parms,
                                     max_parms) {
@@ -1043,13 +1063,6 @@ components_model_pdf_gd <- function(response,
     p_t <- parms[2]
     p_n <- parms[3];
     p_u <- parms[4]
-  }
-
-  # if present, calculate response error from non-targets
-  if(nn > 0){
-    non_target_error <- wrap(repmat(response, nn) - non_targets)
-  } else {
-    non_target_error <- repmat(response, nn)
   }
 
   # initialise likelihood and fit routine values
