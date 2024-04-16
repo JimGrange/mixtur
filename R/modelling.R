@@ -1031,14 +1031,6 @@ components_model_pdf_gd <- function(response,
     return(.Machine$double.xmax)
   }
 
-
-  # set maximum iterations & LL acceptable
-  max_iter <- 10^4
-  max_dLL <- 10^-4
-
-  # get the number of trials
-  n <- NROW(response)
-
   # get the number of non-targets present
   nn <- if (is.null(non_target_error)) 0 else NCOL(non_target_error)
 
@@ -1055,10 +1047,6 @@ components_model_pdf_gd <- function(response,
     p_n <- parms[3];
     p_u <- parms[4]
   }
-
-  # initialise likelihood and fit routine values
-  LL <- 0
-  dLL <- 1
 
   # get the weight contributions of target and guess responses to performance
   w_t <- p_t * vonmisespdf(error, 0, kappa)
