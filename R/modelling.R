@@ -1067,7 +1067,6 @@ components_model_pdf_gd <- function(response,
   } else {
     w_n <- p_n/nn * vonmisespdf(non_target_error, 0, kappa)
     w_n <- rowSums(w_n)
-    w_n[is.nan(w_n)] <- 0
   }
 
   # calculate log likelihood of model
