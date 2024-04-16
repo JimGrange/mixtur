@@ -797,6 +797,8 @@ fit_level_components <- function(data,
       # if present, calculate response error from non-targets
       if (nn > 0) {
         non_target_error <- wrap(response - non_targets)
+      } else {
+        non_target_error <- NULL
       }
 
       if(fit_method == "EM"){
@@ -1011,7 +1013,7 @@ components_model_pdf_gd <- function(response,
                                     target,
                                     non_targets,
                                     error,
-                                    non_target_error,
+                                    non_target_error = NULL,
                                     start_parms = NULL,
                                     min_parms,
                                     max_parms) {
@@ -1021,17 +1023,6 @@ components_model_pdf_gd <- function(response,
              1 - start_parms[2] - start_parms[3],
              start_parms[2],
              start_parms[3])
-
-  if(is.null(non_targets)){
-    non_targets <- rep(0, NROW(response))
-  }
-
-  # check the data is in correct shape
-  if(NCOL(response) > 2 || NCOL(target) > 1 || NROW(response) != NROW(target) ||
-     (any(non_targets != 0) & NROW(non_targets) != NROW(response) ||
-      NROW(non_targets) != NROW(target))) {
-    stop("likelihood error: Input not correctly dimensioned", call. = FALSE)
-  }
 
   # check parameters are valid in terms of min and max values
   if((!(is.null(parms))) &
@@ -1049,7 +1040,7 @@ components_model_pdf_gd <- function(response,
   n <- NROW(response)
 
   # get the number of non-targets present
-  nn <- ifelse(any(non_targets != 0), NCOL(non_targets), 0)
+  nn <- if (is.null(non_target_error)) 0 else NCOL(non_target_error)
 
   # set default starting parameter if not provided, else assign starting
   # parameters to parameter variables
