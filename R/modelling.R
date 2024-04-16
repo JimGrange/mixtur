@@ -923,7 +923,7 @@ fit_components_gd <- function(response,
 
         if (model == "2_component") {
           start_parms <- c(kappa[i],
-                          U[j])
+                          U[k])
           pdf_fun <- components_model_pdf_gd_2p
           control = list(parscale = c(1, 0.1))
         } else {
