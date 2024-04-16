@@ -172,8 +172,7 @@ randomvonmises <- function(n, mu, kappa) {
 #' (https://bayslab.com) published under GNU General Public License.
 #' @noRd
 vonmisespdf <- function(x, mu, kappa) {
-  p <- exp(kappa * cos(x - mu)) / (2 * pi * besselI(kappa, 0))
-  return(p)
+  exp(kappa * cos(x - mu)) / (2 * pi * besselI(kappa, 0))
 }
 
 
@@ -316,4 +315,13 @@ bic <- function(ll, parms, n){
   value <- (-2 * ll) + (parms * log(n))
   value <- round(value, 3)
   return(value)
+}
+
+
+# slightly faster rowSums
+rowSums2 <- function (x, na.rm = FALSE, dims = 1L) {
+  dn <- dim(x)
+  p <- dn[2]
+  dn <- dn[1]
+  .Internal(rowSums(x, dn, p, na.rm))
 }

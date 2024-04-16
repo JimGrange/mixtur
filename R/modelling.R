@@ -1052,17 +1052,18 @@ components_model_pdf_gd <- function(response,
   w_t <- p_t * vonmisespdf(error, 0, kappa)
   w_g <- p_u / (2 * pi)
 
+  # combine the weights
+  w_t <- w_t + w_g
+
   # if present, get the weight contribution of non-target responses
   # to performance
-  if(nn == 0){
-    w_n <- 0
-  } else {
-    w_n <- p_n/nn * vonmisespdf(non_target_error, 0, kappa)
-    w_n <- rowSums(w_n)
+  if (nn > 0) {
+    w_n <- vonmisespdf(non_target_error, 0, kappa)
+    w_n <- p_n/nn * rowSums2(w_n)
+    w_t <- w_t + w_n
   }
 
   # calculate log likelihood of model
-  w_t <- w_t + w_g + w_n
   ll <- -sum(log(w_t))
 
 
