@@ -1076,7 +1076,7 @@ components_model_pdf_gd <- function(response,
     } else {
       w_n <- vonmisespdf(non_target_error, 0, kappa)
     }
-    w_n <- p_n/nn * rowSums2(w_n)
+    w_n <- p_n/nn * rowSums(w_n)
     w_t <- w_t + w_n
   }
 

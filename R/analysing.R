@@ -190,7 +190,7 @@ get_summary_statistics <- function(data,
   }
 
 
-return(final_data)
+  return(final_data)
 
 }
 
@@ -385,10 +385,10 @@ get_precision_single <- function(error, target = 0) {
 # Obtain mean absolute error
 get_mean_absolute_error <- function(error){
 
- error <- abs(error)
- mae <- cmean(error)
+  error <- abs(error)
+  mae <- cmean(error)
 
- return(mae)
+  return(mae)
 }
 
 

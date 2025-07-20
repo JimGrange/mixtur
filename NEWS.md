@@ -1,5 +1,8 @@
 # mixtur (development version)
 
+# mixtur v1.2.2
+* Implemented pull request providing efficiencies to fit_mixtur() function
+
 # mixtur v1.2.1
 * Fixed issue that RColorBrewer package was imported but never used
 * Fixed issue in simulate_components() function caused by dplyr's slice()

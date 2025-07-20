@@ -316,12 +316,3 @@ bic <- function(ll, parms, n){
   value <- round(value, 3)
   return(value)
 }
-
-
-# slightly faster rowSums
-rowSums2 <- function (x, na.rm = FALSE, dims = 1L) {
-  dn <- dim(x)
-  p <- dn[2]
-  dn <- dn[1]
-  .Internal(rowSums(x, dn, p, na.rm))
-}
