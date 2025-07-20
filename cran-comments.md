@@ -15,14 +15,14 @@ There was 1 NOTE:
 ### Checking CRAN incoming feasibility
 
 * New submission
-  * mixtur v1.2.0 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed in this submission.
+  * mixtur v1.2.1 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed in this submission.
 
 * Package was archived on CRAN
-  * mixtur v1.2.0 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed. 
+  * mixtur v1.2.1 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed. 
 
-* CRAN repository db overrides: X-CRAN-Comment: Archived on 2023-04-03 as issues were not corrected
+* CRAN repository db overrides: X-CRAN-Comment: Archived on 2025-07-01 as issues were not corrected
   in time.
-  * mixtur v1.2.0 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed.
+  * mixtur v1.2.1 was removed from CRAN as I didn't deal with an issue in time. These issues have now been successfully addressed.
 
 * Possibly mis-spelled words in DESCRIPTION: al (27:42), et (27:39), Zhang (26:22) 
   * These have been checked and are all correct.
