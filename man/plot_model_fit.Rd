@@ -56,7 +56,7 @@ plot of the behavioural data.}
 plot.}
 
 \item{palette}{A character stating the preferred colour palette to use. To
-see all available palettes, type display.brewer.all() into the console.}
+see all available palettes, type ?scale_colour_brewer into the console.}
 }
 \value{
 The function returns a ggplot2 object visualising the mean observed
