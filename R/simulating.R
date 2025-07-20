@@ -487,7 +487,7 @@ get_component_response <- function(trial_data, set_size, kappa, p_t, p_n, p_u){
       distractors <- trial_data[i, ] %>%
         select(contains("non_target")) %>%
         # slice() %>%
-        unlist(.data, use.names = FALSE)
+        unlist(use.names = FALSE)
     }
 
     #--- generate the model response based on probability

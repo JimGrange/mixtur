@@ -45,5 +45,5 @@ LazyData: true
 URL: https://github.com/JimGrange/mixtur
 BugReports: https://github.com/JimGrange/mixtur/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Copyright: Some functions have been adapted from Matlab code written by Paul Bays (https://bayslab.com) published under GNU General Public License.
