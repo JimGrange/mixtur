@@ -51,7 +51,7 @@ the pre-print of the paper:
   studies. *Behavior Research Methods, 54*, 2071–2100.
   - [Final
     Publication](https://link.springer.com/article/10.3758/s13428-021-01688-1)  
-  - [Preprint](https://psyarxiv.com/n6gqx/)
+  - [Preprint](https://osf.io/preprints/psyarxiv/n6gqx/)
 
 The paper also includes several simulation studies exploring some
 properties of the models (including parameter recovery simulations,
