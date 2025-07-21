@@ -25,7 +25,7 @@ The package allows users to:
 
 ## Installation
 
-You can install the released version of mixtur (v1.2.0) from
+You can install the released version of mixtur (v1.2.2) from
 [CRAN](https://CRAN.R-project.org/package=mixtur) with:
 
 ``` r
