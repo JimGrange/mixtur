@@ -1188,13 +1188,13 @@ plot_error_non_target <- function(data,
     data[, non_target_cols] <- data[, non_target_cols] / 180 * pi
 
     # get deviations of response from target values
-    response <- data[[response_var]] / 180 * pi
-    target <- data[[target_var]] / 180 * pi
+    response <- data[[response_var]]
+    target <- data[[target_var]]
     data$target_error <- wrap(response - target)
 
     # get deviations of response from non-target values
-    data[, non_target_cols] <- wrap(data[, non_target_cols] -
-                                      data[[response_var]])
+    data[, non_target_cols] <- wrap(data[[response_var]] -
+                                      data[, non_target_cols])
 
     # get deviations of target from non-target values
     # (this has to use the data_copy data frame)
@@ -1212,8 +1212,8 @@ plot_error_non_target <- function(data,
     data$target_error <- wrap(response - target)
 
     # get deviations of response  from non-target values
-    data[, non_target_cols] <- wrap(data[, non_target_cols] -
-                                      data[[response_var]])
+    data[, non_target_cols] <- wrap(data[[response_var]] -
+                                      data[, non_target_cols])
   }
 
   if(unit == "radians"){
@@ -1222,13 +1222,13 @@ plot_error_non_target <- function(data,
     data$target_error <- wrap(data[[response_var]] - data[[target_var]])
 
     # get deviations of response from non-target values
-    data[, non_target_cols] <- wrap(data[, non_target_cols] -
-                                       data[[response_var]])
+    data[, non_target_cols] <- wrap(data[[response_var]] -
+                                      data[, non_target_cols])
 
     # get deviations of target from non-target values
     # (this has to use the data_copy data frame)
-    data_copy[, non_target_cols] <- wrap(data_copy[, non_target_cols] -
-                                           data_copy[[target_var]])
+    data_copy[, non_target_cols] <- wrap(data_copy[[target_var]] -
+                                           data_copy[, non_target_cols])
 
   }
   # TODO
