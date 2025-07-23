@@ -1198,8 +1198,8 @@ plot_error_non_target <- function(data,
 
     # get deviations of target from non-target values
     # (this has to use the data_copy data frame)
-    data_copy[, non_target_cols] <- wrap(data_copy[, non_target_cols] -
-                                           data_copy[[target_var]])
+    data_copy[, non_target_cols] <- wrap(data_copy[[target_var]] -
+                                           data_copy[, non_target_cols])
 
   }
 
