@@ -37,7 +37,7 @@ The development version can be installed from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("JimGrange/mixtur", ref = "development")
+devtools::install_github("JimGrange/mixtur")
 ```
 
 ## Publication
