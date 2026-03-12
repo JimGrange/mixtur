@@ -1,7 +1,7 @@
 Package: mixtur
 Title: Modelling Continuous Report Visual Short-Term Memory Studies
-Version: 1.2.2.9000
-Date: 2025-07-19
+Version: 1.2.3
+Date: 2026-03-12
 Authors@R: c(
     person(
         given = "Jim", 
@@ -35,7 +35,7 @@ Description: A set of utility functions for analysing and modelling data from
 Depends: 
   R (>= 4.0)
 Imports:
-  dplyr, 
+  dplyr (>= 1.2.0), 
   ggplot2, 
   rlang,
   tidyr

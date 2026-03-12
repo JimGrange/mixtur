@@ -724,6 +724,7 @@ plot_mean_absolute_error <- function(data,
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
+#' @importFrom dplyr reframe
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
@@ -788,17 +789,17 @@ plot_error <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(.data$id) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+      reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -812,18 +813,18 @@ plot_error <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(.data$id, .data$condition) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         group_by(.data$condition) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -836,18 +837,18 @@ plot_error <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(.data$id, .data$set_size) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         group_by(.data$set_size) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -861,18 +862,18 @@ plot_error <- function(data,
     if(!is.null(id_var)){
       final_data <- data %>%
         group_by(.data$id, .data$condition, .data$set_size) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        dplyr::reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        dplyr::reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         group_by(.data$condition, .data$set_size) %>%
-        summarise(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
+        dplyr::reframe(y = hist(.data$error, breaks = break_points, plot = FALSE)$density,
                   x = hist(.data$error, breaks = break_points, plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        dplyr::reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -1119,6 +1120,7 @@ plot_error <- function(data,
 #' @importFrom stats sd
 #' @importFrom dplyr %>%
 #' @importFrom dplyr summarise
+#' @importFrom dplyr reframe
 #' @importFrom dplyr group_by
 #' @importFrom dplyr rename
 #' @importFrom graphics hist
@@ -1257,7 +1259,7 @@ plot_error_non_target <- function(data,
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$id) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
@@ -1270,21 +1272,21 @@ plot_error_non_target <- function(data,
 
       final_data <- actual %>%
         group_by(.data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
 
     } else{
       final_data <- data %>%
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -1299,28 +1301,28 @@ plot_error_non_target <- function(data,
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$id, .data$condition) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$condition) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -1334,28 +1336,28 @@ plot_error_non_target <- function(data,
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$id, .data$set_size) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$set_size) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }
@@ -1370,28 +1372,28 @@ plot_error_non_target <- function(data,
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$id, .data$condition, .data$set_size) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     } else{
       final_data <- data %>%
         pivot_longer(non_target_cols, values_to = "error") %>%
         select(-.data$name) %>%
         group_by(.data$condition, .data$set_size) %>%
-        summarise(y = hist(.data$error,
+        reframe(y = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$density,
                   x = hist(.data$error,
                            breaks = break_points,
                            plot = FALSE)$mids) %>%
         group_by(.data$set_size, .data$condition, .data$x) %>%
-        summarise(mean_error = mean(.data$y),
+        reframe(mean_error = mean(.data$y),
                   se_error = (sd(.data$y) / sqrt(length(.data$y))))
     }
   }

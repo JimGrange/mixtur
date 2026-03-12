@@ -1,4 +1,5 @@
-# mixtur v1.2.2.9000 (development version)
+# mixtur v1.2.3
+* Minor patch to use dplyr's reframe() instead of summarise() in plotting calls
 
 # mixtur v1.2.2
 * Implemented pull request providing efficiencies to fit_mixtur() function
