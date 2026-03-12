@@ -1,3 +1,6 @@
+# mixtur v1.2.3.9999
+* Development version
+
 # mixtur v1.2.3
 * Minor patch to use dplyr's reframe() instead of summarise() in plotting calls
 
